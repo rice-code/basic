@@ -1,0 +1,29 @@
+{
+  "name": "rice/basic",
+  "description": "basic tool",
+  "type": "library",
+  "license": "MIT",
+  "autoload": {
+    "psr-4": {
+      "Rice\\Basic\\": "src/"
+    }
+  },
+  "authors": [
+    {
+      "name": "dengminfeng",
+      "email": "1015814408@qq.com"
+    }
+  ],
+  "minimum-stability": "dev",
+  "require-dev": {
+    "phpunit/phpunit": "9"
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Tests\\": "tests/"
+    },
+    "files": [
+      "tests/common.php"
+    ]
+  }
+}
