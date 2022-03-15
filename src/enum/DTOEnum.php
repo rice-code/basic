@@ -1,7 +1,8 @@
 <?php
-namespace enum;
 
-class DTOEnum
+namespace Rice\Basic\Enum;
+
+class DTOEnum extends BaseEnum
 {
-    const VERSION = 1.0;
+
 }

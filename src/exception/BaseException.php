@@ -1,8 +1,10 @@
 <?php
 
+
 namespace Rice\Basic\Exception;
 
-class DTOException extends BaseException
+
+class BaseException extends \Exception
 {
 
 }
