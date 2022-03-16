@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Rice\Basic\dto;
+namespace Rice\Basic\Dto;
 
 
 class Response extends DTO

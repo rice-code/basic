@@ -2,8 +2,12 @@
 
 namespace Rice\Basic;
 
+use Rice\Basic\Support\Traits\Sington;
+
 class Lang
 {
+    use Sington;
+
     private $locale = 'zh-CN';
     private $fileName = 'base';
     private $key = '';
@@ -65,7 +69,7 @@ class Lang
     public function getMessage(): string
     {
         $messages = require __DIR__ . '..' .
-            DIRECTORY_SEPARATOR . 'lang' . DIRECTORY_SEPARATOR .
+            DIRECTORY_SEPARATOR . 'Lang' . DIRECTORY_SEPARATOR .
             $this->locale . DIRECTORY_SEPARATOR . $this->fileName . '.php';
 
         return $messages[$this->key];

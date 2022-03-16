@@ -1,7 +1,7 @@
 <?php
 
 
-namespace lang;
+namespace Lang;
 
 
 use PHPUnit\Framework\TestCase;
@@ -14,13 +14,15 @@ class LangTest extends TestCase
     {
         $this->assertEquals(
             'string is empty',
-            (new Lang())->setLocale('en')
+            Lang::getInstance()
+                ->setLocale('en')
                 ->setKey(BaseEnum::STRING_IS_EMPTY)->getMessage()
         );
 
         $this->assertEquals(
             '字符串为空',
-            (new Lang())->setLocale('zh-CN')
+            Lang::getInstance()
+                ->setLocale('zh-CN')
                 ->setKey(BaseEnum::STRING_IS_EMPTY)->getMessage()
         );
     }

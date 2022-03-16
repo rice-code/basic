@@ -1,9 +1,11 @@
 <?php
 
-namespace Rice\Basic\dto;
+namespace Rice\Basic\Dto;
 
 
+use Rice\Basic\Enum\DTOEnum;
 use Rice\Basic\Exception\DTOException;
+use Rice\Basic\Lang;
 
 abstract class DTO
 {
@@ -19,7 +21,11 @@ abstract class DTO
         }
 
         if (!property_exists($this, $attrName)) {
-            throw new DTOException('this attr not define');
+            throw new DTOException(
+                Lang::getInstance()
+                    ->setFileName(DTOEnum::LANG_NAME)
+                    ->setKey(DTOEnum::ATTR_NOT_DEFINE)->getMessage()
+            );
         }
 
         switch ($style) {

@@ -1,7 +1,7 @@
 <?php
 
 
-namespace common;
+namespace Common;
 
 
 use PHPUnit\Framework\TestCase;

@@ -3,13 +3,13 @@
 namespace Tests\dto;
 
 
-use Rice\Basic\dto\DTO;
+use Rice\Basic\Dto\DTO;
 
 /**
  * @method getName() 获取名称
  * @method setName(string $string)
  * Class ObjDTO
- * @package test\dto
+ * @package test\Dto
  */
 class ObjDTO extends DTO
 {

@@ -11,7 +11,7 @@
       "Rice\\Basic\\": "src/"
     },
     "files": [
-      "src/common/common.php"
+      "src/Common/common.php"
     ]
   },
   "authors": [
