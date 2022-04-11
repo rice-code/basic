@@ -11,7 +11,7 @@ if (!function_exists('is_upper')) {
     {
         if (strlen($str) > 1) {
             throw new BaseException(
-                (new Lang)->setFileName(CodeEnum::LANG_NAME)
+                Lang::getInstance()->setFileName(CodeEnum::LANG_NAME)
                     ->setKey(CodeEnum::INVALID_PARAM)
                     ->getMessage()
             );
@@ -30,8 +30,9 @@ if (!function_exists('is_lower')) {
     function is_lower(string $str)
     {
         if (strlen($str) > 1) {
+
             throw new BaseException(
-                (new Lang)->setFileName(CodeEnum::LANG_NAME)
+                Lang::getInstance()->setFileName(CodeEnum::LANG_NAME)
                     ->setKey(CodeEnum::INVALID_PARAM)
                     ->getMessage()
             );
@@ -55,7 +56,7 @@ if (!function_exists('camel_case_to_snake_case')) {
 
         if ($len === 0) {
             throw new BaseException(
-                (new Lang)->setKey(BaseEnum::STRING_IS_EMPTY)->getMessage()
+                Lang::getInstance()->setKey(BaseEnum::STRING_IS_EMPTY)->getMessage()
             );
         }
 

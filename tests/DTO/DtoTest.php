@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\dto;
+namespace Tests\DTO;
 
 use PHPUnit\Framework\TestCase;
 

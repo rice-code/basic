@@ -2,7 +2,7 @@
 
 namespace Rice\Basic\Support\Traits;
 
-trait Sington
+trait Singleton
 {
     private static $instance = null;
 
@@ -14,7 +14,7 @@ trait Sington
     {
     }
 
-    public static function getInstance()
+    public static function getInstance(): self
     {
         if (is_null(self::$instance)) {
             self::$instance = new self();

@@ -1,10 +1,12 @@
 <?php
 
+
 namespace Rice\Basic\Enum;
 
-class DTOEnum extends BaseEnum
+
+class AccessorEnum extends BaseEnum
 {
-    public const LANG_NAME = 'dto';
+    public const LANG_NAME = 'accessor';
     // 属性未定义
     public const ATTR_NOT_DEFINE = 'attr_not_define';
     // 属性未定义

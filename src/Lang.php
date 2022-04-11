@@ -2,11 +2,11 @@
 
 namespace Rice\Basic;
 
-use Rice\Basic\Support\Traits\Sington;
+use Rice\Basic\Support\Traits\Singleton;
 
 class Lang
 {
-    use Sington;
+    use Singleton;
 
     private $locale = 'zh-CN';
     private $fileName = 'base';

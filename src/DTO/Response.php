@@ -4,7 +4,7 @@
 namespace Rice\Basic\Dto;
 
 
-class Response extends DTO
+class Response extends DTOBase
 {
     private $success;
 
