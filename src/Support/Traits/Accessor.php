@@ -4,6 +4,7 @@
 namespace Rice\Basic\Support\Traits;
 
 
+use Rice\Basic\Enum\DTOEnum;
 use Rice\Basic\Exception\DTOException;
 use Rice\Basic\Lang;
 
