@@ -1,8 +1,6 @@
 <?php
 
-use Rice\Basic\Enum\BaseEnum;
-use Rice\Basic\Enum\CodeEnum;
-use Rice\Basic\Exception\BaseException;
+use Rice\Basic\Exception\CommonException;
 use Rice\Basic\Lang;
 
 // 大写字母判断
@@ -10,11 +8,7 @@ if (!function_exists('is_upper')) {
     function is_upper(string $str)
     {
         if (strlen($str) > 1) {
-            throw new BaseException(
-                Lang::getInstance()->setFileName(CodeEnum::LANG_NAME)
-                    ->setKey(CodeEnum::INVALID_PARAM)
-                    ->getMessage()
-            );
+            throw new CommonException(CommonException::INVALID_PARAM);
         }
 
         if (preg_match('/^[A-Z]+$/', $str)) {
@@ -30,12 +24,7 @@ if (!function_exists('is_lower')) {
     function is_lower(string $str)
     {
         if (strlen($str) > 1) {
-
-            throw new BaseException(
-                Lang::getInstance()->setFileName(CodeEnum::LANG_NAME)
-                    ->setKey(CodeEnum::INVALID_PARAM)
-                    ->getMessage()
-            );
+            throw new CommonException(CommonException::INVALID_PARAM);
         }
 
         if (preg_match('/^[a-z]+$/', $str)) {
@@ -55,9 +44,7 @@ if (!function_exists('camel_case_to_snake_case')) {
         $len = strlen($name);
 
         if ($len === 0) {
-            throw new BaseException(
-                Lang::getInstance()->setKey(BaseEnum::STRING_IS_EMPTY)->getMessage()
-            );
+            throw new CommonException(CommonException::INVALID_PARAM);
         }
 
         $newName = $name[0];

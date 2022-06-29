@@ -1,12 +1,11 @@
 <?php
 
-namespace Rice\Basic\Enum;
+
+namespace Rice\Basic\Exception;
 
 
-class CodeEnum extends BaseEnum
+class CodeException extends BaseException
 {
-    // 语言包名称
-    public const LANG_NAME = 'code';
     // 成功
     public const SUCCESS = 0;
     // 参数非法
@@ -16,4 +15,8 @@ class CodeEnum extends BaseEnum
     // 异常中断
     public const ABNORMAL_INTERRUPT = 100003;
 
+    public static function getLangName(): string
+    {
+        return 'code';
+    }
 }

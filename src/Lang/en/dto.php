@@ -1,8 +1,9 @@
 <?php
 
-use Rice\Basic\Enum\DTOEnum;
+use Rice\Basic\Exception\DTOException;
 
 return [
-    DTOEnum::ATTR_NOT_DEFINE => 'attr not define',
-    DTOEnum::METHOD_NOT_DEFINE => 'method not define',
+    DTOException::ATTR_NOT_DEFINE => 'attr not define',
+    DTOException::METHOD_NOT_DEFINE => 'method not define',
 ];
+

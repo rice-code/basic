@@ -1,10 +1,10 @@
 <?php
 
 
-use Rice\Basic\Enum\CodeEnum;
+use Rice\Basic\Exception\CodeException;
 
 return [
-    CodeEnum::SUCCESS => 'success',
-    CodeEnum::INVALID_PARAM => 'invalid param',
-    CodeEnum::INVALID_REQUEST => 'invalid request',
+    CodeException::SUCCESS => 'success',
+    CodeException::INVALID_PARAM => 'invalid param',
+    CodeException::INVALID_REQUEST => 'invalid request',
 ];

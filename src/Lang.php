@@ -9,14 +9,15 @@ class Lang
     use Singleton;
 
     private $locale = 'zh-CN';
-    private $fileName = 'base';
+    private $fileName = 'common';
     private $key = '';
+    protected $messages = [];
 
     /**
      * @param string $locale
      * @return Lang
      */
-    public function setLocale(string $locale)
+    public function setLocale(string $locale): Lang
     {
         $this->locale = $locale;
         return $this;
@@ -34,7 +35,7 @@ class Lang
      * @param string $fileName
      * @return Lang
      */
-    public function setFileName(string $fileName)
+    public function setFileName(string $fileName): Lang
     {
         $this->fileName = $fileName;
         return $this;
@@ -52,7 +53,7 @@ class Lang
      * @param string $key
      * @return Lang
      */
-    public function setKey(string $key)
+    public function setKey(string $key): Lang
     {
         $this->key = $key;
         return $this;
@@ -66,12 +67,21 @@ class Lang
         return $this->key;
     }
 
-    public function getMessage(): string
+    public function loadFile(): Lang
     {
-        $messages = require __DIR__ . '..' .
+        $this->messages = require __DIR__ . '..' .
             DIRECTORY_SEPARATOR . 'Lang' . DIRECTORY_SEPARATOR .
             $this->locale . DIRECTORY_SEPARATOR . $this->fileName . '.php';
+        return $this;
+    }
 
-        return $messages[$this->key];
+    public function getMessage($key): string
+    {
+        return $this->messages[$key];
+    }
+
+    public function existKey($key): bool
+    {
+        return isset($this->messages[$key]);
     }
 }
