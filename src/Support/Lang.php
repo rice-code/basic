@@ -1,6 +1,6 @@
 <?php
 
-namespace Rice\Basic;
+namespace Rice\Basic\Support;
 
 use Rice\Basic\Support\Traits\Singleton;
 
@@ -69,7 +69,7 @@ class Lang
 
     public function loadFile(): Lang
     {
-        $this->messages = require __DIR__ . '..' .
+        $this->messages = require __DIR__ . 'basic' .
             DIRECTORY_SEPARATOR . 'Lang' . DIRECTORY_SEPARATOR .
             $this->locale . DIRECTORY_SEPARATOR . $this->fileName . '.php';
         return $this;

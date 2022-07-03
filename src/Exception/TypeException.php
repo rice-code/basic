@@ -10,6 +10,8 @@ namespace Rice\Basic\Exception;
  */
 class TypeException extends BaseException
 {
+    public const INVALID_TYPE = 'invalid type';
+
     public static function getLangName(): string
     {
         return 'type';

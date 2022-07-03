@@ -1,10 +1,9 @@
 <?php
 
-if (!function_exists('dump')) {
-    function dump($vars)
+if (!function_exists('dd')) {
+    function dd($vars)
     {
         var_dump($vars);
         die();
     }
 }
-

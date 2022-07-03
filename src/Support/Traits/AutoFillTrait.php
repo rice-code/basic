@@ -19,7 +19,7 @@ trait AutoFillTrait
     protected function handle($params)
     {
         if (!is_object($params) || !is_array($params)) {
-            new TypeException(Lang::getInstance()->setKey());
+            new TypeException(TypeException::INVALID_TYPE);
         }
 
 
@@ -41,13 +41,17 @@ trait AutoFillTrait
     }
 
 
-    public function beforeFillHook() {}
+    public function beforeFillHook()
+    {
+    }
 
 
-    public function afterFillHook() {}
+    public function afterFillHook()
+    {
+    }
 
 
-    public function getPublicVars (): array
+    public function getPublicVars(): array
     {
         $me = new class {
             public function getPublicVars($object): array
