@@ -2,7 +2,7 @@
 
 namespace Rice\Basic\Exception;
 
-use Rice\Basic\Lang;
+use Rice\Basic\Support\Lang;
 use Throwable;
 
 abstract class BaseException extends \Exception

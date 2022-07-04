@@ -3,8 +3,7 @@
 
 namespace Tests\Support\Annotation;
 
-
-use Tests\Support\Speak;
+use Tests\Support\Entity\Speak;
 
 class Cat
 {
@@ -26,4 +25,9 @@ class Cat
      * @var Speak
      */
     public $speak;
+
+    /**
+     * @var string[]
+     */
+    public $hair;
 }

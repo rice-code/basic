@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Tests\Support;
+namespace Tests\Support\Entity;
 
 
 class Speak

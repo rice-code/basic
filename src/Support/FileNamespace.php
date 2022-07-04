@@ -2,46 +2,46 @@
 
 namespace Rice\Basic\Support;
 
+use Rice\Basic\Support\Traits\Singleton;
+
 class FileNamespace
 {
+    use Singleton;
+
     const START_PATTERN = '/^namespace\s+(.*);$/';
-    const END_PATTERN = '/^class\s*.*$/';
-    const USE_PATTERN = '/^use\s*([\w\\\\]+)[\s*;](?:AS|as)?\s*(\w*)[;]?$/';
+    const END_PATTERN = '/^class\s*(.*)$/';
+    const USE_PATTERN = '/^use\s*([\S]+)[\s*;](?:AS|as)?\s*(\w*)[;]?$/';
 
     public $isRead = false;
     protected $objectMap = [];
 
-    public function analysisNamespaces($rowData): bool
+    public function analysisNamespaces($fileName, $rowData): bool
     {
-        var_dump(111111111111111111);
-        var_dump($rowData);
         $matches = [];
         if (!$this->isRead && preg_match(self::START_PATTERN, $rowData, $matches)) {
-            var_dump($matches);
-            $this->objectMap['this'] = $matches[1] ?? '';
+            $this->objectMap[$fileName]['this'] = $matches[1] ?? '';
             $this->isRead = true;
         } elseif ($this->isRead && preg_match(self::USE_PATTERN, $rowData, $matches)) {
-            var_dump($matches);
             $useNamespace = $matches[1] ?? '';
             $alias = $matches[2] ?? '';
             if ($useNamespace) {
                 $words = explode('\\', $useNamespace);
                 $alias = array_pop($words);
-                $this->objectMap[$alias] = implode('\\', $words);
+                $this->objectMap[$fileName][$alias] = implode('\\', $words);
             }
         } elseif ($this->isRead && preg_match(self::END_PATTERN, $rowData, $matches)) {
-            return false;
+            return true;
         }
 
-        return true;
+        return false;
     }
 
-    public function matchNamespace($path): FileNamespace
+    public function matchNamespace($fileName, $path): FileNamespace
     {
         $file = (new File($path));
         $row = $file->readLine();
         while ($row->valid()) {
-            $isDone = $this->analysisNamespaces($row->current());
+            $isDone = $this->analysisNamespaces($fileName, $row->current());
             if ($isDone) {
                 break;
             }

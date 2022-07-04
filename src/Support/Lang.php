@@ -69,7 +69,7 @@ class Lang
 
     public function loadFile(): Lang
     {
-        $this->messages = require __DIR__ . 'basic' .
+        $this->messages = require __DIR__ . DIRECTORY_SEPARATOR . '..' .
             DIRECTORY_SEPARATOR . 'Lang' . DIRECTORY_SEPARATOR .
             $this->locale . DIRECTORY_SEPARATOR . $this->fileName . '.php';
         return $this;

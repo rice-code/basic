@@ -22,8 +22,10 @@ class File
 
     public function close()
     {
-        fclose($this->handle);
-        $this->handle = null;
+        if (!is_null($this->handle)) {
+            fclose($this->handle);
+            $this->handle = null;
+        }
     }
 
     public function readLine()
