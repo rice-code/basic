@@ -13,6 +13,6 @@ class AnnotationTest extends TestCase
     {
         $annotation = new Annotation();
 
-        $annotation->buildClass(Cat::class)->analysisAttr();
+        var_dump($annotation->execute(Cat::class)->getNamespaceList());
     }
 }
