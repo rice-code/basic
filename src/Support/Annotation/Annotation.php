@@ -36,12 +36,15 @@ class Annotation
 
     public function execute($class): Annotation
     {
+        // 构建命名空间
         $this->queue[] = $class;
         while (!empty($this->queue)) {
             $objClass = array_shift($this->queue);
             $this->buildClass($objClass)->analysisAttr();
         }
 
+        // 赋值
+        
         return $this;
     }
 
