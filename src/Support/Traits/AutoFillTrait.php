@@ -41,7 +41,7 @@ trait AutoFillTrait
 
     }
 
-    public function fill($params, $idx): self
+    public function fill($params, $idx)
     {
         $propertyArr = DataExtract::getCamelCase($this->propertyArr, self::class);
 
@@ -58,13 +58,13 @@ trait AutoFillTrait
                 $loopIdx = $propertyName;
             }
 
-            var_dump('#----------赋值start---------------#');
-            var_dump(self::class);
-            var_dump($loopIdx);
-
             $value = $params[$loopIdx] ?? null;
-            var_dump($value);
-            var_dump('#----------赋值end---------------#');
+
+//            var_dump('#----------赋值start---------------#');
+//            var_dump(self::class);
+//            var_dump($loopIdx);
+//            var_dump($value);
+//            var_dump('#----------赋值end---------------#');
 
             if (is_null($property)) {
                 $this->{$name} = $value;
@@ -72,9 +72,10 @@ trait AutoFillTrait
             }
 
             if ($property->isClass) {
-                if ($property->isArray) {
+                if (!isset($this->propertyArr[$property->namespace])) {
+                    $this->{$name} = null;
+                } elseif ($property->isArray) {
                     foreach ($value as $k => $v) {
-                        var_dump($v);
                         $this->{$name}[] = new $property->namespace($v, "{$loopIdx}.{$k}");
                     }
                 } else {
@@ -82,15 +83,12 @@ trait AutoFillTrait
                 }
             } elseif ($property->isArray) {
                 foreach ($value as $k => $v) {
-                    var_dump($v);
                     $this->{$name}[] = $v;
                 }
             } else {
                 $this->{$name} = $value;
             }
         }
-
-        return $this;
     }
 
     public function beforeFillHook($params)
