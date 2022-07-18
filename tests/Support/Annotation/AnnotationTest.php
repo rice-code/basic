@@ -16,8 +16,10 @@ class AnnotationTest extends TestCase
         $this->assertIsArray($annotation->execute(Cat::class)->getNamespaceList());
     }
 
-    public function testProperty()
+    public function testProperty(): void
     {
+        $annotation = new Annotation();
 
+        var_dump($annotation->execute(Cat::class)->getProperty());
     }
 }

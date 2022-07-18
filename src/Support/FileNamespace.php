@@ -8,9 +8,9 @@ class FileNamespace
 {
     use Singleton;
 
-    const START_PATTERN = '/^namespace\s+(.*);$/';
-    const END_PATTERN = '/^class\s*(.*)$/';
-    const USE_PATTERN = '/^use\s*([\S]+)[\s*;](?:AS|as)?\s*(\w*)[;]?$/';
+    public const START_PATTERN = '/^namespace\s+(.*);$/';
+    public const END_PATTERN = '/^class\s*(.*)$/';
+    public const USE_PATTERN = '/^use\s*([\S]+)[\s*;](?:AS|as)?\s*(\w*)[;]?$/';
 
     protected $objectMap = [];
 

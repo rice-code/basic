@@ -44,7 +44,7 @@ class Annotation
         }
 
         // 赋值
-        
+
         return $this;
     }
 
@@ -73,6 +73,8 @@ class Annotation
                 $docProperty = (new Property($matches[1]));
                 $this->propertyMap[$className][$property->name] = $docProperty;
                 $docProperty->namespace = $this->selectNamespace($docProperty);
+            } else {
+                $this->propertyMap[$className][$property->name] = null;
             }
         }
     }
@@ -99,8 +101,14 @@ class Annotation
         return '';
     }
 
-    public function getNamespaceList()
+    public function getNamespaceList(): array
     {
         return $this->fileNamespaceMap;
+    }
+
+    public function getProperty(): array
+    {
+        // 兼容类无 public 变量问题
+        return $this->propertyMap ?? [];
     }
 }
