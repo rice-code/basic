@@ -9,6 +9,7 @@ use Rice\Basic\Support\Annotation\Annotation;
 use Rice\Basic\Support\Annotation\Property;
 use Rice\Basic\Support\Convert;
 use Rice\Basic\Support\DataExtract;
+use Rice\Basic\Support\verify;
 
 trait AutoFillTrait
 {
@@ -60,12 +61,6 @@ trait AutoFillTrait
 
             $value = $params[$loopIdx] ?? null;
 
-//            var_dump('#----------赋值start---------------#');
-//            var_dump(self::class);
-//            var_dump($loopIdx);
-//            var_dump($value);
-//            var_dump('#----------赋值end---------------#');
-
             if (is_null($property)) {
                 $this->{$name} = $value;
                 continue;
@@ -83,9 +78,11 @@ trait AutoFillTrait
                 }
             } elseif ($property->isArray) {
                 foreach ($value as $k => $v) {
+                    verify::throwStrongType($property->name, $v);
                     $this->{$name}[] = $v;
                 }
             } else {
+                verify::throwStrongType($property->name, $value);
                 $this->{$name} = $value;
             }
         }
