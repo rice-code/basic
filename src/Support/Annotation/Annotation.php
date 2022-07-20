@@ -5,7 +5,6 @@ namespace Rice\Basic\Support\Annotation;
 
 
 use ReflectionClass;
-use Rice\Basic\Exception\CommonException;
 use Rice\Basic\Support\FileNamespace;
 
 class Annotation
@@ -99,6 +98,11 @@ class Annotation
         }
 
         return '';
+    }
+
+    public function getFileName(): string
+    {
+        return $this->class->getFileName();
     }
 
     public function getNamespaceList(): array

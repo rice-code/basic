@@ -4,7 +4,6 @@
 namespace Rice\Basic\Support;
 
 
-use phpDocumentor\Reflection\DocBlock\Tags\Throws;
 use Rice\Basic\Exception\TypeException;
 
 class verify

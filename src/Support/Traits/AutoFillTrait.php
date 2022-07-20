@@ -32,7 +32,7 @@ trait AutoFillTrait
         }
     }
 
-    protected function handle($params)
+    protected function handle($params): void
     {
         $this->beforeFillHook($params);
 
@@ -42,7 +42,7 @@ trait AutoFillTrait
 
     }
 
-    public function fill($params, $idx)
+    public function fill($params, $idx): void
     {
         $propertyArr = DataExtract::getCamelCase($this->propertyArr, self::class);
 
@@ -88,11 +88,16 @@ trait AutoFillTrait
         }
     }
 
-    public function beforeFillHook($params)
+    public function beforeFillHook(&$params): void
     {
     }
 
-    public function afterFillHook($params)
+    public function afterFillHook(&$params): void
     {
+    }
+
+    public function cacheLoad()
+    {
+
     }
 }
