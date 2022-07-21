@@ -7,6 +7,7 @@ namespace Rice\Basic\Support\Traits;
 use Rice\Basic\Exception\TypeException;
 use Rice\Basic\Support\Annotation\Annotation;
 use Rice\Basic\Support\Annotation\Property;
+use Rice\Basic\Support\Contracts\AutoFillCacheContract;
 use Rice\Basic\Support\Convert;
 use Rice\Basic\Support\DataExtract;
 use Rice\Basic\Support\verify;
@@ -15,7 +16,7 @@ trait AutoFillTrait
 {
     private $propertyArr;
 
-    public function __construct($params)
+    public function __construct($params, AutoFillCacheContract $cache = null)
     {
         if (!is_object($params) || !is_array($params)) {
             new TypeException(TypeException::INVALID_TYPE);
@@ -25,7 +26,7 @@ trait AutoFillTrait
             $params = Convert::objToArr($params);
         }
 
-        $this->propertyArr = (new Annotation())->execute($this)->getProperty();
+        $this->propertyArr = (new Annotation($cache))->execute($this)->getProperty();
 
         if (!empty($params)) {
             $this->handle($params);
@@ -94,10 +95,5 @@ trait AutoFillTrait
 
     public function afterFillHook(&$params): void
     {
-    }
-
-    public function cacheLoad()
-    {
-
     }
 }

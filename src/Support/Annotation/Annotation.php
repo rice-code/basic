@@ -5,10 +5,18 @@ namespace Rice\Basic\Support\Annotation;
 
 
 use ReflectionClass;
+use Rice\Basic\Support\Contracts\AutoFillCacheContract;
+use Rice\Basic\Support\Decide;
 use Rice\Basic\Support\FileNamespace;
 
 class Annotation
 {
+    /**
+     * 缓存实体
+     * @var AutoFillCacheContract
+     */
+    private $cache;
+
     /**
      * 反射类
      * @var ReflectionClass
@@ -33,6 +41,11 @@ class Annotation
      */
     private $queue;
 
+    public function __construct($cache = null)
+    {
+        $this->cache = $cache;
+    }
+
     public function execute($class): Annotation
     {
         // 构建命名空间
@@ -56,7 +69,24 @@ class Annotation
     public function buildClass($class): self
     {
         $this->class = new ReflectionClass($class);
-        $this->fileNamespaceMap = FileNamespace::getInstance()->matchNamespace($this->class->getName(), $this->class->getFileName())->getNamespaces();
+        $classNamespace = $this->class->getName();
+        $modifyTimestamp = $classNamespace . '_timestamp';
+        $classFileName = $this->class->getFileName();
+        if (Decide::notNull($this->cache)) {
+            $modifyTime = $this->cache->get($modifyTimestamp);
+            $content = json_decode($this->cache->get($classNamespace), true);
+            if (Decide::notNullAndNotEmpty($content) && $modifyTime == filemtime($classFileName)) {
+                $this->fileNamespaceMap = $content;
+                return $this;
+            }
+        }
+        $this->fileNamespaceMap = FileNamespace::getInstance()->matchNamespace($classNamespace, $classFileName)->getNamespaces();
+
+        if (Decide::notNull($this->cache)) {
+            $this->cache->set($modifyTimestamp, filemtime($classFileName));
+            $this->cache->set($classNamespace, json_encode($this->fileNamespaceMap, JSON_UNESCAPED_UNICODE));
+        }
+
         return $this;
     }
 
