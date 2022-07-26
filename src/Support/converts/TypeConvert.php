@@ -1,14 +1,13 @@
 <?php
 
 
-namespace Rice\Basic\Support;
+namespace Rice\Basic\Support\converts;
 
 
-class Convert
+class TypeConvert
 {
     public static function objToArr($obj)
     {
         return json_decode(json_encode($obj, JSON_UNESCAPED_UNICODE), true);
     }
-
 }

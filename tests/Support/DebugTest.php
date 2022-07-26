@@ -1,12 +1,12 @@
 <?php
 
 
-namespace Support;
+namespace Tests\Support;
 
 
 use PHPUnit\Framework\TestCase;
 
-class Debug extends TestCase
+class DebugTest extends TestCase
 {
     public function testShowTakeTime()
     {

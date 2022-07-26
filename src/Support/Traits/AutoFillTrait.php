@@ -9,6 +9,7 @@ use Rice\Basic\Support\Annotation\Annotation;
 use Rice\Basic\Support\Annotation\Property;
 use Rice\Basic\Support\Contracts\AutoFillCacheContract;
 use Rice\Basic\Support\Convert;
+use Rice\Basic\Support\converts\TypeConvert;
 use Rice\Basic\Support\DataExtract;
 use Rice\Basic\Support\verify;
 
@@ -23,7 +24,7 @@ trait AutoFillTrait
         }
 
         if (is_object($params)) {
-            $params = Convert::objToArr($params);
+            $params = TypeConvert::objToArr($params);
         }
 
         $this->propertyArr = (new Annotation($cache))->execute($this)->getProperty();

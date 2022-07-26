@@ -12,6 +12,8 @@ class CommonException extends BaseException
 
     public const CLASS_DOES_NOT_EXIST = 'class_does_not_exist';
 
+    public const CLASS_PROPERTY_IS_NOT_OVERRIDDEN = 'class_property_is_not_overridden';
+
     public static function getLangName(): string
     {
         return 'common';
