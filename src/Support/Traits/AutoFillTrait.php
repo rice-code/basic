@@ -8,7 +8,6 @@ use Rice\Basic\Exception\TypeException;
 use Rice\Basic\Support\Annotation\Annotation;
 use Rice\Basic\Support\Annotation\Property;
 use Rice\Basic\Support\Contracts\AutoFillCacheContract;
-use Rice\Basic\Support\Convert;
 use Rice\Basic\Support\converts\TypeConvert;
 use Rice\Basic\Support\DataExtract;
 use Rice\Basic\Support\verify;
