@@ -45,7 +45,7 @@ trait AutoFillTrait
 
     public function fill($params, $idx): void
     {
-        $propertyArr = DataExtract::getCamelCase($this->propertyArr, self::class);
+        $propertyArr = DataExtract::getCamelCase($this->propertyArr, get_class($this));
 
         /**
          * @var $property Property

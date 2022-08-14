@@ -4,9 +4,9 @@
 namespace Rice\Basic\Support\Traits;
 
 
-use Rice\Basic\Enum\DTOEnum;
+use Rice\Basic\Enum\NameTypeEnum;
+use Rice\Basic\Exception\CommonException;
 use Rice\Basic\Exception\DTOException;
-use Rice\Basic\Lang;
 
 trait Accessor
 {
@@ -14,7 +14,7 @@ trait Accessor
     {
         preg_match('/^([sg]et)(.*)/', $name, $matchArr);
 
-        $style = $matchArr[1] ?? null;
+        $style    = $matchArr[1] ?? null;
         $attrName = $matchArr[2] ?? null;
 
         if (!is_null($attrName)) {
@@ -22,11 +22,7 @@ trait Accessor
         }
 
         if (!property_exists($this, $attrName)) {
-            throw new DTOException(
-                Lang::getInstance()
-                    ->setFileName(DTOEnum::LANG_NAME)
-                    ->setKey(DTOEnum::ATTR_NOT_DEFINE)->getMessage()
-            );
+            throw new DTOException(DTOException::ATTR_NOT_DEFINE);
         }
 
         switch ($style) {
@@ -37,7 +33,7 @@ trait Accessor
                 return $this->getValue($attrName);
         }
 
-        throw new DTOException('this method not define');
+        throw new DTOException(DTOException::METHOD_NOT_DEFINE);
     }
 
     private function setValue($attrName, $args)
@@ -50,17 +46,45 @@ trait Accessor
         return $this->{$attrName};
     }
 
-    public function toArray($fields = [])
+    /**
+     * @param array $fields
+     * @param int $nameType
+     * @return array
+     * @throws CommonException
+     */
+    private function assignElement(array $fields, $nameType = NameTypeEnum::UNLIMITED): array
     {
-        $result = [];
         foreach (get_object_vars($this) as $k => $v) {
+            $key = $k;
+            switch ($nameType) {
+                case NameTypeEnum::CAMEL_CASE:
+                    $key = snake_case_to_camel_case($key);
+                    break;
+                case NameTypeEnum::SNAKE_CASE:
+                    $key = camel_case_to_snake_case($key);
+                    break;
+            }
             if (empty($fields)) {
-                $result[$k] = $v;
-            } elseif (in_array($k, $fields)) {
-                $result[$k] = $v;
+                $result[$key] = $v;
+            } elseif (in_array($key, $fields)) {
+                $result[$key] = $v;
             }
         }
-
         return $result;
+    }
+
+    public function toArray($fields = [])
+    {
+        return $this->assignElement($fields);
+    }
+
+    public function toSnakeCaseArray($fields = [])
+    {
+        return $this->assignElement($fields, NameTypeEnum::SNAKE_CASE);
+    }
+
+    public function toCamelCaseArray($fields = [])
+    {
+        return $this->assignElement($fields, NameTypeEnum::CAMEL_CASE);
     }
 }
