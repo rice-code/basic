@@ -10,11 +10,14 @@ use Rice\Basic\Support\Annotation\Property;
 use Rice\Basic\Support\Contracts\AutoFillCacheContract;
 use Rice\Basic\Support\converts\TypeConvert;
 use Rice\Basic\Support\DataExtract;
+use Rice\Basic\Support\Debug;
 use Rice\Basic\Support\verify;
 
 trait AutoFillTrait
 {
-    private $propertyArr;
+    private $_params;
+    private $_propertyArr;
+    private $_cache;
 
     public function __construct($params, $idx = '', AutoFillCacheContract $cache = null)
     {
@@ -26,26 +29,28 @@ trait AutoFillTrait
             $params = TypeConvert::objToArr($params);
         }
 
-        $this->propertyArr = (new Annotation($cache))->execute($this)->getProperty();
+        $this->_params      = $params;
+        $this->_propertyArr = (new Annotation($cache))->execute($this)->getProperty();
+        $this->_cache       = $cache;
 
-        if (!empty($params)) {
-            $this->handle($params, $idx, $cache);
+        if (!empty($this->_params)) {
+            $this->handle($idx);
         }
     }
 
-    protected function handle($params, $idx, $cache): void
+    protected function handle($idx): void
     {
         $this->beforeFillHook($params);
 
-        $this->fill($params, $idx, $cache);
+        $this->fill($idx);
 
         $this->afterFillHook($params);
 
     }
 
-    public function fill($params, $idx, $cache): void
+    public function fill($idx): void
     {
-        $propertyArr = DataExtract::getCamelCase($this->propertyArr, get_class($this));
+        $propertyArr = DataExtract::getCamelCase($this->_propertyArr, get_class($this));
 
         /**
          * @var $property Property
@@ -60,7 +65,7 @@ trait AutoFillTrait
                 $loopIdx = $propertyName;
             }
 
-            $value = $params[$loopIdx] ?? null;
+            $value = DataExtract::get($this->_params, $loopIdx);
 
             if (is_null($property)) {
                 $this->{$name} = $value;
@@ -68,14 +73,14 @@ trait AutoFillTrait
             }
 
             if ($property->isClass) {
-                if (!isset($this->propertyArr[$property->namespace])) {
+                if (!isset($this->_propertyArr[$property->namespace])) {
                     $this->{$name} = null;
                 } elseif ($property->isArray) {
                     foreach ($value as $k => $v) {
-                        $this->{$name}[] = new $property->namespace($v, "{$loopIdx}.{$k}", $cache);
+                        $this->{$name}[] = new $property->namespace($this->_params, "{$loopIdx}.{$k}", $this->_cache);
                     }
                 } else {
-                    $this->{$name} = new $property->namespace($value, $loopIdx, $cache);
+                    $this->{$name} = new $property->namespace($this->_params, $loopIdx, $this->_cache);
                 }
             } elseif ($property->isArray) {
                 foreach ($value as $k => $v) {

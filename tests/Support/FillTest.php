@@ -5,6 +5,7 @@ namespace Tests\Support;
 
 
 use PHPUnit\Framework\TestCase;
+use Rice\Basic\Support\Debug;
 use Tests\Support\Annotation\Cat;
 
 class FillTest extends TestCase
@@ -24,12 +25,12 @@ class FillTest extends TestCase
 
         $cat = new Cat($params);
 
-        var_dump('eyes: ' . $cat->eyes);
-        var_dump($cat->eat);
-        var_dump($cat->speak->language);
-        var_dump($cat->hair);
-        var_dump($cat->toArray());
-        var_dump($cat->toCamelCaseArray());
-        var_dump($cat->toSnakeCaseArray());
+        $this->assertEquals('big eyes', $cat->eyes);
+        $this->assertNull($cat->eat);
+        $this->assertEquals('english', $cat->speak->language);
+        $this->assertIsArray($cat->hair);
+        $this->assertArrayHasKey('eyes', $cat->toArray());
+        $this->assertArrayHasKey('speak', $cat->toCamelCaseArray());
+        $this->assertArrayHasKey('hair', $cat->toSnakeCaseArray());
     }
 }

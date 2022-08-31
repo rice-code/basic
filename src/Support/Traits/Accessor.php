@@ -48,15 +48,19 @@ trait Accessor
 
     /**
      * @param array $fields
-     * @param $filters
-     * @param $nameType
+     * @param int $nameType
      * @return array
      * @throws CommonException
      */
-    private function assignElement(array $fields, array $filters, int $nameType): array
+    private function assignElement($obj, array $fields, int $nameType): array
     {
-        foreach (get_object_vars($this) as $k => $v) {
+        foreach (get_object_vars($obj) as $k => $v) {
             $key = $k;
+
+            if (isset($key[0]) && $key[0] === '_') {
+                continue;
+            }
+
             switch ($nameType) {
                 case NameTypeEnum::CAMEL_CASE:
                     $key = snake_case_to_camel_case($key);
@@ -66,31 +70,41 @@ trait Accessor
                     break;
             }
 
-            if (in_array($key, $filters)) {
-                continue;
+            $val = $v;
+
+            if (is_object($val)) {
+                $val = $this->assignElement($val, $fields, $nameType);
+            }
+
+            if (is_array($val) && isset($val[0]) && is_object($val[0])) {
+                $tempVal = [];
+                foreach ($val as $item) {
+                    $tempVal[] = $this->assignElement($item, $fields, $nameType);
+                }
+                $val = $tempVal;
             }
 
             if (empty($fields)) {
-                $result[$key] = $v;
+                $result[$key] = $val;
             } elseif (in_array($key, $fields)) {
-                $result[$key] = $v;
+                $result[$key] = $val;
             }
         }
-        return $result;
+        return $result ?? [];
     }
 
-    public function toArray($fields = [], $filters = ['propertyArr'])
+    public function toArray($fields = []): array
     {
-        return $this->assignElement($fields, $filters, NameTypeEnum::UNLIMITED);
+        return $this->assignElement($this, $fields, NameTypeEnum::UNLIMITED);
     }
 
-    public function toSnakeCaseArray($fields = [], $filters = ['property_arr'])
+    public function toSnakeCaseArray($fields = []): array
     {
-        return $this->assignElement($fields, $filters, NameTypeEnum::SNAKE_CASE);
+        return $this->assignElement($this, $fields, NameTypeEnum::SNAKE_CASE);
     }
 
-    public function toCamelCaseArray($fields = [], $filters = ['propertyArr'])
+    public function toCamelCaseArray($fields = []): array
     {
-        return $this->assignElement($fields, $filters, NameTypeEnum::CAMEL_CASE);
+        return $this->assignElement($this, $fields, NameTypeEnum::CAMEL_CASE);
     }
 }
