@@ -12,11 +12,11 @@ class FillTest extends TestCase
     public function testAutoFill()
     {
         $params = [
-            'eyes' => 'big eyes',
+            'eyes'  => 'big eyes',
             'speak' => [
                 'language' => 'english'
             ],
-            'hair' => [
+            'hair'  => [
                 'short',
                 'long'
             ]
@@ -28,5 +28,8 @@ class FillTest extends TestCase
         var_dump($cat->eat);
         var_dump($cat->speak->language);
         var_dump($cat->hair);
+        var_dump($cat->toArray());
+        var_dump($cat->toCamelCaseArray());
+        var_dump($cat->toSnakeCaseArray());
     }
 }

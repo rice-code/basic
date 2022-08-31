@@ -16,7 +16,7 @@ trait AutoFillTrait
 {
     private $propertyArr;
 
-    public function __construct($params, AutoFillCacheContract $cache = null)
+    public function __construct($params, $idx = '', AutoFillCacheContract $cache = null)
     {
         if (!is_object($params) || !is_array($params)) {
             new TypeException(TypeException::INVALID_TYPE);
@@ -29,21 +29,21 @@ trait AutoFillTrait
         $this->propertyArr = (new Annotation($cache))->execute($this)->getProperty();
 
         if (!empty($params)) {
-            $this->handle($params);
+            $this->handle($params, $idx, $cache);
         }
     }
 
-    protected function handle($params): void
+    protected function handle($params, $idx, $cache): void
     {
         $this->beforeFillHook($params);
 
-        $this->fill($params, '');
+        $this->fill($params, $idx, $cache);
 
         $this->afterFillHook($params);
 
     }
 
-    public function fill($params, $idx): void
+    public function fill($params, $idx, $cache): void
     {
         $propertyArr = DataExtract::getCamelCase($this->propertyArr, get_class($this));
 
@@ -72,10 +72,10 @@ trait AutoFillTrait
                     $this->{$name} = null;
                 } elseif ($property->isArray) {
                     foreach ($value as $k => $v) {
-                        $this->{$name}[] = new $property->namespace($v, "{$loopIdx}.{$k}");
+                        $this->{$name}[] = new $property->namespace($v, "{$loopIdx}.{$k}", $cache);
                     }
                 } else {
-                    $this->{$name} = new $property->namespace($value, $loopIdx);
+                    $this->{$name} = new $property->namespace($value, $loopIdx, $cache);
                 }
             } elseif ($property->isArray) {
                 foreach ($value as $k => $v) {

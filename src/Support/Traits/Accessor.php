@@ -48,11 +48,12 @@ trait Accessor
 
     /**
      * @param array $fields
-     * @param int $nameType
+     * @param $filters
+     * @param $nameType
      * @return array
      * @throws CommonException
      */
-    private function assignElement(array $fields, $nameType = NameTypeEnum::UNLIMITED): array
+    private function assignElement(array $fields, array $filters, int $nameType): array
     {
         foreach (get_object_vars($this) as $k => $v) {
             $key = $k;
@@ -64,6 +65,11 @@ trait Accessor
                     $key = camel_case_to_snake_case($key);
                     break;
             }
+
+            if (in_array($key, $filters)) {
+                continue;
+            }
+
             if (empty($fields)) {
                 $result[$key] = $v;
             } elseif (in_array($key, $fields)) {
@@ -73,18 +79,18 @@ trait Accessor
         return $result;
     }
 
-    public function toArray($fields = [])
+    public function toArray($fields = [], $filters = ['propertyArr'])
     {
-        return $this->assignElement($fields);
+        return $this->assignElement($fields, $filters, NameTypeEnum::UNLIMITED);
     }
 
-    public function toSnakeCaseArray($fields = [])
+    public function toSnakeCaseArray($fields = [], $filters = ['property_arr'])
     {
-        return $this->assignElement($fields, NameTypeEnum::SNAKE_CASE);
+        return $this->assignElement($fields, $filters, NameTypeEnum::SNAKE_CASE);
     }
 
-    public function toCamelCaseArray($fields = [])
+    public function toCamelCaseArray($fields = [], $filters = ['propertyArr'])
     {
-        return $this->assignElement($fields, NameTypeEnum::CAMEL_CASE);
+        return $this->assignElement($fields, $filters, NameTypeEnum::CAMEL_CASE);
     }
 }
