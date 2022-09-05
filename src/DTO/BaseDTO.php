@@ -1,10 +1,11 @@
 <?php
 
-namespace Rice\Basic\Entity;
+namespace Rice\Basic\DTO;
+
 
 use Rice\Basic\Support\Traits\Accessor;
 
-class EntityBase
+abstract class BaseDTO
 {
     use Accessor;
 }

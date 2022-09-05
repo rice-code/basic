@@ -7,7 +7,7 @@ namespace Rice\Basic\Support\converts;
 use Rice\Basic\Exception\CalculateException;
 use Rice\Basic\Exception\CommonException;
 
-abstract class MeterBase
+abstract class BaseMeter
 {
     /**
      * 数值

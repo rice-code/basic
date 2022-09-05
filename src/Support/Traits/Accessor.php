@@ -4,7 +4,7 @@
 namespace Rice\Basic\Support\Traits;
 
 
-use Rice\Basic\Enum\NameTypeEnum;
+use Rice\Basic\Enum\NameTypeBaseEnum;
 use Rice\Basic\Exception\CommonException;
 use Rice\Basic\Exception\DTOException;
 
@@ -47,12 +47,13 @@ trait Accessor
     }
 
     /**
+     * @param object $obj
      * @param array $fields
      * @param int $nameType
      * @return array
      * @throws CommonException
      */
-    private function assignElement($obj, array $fields, int $nameType): array
+    private function assignElement(object $obj, array $fields, int $nameType): array
     {
         foreach (get_object_vars($obj) as $k => $v) {
             $key = $k;
@@ -62,10 +63,10 @@ trait Accessor
             }
 
             switch ($nameType) {
-                case NameTypeEnum::CAMEL_CASE:
+                case NameTypeBaseEnum::CAMEL_CASE:
                     $key = snake_case_to_camel_case($key);
                     break;
-                case NameTypeEnum::SNAKE_CASE:
+                case NameTypeBaseEnum::SNAKE_CASE:
                     $key = camel_case_to_snake_case($key);
                     break;
             }
@@ -95,16 +96,16 @@ trait Accessor
 
     public function toArray($fields = []): array
     {
-        return $this->assignElement($this, $fields, NameTypeEnum::UNLIMITED);
+        return $this->assignElement($this, $fields, NameTypeBaseEnum::UNLIMITED);
     }
 
     public function toSnakeCaseArray($fields = []): array
     {
-        return $this->assignElement($this, $fields, NameTypeEnum::SNAKE_CASE);
+        return $this->assignElement($this, $fields, NameTypeBaseEnum::SNAKE_CASE);
     }
 
     public function toCamelCaseArray($fields = []): array
     {
-        return $this->assignElement($this, $fields, NameTypeEnum::CAMEL_CASE);
+        return $this->assignElement($this, $fields, NameTypeBaseEnum::CAMEL_CASE);
     }
 }

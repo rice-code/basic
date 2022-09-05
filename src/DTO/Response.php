@@ -1,10 +1,10 @@
 <?php
 
 
-namespace Rice\Basic\Dto;
+namespace Rice\Basic\DTO;
 
 
-class Response extends DTOBase
+class Response extends BaseDTO
 {
     private $success;
 

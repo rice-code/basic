@@ -3,7 +3,7 @@
 namespace Tests\DTO;
 
 
-use Rice\Basic\Dto\DTOBase;
+use Rice\Basic\Dto\BaseDTO;
 
 /**
  * @method getName() 获取名称
@@ -11,7 +11,7 @@ use Rice\Basic\Dto\DTOBase;
  * Class ObjDTOBase
  * @package test\DTOBase
  */
-class ObjDTO extends DTOBase
+class ObjDTO extends BaseDTO
 {
     public $name;
 }

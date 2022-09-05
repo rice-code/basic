@@ -6,6 +6,7 @@ namespace Tests\Support\Annotation;
 
 use PHPUnit\Framework\TestCase;
 use Rice\Basic\Support\Annotation\Annotation;
+use Tests\Support\Annotation\Cat;
 
 class AnnotationTest extends TestCase
 {
@@ -20,6 +21,7 @@ class AnnotationTest extends TestCase
     {
         $annotation = new Annotation();
 
-        var_dump($annotation->execute(Cat::class)->getProperty());
+        $property = $annotation->execute(Cat::class)->getProperty();
+        $this->assertArrayHasKey(Cat::class, $property);
     }
 }

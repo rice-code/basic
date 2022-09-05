@@ -3,7 +3,7 @@
 namespace Rice\Basic\Support\converts;
 
 
-class WeightConvert extends MeterBase
+class WeightConvert extends BaseMeter
 {
 
     // 公制

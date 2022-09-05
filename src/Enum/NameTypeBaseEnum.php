@@ -4,7 +4,7 @@
 namespace Rice\Basic\Enum;
 
 
-class NameTypeEnum extends BaseEnum
+class NameTypeBaseEnum extends BaseEnum
 {
     // 无限制
     public const UNLIMITED = 0;
