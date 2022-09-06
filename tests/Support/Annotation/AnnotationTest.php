@@ -6,7 +6,6 @@ namespace Tests\Support\Annotation;
 
 use PHPUnit\Framework\TestCase;
 use Rice\Basic\Support\Annotation\Annotation;
-use Tests\Support\Annotation\Cat;
 
 class AnnotationTest extends TestCase
 {
