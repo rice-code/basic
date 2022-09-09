@@ -4,11 +4,11 @@
 namespace Tests\Support\Entity;
 
 
-use Rice\Basic\Support\Traits\AutoFillTrait;
+use Rice\Basic\Support\Traits\AutoFillProperties;
 
 class Speak
 {
-    use AutoFillTrait;
+    use AutoFillProperties;
 
     public $language;
 }

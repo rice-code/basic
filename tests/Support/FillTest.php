@@ -24,7 +24,6 @@ class FillTest extends TestCase
         ];
 
         $cat = new Cat($params);
-
         $this->assertEquals('big eyes', $cat->eyes);
         $this->assertNull($cat->eat);
         $this->assertEquals('english', $cat->speak->language);

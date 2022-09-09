@@ -4,12 +4,12 @@
 namespace Tests\Support\Annotation;
 
 use Rice\Basic\Support\Traits\Accessor;
-use Rice\Basic\Support\Traits\AutoFillTrait;
+use Rice\Basic\Support\Traits\AutoFillProperties;
 use Tests\Support\Entity\Speak;
 
 class Cat
 {
-    use AutoFillTrait, Accessor;
+    use AutoFillProperties, Accessor;
 
     /**
      * 眼睛

@@ -75,12 +75,12 @@ class Lang
         return $this;
     }
 
-    public function getMessage($key): string
+    public function getMessage(string $key): string
     {
         return $this->messages[$key];
     }
 
-    public function existKey($key): bool
+    public function existKey(string $key): bool
     {
         return isset($this->messages[$key]);
     }

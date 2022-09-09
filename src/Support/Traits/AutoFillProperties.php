@@ -13,14 +13,19 @@ use Rice\Basic\Support\DataExtract;
 use Rice\Basic\Support\Debug;
 use Rice\Basic\Support\verify;
 
-trait AutoFillTrait
+trait AutoFillProperties
 {
     private $_params;
     private $_propertyArr;
     private $_cache;
+    private $_idx;
 
-    public function __construct($params, $idx = '', AutoFillCacheContract $cache = null)
+    public function __construct($params, AutoFillCacheContract $cache = null, $idx = '')
     {
+        if (empty($params)) {
+            return;
+        }
+
         if (!is_object($params) || !is_array($params)) {
             new TypeException(TypeException::INVALID_TYPE);
         }
@@ -32,23 +37,22 @@ trait AutoFillTrait
         $this->_params      = $params;
         $this->_propertyArr = (new Annotation($cache))->execute($this)->getProperty();
         $this->_cache       = $cache;
+        $this->_idx         = $idx;
 
-        if (!empty($this->_params)) {
-            $this->handle($idx);
-        }
+        $this->handle();
     }
 
-    protected function handle($idx): void
+    protected function handle(): void
     {
         $this->beforeFillHook($params);
 
-        $this->fill($idx);
+        $this->fill();
 
         $this->afterFillHook($params);
 
     }
 
-    public function fill($idx): void
+    public function fill(): void
     {
         $propertyArr = DataExtract::getCamelCase($this->_propertyArr, get_class($this));
 
@@ -59,8 +63,8 @@ trait AutoFillTrait
 
             $propertyName = snake_case_to_camel_case($name);
 
-            if ($idx) {
-                $loopIdx = "{$idx}.{$propertyName}";
+            if ($this->_idx) {
+                $loopIdx = "{$this->_idx}.{$propertyName}";
             } else {
                 $loopIdx = $propertyName;
             }
@@ -77,10 +81,10 @@ trait AutoFillTrait
                     $this->{$name} = null;
                 } elseif ($property->isArray) {
                     foreach ($value as $k => $v) {
-                        $this->{$name}[] = new $property->namespace($this->_params, "{$loopIdx}.{$k}", $this->_cache);
+                        $this->{$name}[] = new $property->namespace($this->_params, $this->_cache, "{$loopIdx}.{$k}");
                     }
                 } else {
-                    $this->{$name} = new $property->namespace($this->_params, $loopIdx, $this->_cache);
+                    $this->{$name} = new $property->namespace($this->_params, $this->_cache, $loopIdx);
                 }
             } elseif ($property->isArray) {
                 foreach ($value as $k => $v) {

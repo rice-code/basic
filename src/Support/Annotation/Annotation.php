@@ -68,13 +68,13 @@ class Annotation
      */
     public function buildClass($class): self
     {
-        $this->class = new ReflectionClass($class);
-        $classNamespace = $this->class->getName();
+        $this->class     = new ReflectionClass($class);
+        $classNamespace  = $this->class->getName();
         $modifyTimestamp = $classNamespace . '_timestamp';
-        $classFileName = $this->class->getFileName();
+        $classFileName   = $this->class->getFileName();
         if (Decide::notNull($this->cache)) {
             $modifyTime = $this->cache->get($modifyTimestamp);
-            $content = json_decode($this->cache->get($classNamespace), true);
+            $content    = json_decode($this->cache->get($classNamespace), true);
             if (Decide::notNullAndNotEmpty($content) && $modifyTime == filemtime($classFileName)) {
                 $this->fileNamespaceMap = $content;
                 return $this;
@@ -90,21 +90,22 @@ class Annotation
         return $this;
     }
 
-    public function analysisAttr()
+    public function analysisAttr(): void
     {
         $properties = $this->class->getProperties(\ReflectionProperty::IS_PUBLIC);
-        $pattern = '/.*@var\s+(\S+)/';
-        $className = $this->class->getName();
+        $pattern    = '/.*@var\s+(\S+)/';
+        $className  = $this->class->getName();
         foreach ($properties as $property) {
             $matches = [];
             preg_match($pattern, $property->getDocComment(), $matches);
             if (isset($matches[1]) && !empty($matches[1])) {
-                $docProperty = (new Property($matches[1]));
+                $docProperty                                    = (new Property($matches[1]));
                 $this->propertyMap[$className][$property->name] = $docProperty;
-                $docProperty->namespace = $this->selectNamespace($docProperty);
-            } else {
-                $this->propertyMap[$className][$property->name] = null;
+                $docProperty->namespace                         = $this->selectNamespace($docProperty);
+                continue;
             }
+
+            $this->propertyMap[$className][$property->name] = null;
         }
     }
 
@@ -117,13 +118,13 @@ class Annotation
         $fileNamespaceMap = $this->fileNamespaceMap[$this->class->getName()];
         if (class_exists($namespace = $fileNamespaceMap['this'] . '\\' . $property->name)) {
             $property->isClass = true;
-            $this->queue[] = $namespace;
+            $this->queue[]     = $namespace;
             return $namespace;
         }
 
         if (isset($fileNamespaceMap[$property->name]) && class_exists($namespace = $fileNamespaceMap[$property->name] . '\\' . $property->name)) {
             $property->isClass = true;
-            $this->queue[] = $namespace;
+            $this->queue[]     = $namespace;
             return $namespace;
         }
 
