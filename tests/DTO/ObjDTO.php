@@ -3,7 +3,7 @@
 namespace Tests\DTO;
 
 
-use Rice\Basic\Dto\BaseDTO;
+use Rice\Basic\DTO\BaseDTO;
 
 /**
  * @method getName() 获取名称

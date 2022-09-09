@@ -5,9 +5,9 @@ namespace Tests\DTO;
 use PHPUnit\Framework\TestCase;
 
 
-class DtoTest extends TestCase
+class DTOTest extends TestCase
 {
-    public function testSetElement()
+    public function testSetElement(): void
     {
         $dto = new ObjDTO();
         $dto->setName('tests');
