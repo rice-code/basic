@@ -2,7 +2,6 @@
 
 namespace Rice\Basic\Support;
 
-
 use Rice\Basic\Support\Traits\Accessor;
 
 /**
@@ -10,7 +9,6 @@ use Rice\Basic\Support\Traits\Accessor;
  * @method self setPrintEndTxt($txt) 设置输出尾文本
  *
  * Class Debug
- * @package Rice\Basic\Support
  */
 class Debug
 {
@@ -26,7 +24,7 @@ class Debug
     public $takeTimeMap;
 
     /**
-     * 设置时间点
+     * 设置时间点.
      * @param $key
      * @param $value
      * @return $this
@@ -34,11 +32,12 @@ class Debug
     public function setTakeTime($key, $value): self
     {
         $this->takeTimeMap[$key] = $value;
+
         return $this;
     }
 
     /**
-     * 打印耗时
+     * 打印耗时.
      * @param string $start
      * @param string $end
      * @return string
@@ -48,11 +47,12 @@ class Debug
         // 单位秒
         $useTime = number_format($this->takeTimeMap[$end] - $this->takeTimeMap[$start], 6);
         var_dump("耗时：{$useTime} 秒");
+
         return $useTime;
     }
 
     /**
-     * 块状打印
+     * 块状打印.
      * @param mixed ...$args
      */
     public static function blockPrint(...$args): void
