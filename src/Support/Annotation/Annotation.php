@@ -7,7 +7,8 @@ use Rice\Basic\Support\Contracts\AutoFillCacheContract;
 use Rice\Basic\Support\Decide;
 use Rice\Basic\Support\FileNamespace;
 
-class Annotation {
+class Annotation
+{
     /**
      * 缓存实体.
      * @var AutoFillCacheContract
@@ -38,11 +39,13 @@ class Annotation {
      */
     private $queue;
 
-    public function __construct($cache = null) {
+    public function __construct($cache = null)
+    {
         $this->cache = $cache;
     }
 
-    public function execute($class): self {
+    public function execute($class): self
+    {
         // 构建命名空间
         $this->queue[] = $class;
         while (!empty($this->queue)) {
@@ -61,7 +64,8 @@ class Annotation {
      * @return $this
      * @throws \ReflectionException
      */
-    public function buildClass($class): self {
+    public function buildClass($class): self
+    {
         $this->class     = new ReflectionClass($class);
         $classNamespace  = $this->class->getName();
         $modifyTimestamp = $classNamespace . '_timestamp';
@@ -85,7 +89,8 @@ class Annotation {
         return $this;
     }
 
-    public function analysisAttr(): void {
+    public function analysisAttr(): void
+    {
         $properties = $this->class->getProperties(\ReflectionProperty::IS_PUBLIC);
         $pattern    = '/.*@var\s+(\S+)/';
         $className  = $this->class->getName();
@@ -108,7 +113,8 @@ class Annotation {
      * @param $property
      * @return string
      */
-    public function selectNamespace(Property $property): string {
+    public function selectNamespace(Property $property): string
+    {
         $fileNamespaceMap = $this->fileNamespaceMap[$this->class->getName()];
         if (class_exists($namespace = $fileNamespaceMap['this'] . '\\' . $property->name)) {
             $property->isClass = true;
@@ -127,15 +133,18 @@ class Annotation {
         return '';
     }
 
-    public function getFileName(): string {
+    public function getFileName(): string
+    {
         return $this->class->getFileName();
     }
 
-    public function getNamespaceList(): array {
+    public function getNamespaceList(): array
+    {
         return $this->fileNamespaceMap;
     }
 
-    public function getProperty(): array {
+    public function getProperty(): array
+    {
         // 兼容类无 public 变量问题
         return $this->propertyMap ?? [];
     }

@@ -2,7 +2,8 @@
 
 namespace Rice\Basic\Support\Annotation;
 
-class Property {
+class Property
+{
     /**
      * 属性类型.
      * @var string
@@ -27,7 +28,8 @@ class Property {
      */
     public $isClass = false;
 
-    public function __construct($name) {
+    public function __construct($name)
+    {
         if (false !== strpos($name, '[]')) {
             $this->isArray = true;
             $name          = str_replace('[]', '', $name);

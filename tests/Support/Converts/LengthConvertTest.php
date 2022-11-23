@@ -5,8 +5,10 @@ namespace Tests\Support\Converts;
 use PHPUnit\Framework\TestCase;
 use Rice\Basic\Support\converts\LengthConvert;
 
-class LengthConvertTest extends TestCase {
-    public function testLengthConvert(): void {
+class LengthConvertTest extends TestCase
+{
+    public function testLengthConvert(): void
+    {
         $lengthConvert = new LengthConvert('1', LengthConvert::METRIC_CM);
         $this->assertEquals('0.01', $lengthConvert->getNum(2));
 

@@ -6,8 +6,10 @@ use Rice\Basic\Enum\NameTypeBaseEnum;
 use Rice\Basic\Exception\CommonException;
 use Rice\Basic\Exception\DTOException;
 
-trait Accessor {
-    public function __call($name, $args) {
+trait Accessor
+{
+    public function __call($name, $args)
+    {
         preg_match('/^([sg]et)(.*)/', $name, $matchArr);
 
         $style    = $matchArr[1] ?? null;
@@ -33,11 +35,13 @@ trait Accessor {
         throw new DTOException(DTOException::METHOD_NOT_DEFINE);
     }
 
-    private function setValue($attrName, $args) {
+    private function setValue($attrName, $args)
+    {
         $this->{$attrName} = $args[0];
     }
 
-    private function getValue($attrName) {
+    private function getValue($attrName)
+    {
         return $this->{$attrName};
     }
 
@@ -48,7 +52,8 @@ trait Accessor {
      * @return array
      * @throws CommonException
      */
-    private function assignElement(object $obj, array $fields, int $nameType): array {
+    private function assignElement(object $obj, array $fields, int $nameType): array
+    {
         foreach (get_object_vars($obj) as $k => $v) {
             $key = $k;
 
@@ -91,15 +96,18 @@ trait Accessor {
         return $result ?? [];
     }
 
-    public function toArray($fields = []): array {
+    public function toArray($fields = []): array
+    {
         return $this->assignElement($this, $fields, NameTypeBaseEnum::UNLIMITED);
     }
 
-    public function toSnakeCaseArray($fields = []): array {
+    public function toSnakeCaseArray($fields = []): array
+    {
         return $this->assignElement($this, $fields, NameTypeBaseEnum::SNAKE_CASE);
     }
 
-    public function toCamelCaseArray($fields = []): array {
+    public function toCamelCaseArray($fields = []): array
+    {
         return $this->assignElement($this, $fields, NameTypeBaseEnum::CAMEL_CASE);
     }
 }

@@ -5,8 +5,10 @@ namespace Tests\Support;
 use PHPUnit\Framework\TestCase;
 use Rice\Basic\Support\DataExtract;
 
-class DataExtractTest extends TestCase {
-    public function testGet(): void {
+class DataExtractTest extends TestCase
+{
+    public function testGet(): void
+    {
         $json = '{"data": [{"number": 1}]}';
         $this->assertEquals(1, DataExtract::get($json, 'data.0.number'));
 

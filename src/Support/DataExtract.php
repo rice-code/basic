@@ -6,7 +6,8 @@ namespace Rice\Basic\Support;
  * 数据提取
  * Class DataExtract.
  */
-class DataExtract {
+class DataExtract
+{
     /**
      * @var bool 是否驼峰
      */
@@ -24,7 +25,8 @@ class DataExtract {
      * @param null                $default 默认值
      * @return mixed|null
      */
-    public static function get($source, $key, $default = null) {
+    public static function get($source, $key, $default = null)
+    {
         if (is_string($source)) {
             $source = json_decode($source, true);
         }
@@ -52,7 +54,8 @@ class DataExtract {
         return $source;
     }
 
-    public static function getCamelCase($source, $key, $default = null) {
+    public static function getCamelCase($source, $key, $default = null)
+    {
         self::$camelCase = true;
         $val             = self::get($source, $key, $default);
         self::$camelCase = false;
@@ -60,7 +63,8 @@ class DataExtract {
         return $val;
     }
 
-    public static function getSnakeCase($source, $key, $default = null) {
+    public static function getSnakeCase($source, $key, $default = null)
+    {
         self::$snakeCase = true;
         $val             = self::get($source, $key, $default);
         self::$snakeCase = false;

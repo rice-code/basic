@@ -4,6 +4,7 @@ namespace Tests\Support\Annotation;
 
 use Rice\Basic\Support\Traits\AutoFillProperties;
 
-class Eat {
+class Eat
+{
     use AutoFillProperties;
 }

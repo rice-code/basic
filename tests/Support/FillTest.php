@@ -5,8 +5,10 @@ namespace Tests\Support;
 use PHPUnit\Framework\TestCase;
 use Tests\Support\Annotation\Cat;
 
-class FillTest extends TestCase {
-    public function testAutoFill() {
+class FillTest extends TestCase
+{
+    public function testAutoFill()
+    {
         $params = [
             'eyes'  => 'big eyes',
             'speak' => [

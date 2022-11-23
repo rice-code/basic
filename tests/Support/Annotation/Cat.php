@@ -6,7 +6,8 @@ use Rice\Basic\Support\Traits\Accessor;
 use Rice\Basic\Support\Traits\AutoFillProperties;
 use Tests\Support\Entity\Speak;
 
-class Cat {
+class Cat
+{
     use AutoFillProperties;
     use Accessor;
 

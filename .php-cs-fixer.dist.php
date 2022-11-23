@@ -30,7 +30,6 @@ $rules = [
     'braces' => [
         'allow_single_line_anonymous_class_with_empty_body' => true,
         'allow_single_line_closure'                         => true,
-        'position_after_functions_and_oop_constructs'       => 'same',
     ],
 
     // Comment

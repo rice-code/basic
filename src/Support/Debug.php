@@ -10,7 +10,8 @@ use Rice\Basic\Support\Traits\Accessor;
  *
  * Class Debug
  */
-class Debug {
+class Debug
+{
     use Accessor;
 
     public const BLOCK_PRINT_FMT = '#----------%s---------------#';
@@ -30,7 +31,8 @@ class Debug {
      * @param $value
      * @return $this
      */
-    public function setTakeTime($key, $value): self {
+    public function setTakeTime($key, $value): self
+    {
         $this->takeTimeMap[$key] = $value;
 
         return $this;
@@ -42,7 +44,8 @@ class Debug {
      * @param string $end
      * @return string
      */
-    public function showTakeTime($start = 'start', $end = 'end'): string {
+    public function showTakeTime($start = 'start', $end = 'end'): string
+    {
         // 单位秒
         $useTime = number_format($this->takeTimeMap[$end] - $this->takeTimeMap[$start], 6);
         var_dump("耗时：{$useTime} 秒");
@@ -54,7 +57,8 @@ class Debug {
      * 块状打印.
      * @param mixed ...$args
      */
-    public static function blockPrint(...$args): void {
+    public static function blockPrint(...$args): void
+    {
         var_dump(sprintf(self::BLOCK_PRINT_FMT, self::$printStartTxt));
         foreach ($args as $arg) {
             var_dump($arg);

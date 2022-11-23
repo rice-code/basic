@@ -4,7 +4,8 @@ namespace Rice\Basic\Support;
 
 use Rice\Basic\Exception\TypeException;
 
-class verify {
+class verify
+{
     /**
      * 是否开启强类型校验.
      * @var bool
@@ -17,7 +18,8 @@ class verify {
      * @param $value
      * @return bool
      */
-    public static function strongType($type, $value): bool {
+    public static function strongType($type, $value): bool
+    {
         switch ($type) {
             case 'string':
                 return is_string($value);
@@ -38,7 +40,8 @@ class verify {
      * @param $value
      * @throws TypeException
      */
-    public static function throwStrongType($type, $value): void {
+    public static function throwStrongType($type, $value): void
+    {
         if (self::$strongTypeIsEnable && !self::strongType($type, $value)) {
             throw new TypeException(TypeException::INVALID_TYPE);
         }

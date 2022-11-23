@@ -10,13 +10,15 @@ use Rice\Basic\Support\converts\TypeConvert;
 use Rice\Basic\Support\DataExtract;
 use Rice\Basic\Support\verify;
 
-trait AutoFillProperties {
+trait AutoFillProperties
+{
     private $_params;
     private $_propertyArr;
     private $_cache;
     private $_idx;
 
-    public function __construct($params, AutoFillCacheContract $cache = null, $idx = '') {
+    public function __construct($params, AutoFillCacheContract $cache = null, $idx = '')
+    {
         if (empty($params)) {
             return;
         }
@@ -37,7 +39,8 @@ trait AutoFillProperties {
         $this->handle();
     }
 
-    protected function handle(): void {
+    protected function handle(): void
+    {
         $this->beforeFillHook($params);
 
         $this->fill();
@@ -45,7 +48,8 @@ trait AutoFillProperties {
         $this->afterFillHook($params);
     }
 
-    public function fill(): void {
+    public function fill(): void
+    {
         $propertyArr = DataExtract::getCamelCase($this->_propertyArr, get_class($this));
 
         /**
@@ -90,9 +94,11 @@ trait AutoFillProperties {
         }
     }
 
-    public function beforeFillHook(&$params): void {
+    public function beforeFillHook(&$params): void
+    {
     }
 
-    public function afterFillHook(&$params): void {
+    public function afterFillHook(&$params): void
+    {
     }
 }

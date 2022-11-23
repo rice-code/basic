@@ -5,7 +5,8 @@ namespace Rice\Basic\Support\converts;
 use Rice\Basic\Exception\CalculateException;
 use Rice\Basic\Exception\CommonException;
 
-abstract class BaseMeter {
+abstract class BaseMeter
+{
     /**
      * 数值
      * @var string
@@ -30,7 +31,8 @@ abstract class BaseMeter {
      */
     protected $unit;
 
-    public function __construct(string $num, string $unit, $scale = 4) {
+    public function __construct(string $num, string $unit, $scale = 4)
+    {
         if (is_null($this->anchorPointUnit)) {
             throw new CommonException(CommonException::CLASS_PROPERTY_IS_NOT_OVERRIDDEN);
         }
@@ -46,7 +48,8 @@ abstract class BaseMeter {
      * @param int    $scale
      * @return $this
      */
-    public function add(string $num, $scale = 0): self {
+    public function add(string $num, $scale = 0): self
+    {
         $this->num = bcadd($this->num, $num, $scale);
 
         return $this;
@@ -57,7 +60,8 @@ abstract class BaseMeter {
      * @param int|null $scale
      * @return $this
      */
-    public function sub(string $num, ?int $scale = 0): self {
+    public function sub(string $num, ?int $scale = 0): self
+    {
         $this->num = bcsub($this->num, $num, $scale);
 
         return $this;
@@ -69,7 +73,8 @@ abstract class BaseMeter {
      * @param int    $scale
      * @return $this
      */
-    public function mul(string $num, $scale = 0): self {
+    public function mul(string $num, $scale = 0): self
+    {
         $this->num = bcmul($this->num, $num, $scale);
 
         return $this;
@@ -82,7 +87,8 @@ abstract class BaseMeter {
      * @return $this
      * @throws CalculateException
      */
-    public function div(string $num, $scale = 0): self {
+    public function div(string $num, $scale = 0): self
+    {
         if ('' === $num || '0' === $num) {
             throw new CalculateException(CalculateException::CANNOT_DIVIDE_BY_ZERO);
         }
@@ -98,7 +104,8 @@ abstract class BaseMeter {
      * @param int    $scale
      * @return $this
      */
-    public function mod(string $num, $scale = 0): self {
+    public function mod(string $num, $scale = 0): self
+    {
         $this->num = bcmod($this->num, $num, $scale);
 
         return $this;
@@ -110,7 +117,8 @@ abstract class BaseMeter {
      * @param int    $scale
      * @return $this
      */
-    public function pow(string $exponent, $scale = 0): self {
+    public function pow(string $exponent, $scale = 0): self
+    {
         $this->num = bcpow($this->num, $exponent, $scale);
 
         return $this;
@@ -123,7 +131,8 @@ abstract class BaseMeter {
      * @param int    $scale
      * @return $this
      */
-    public function powmod(string $exponent, string $modulus, int $scale = 0): self {
+    public function powmod(string $exponent, string $modulus, int $scale = 0): self
+    {
         $this->num = bcpowmod($this->num, $exponent, $modulus, $scale);
 
         return $this;
@@ -134,7 +143,8 @@ abstract class BaseMeter {
      * @param int $scale
      * @return $this
      */
-    public function sqrt(int $scale = 0): self {
+    public function sqrt(int $scale = 0): self
+    {
         $this->num = bcsqrt($this->num, $scale);
 
         return $this;
@@ -147,7 +157,8 @@ abstract class BaseMeter {
      * @param int    $scale
      * @return int
      */
-    public function comp(string $num, $scale = 0): int {
+    public function comp(string $num, $scale = 0): int
+    {
         return bccomp($this->num, $num, $scale);
     }
 
@@ -157,7 +168,8 @@ abstract class BaseMeter {
      * @param int    $scale
      * @return bool
      */
-    public function gt(string $num, $scale = 0): bool {
+    public function gt(string $num, $scale = 0): bool
+    {
         return 1 === $this->comp($num, $scale);
     }
 
@@ -167,7 +179,8 @@ abstract class BaseMeter {
      * @param int    $scale
      * @return bool
      */
-    public function lt(string $num, $scale = 0): bool {
+    public function lt(string $num, $scale = 0): bool
+    {
         return -1 === $this->comp($num, $scale);
     }
 
@@ -177,7 +190,8 @@ abstract class BaseMeter {
      * @param int    $scale
      * @return bool
      */
-    public function eq(string $num, $scale = 0): bool {
+    public function eq(string $num, $scale = 0): bool
+    {
         return 0 === $this->comp($num, $scale);
     }
 
@@ -186,7 +200,8 @@ abstract class BaseMeter {
      * @param int $scale
      * @return $this
      */
-    public function setScale(int $scale = 0): self {
+    public function setScale(int $scale = 0): self
+    {
         bcscale($scale);
 
         return $this;
@@ -197,7 +212,8 @@ abstract class BaseMeter {
      * @param int $scale
      * @return string
      */
-    public function getNum($scale = 0): string {
+    public function getNum($scale = 0): string
+    {
         return number_format($this->num, $scale, '.', '');
     }
 
@@ -207,7 +223,8 @@ abstract class BaseMeter {
      * @param int $scale
      * @return string
      */
-    public function to($unit, $scale = 4): string {
+    public function to($unit, $scale = 4): string
+    {
         $handle = $this->calculates[$unit];
         if (is_callable($handle)) {
             return $handle($this->num, true);
@@ -222,7 +239,8 @@ abstract class BaseMeter {
      * @param int $scale
      * @return $this
      */
-    protected function from($unit, $scale = 4): self {
+    protected function from($unit, $scale = 4): self
+    {
         $handle = $this->calculates[$unit];
         if (is_callable($handle)) {
             $this->num = $handle($this->num, false);

@@ -4,7 +4,8 @@ namespace Rice\Basic\Support;
 
 use Rice\Basic\Support\Traits\Singleton;
 
-class FileNamespace {
+class FileNamespace
+{
     use Singleton;
 
     public const START_PATTERN = '/^namespace\s+(.*);$/';
@@ -13,7 +14,8 @@ class FileNamespace {
 
     protected $objectMap = [];
 
-    public function analysisNamespaces($namespace, $rowData): bool {
+    public function analysisNamespaces($namespace, $rowData): bool
+    {
         $matches = [];
         if (preg_match(self::START_PATTERN, $rowData, $matches)) {
             $this->objectMap[$namespace]['this'] = $matches[1] ?? '';
@@ -32,7 +34,8 @@ class FileNamespace {
         return false;
     }
 
-    public function matchNamespace($namespace, $path): self {
+    public function matchNamespace($namespace, $path): self
+    {
         $file = (new File($path));
         $row  = $file->readLine();
         while ($row->valid()) {
@@ -47,7 +50,8 @@ class FileNamespace {
         return $this;
     }
 
-    public function getNamespaces(): array {
+    public function getNamespaces(): array
+    {
         return $this->objectMap;
     }
 }

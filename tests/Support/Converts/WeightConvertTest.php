@@ -5,8 +5,10 @@ namespace Tests\Support\Converts;
 use PHPUnit\Framework\TestCase;
 use Rice\Basic\Support\converts\WeightConvert;
 
-class WeightConvertTest extends TestCase {
-    public function testLengthConvert(): void {
+class WeightConvertTest extends TestCase
+{
+    public function testLengthConvert(): void
+    {
         $weightConvert = new WeightConvert('1', WeightConvert::METRIC_G);
         $this->assertEquals('0.001', $weightConvert->getNum(3));
 

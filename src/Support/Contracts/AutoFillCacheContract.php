@@ -2,7 +2,8 @@
 
 namespace Rice\Basic\Support\Contracts;
 
-interface AutoFillCacheContract {
+interface AutoFillCacheContract
+{
     public function set($key, $value);
 
     public function get($key);

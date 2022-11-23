@@ -1,7 +1,8 @@
 <?php
 
 if (!function_exists('dd')) {
-    function dd($vars) {
+    function dd($vars)
+    {
         var_dump($vars);
         exit();
     }

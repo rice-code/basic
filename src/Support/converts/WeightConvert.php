@@ -2,7 +2,8 @@
 
 namespace Rice\Basic\Support\converts;
 
-class WeightConvert extends BaseMeter {
+class WeightConvert extends BaseMeter
+{
     // 公制
     public const METRIC_T  = 't';          // 吨
     public const METRIC_KG = 'kg';         // 千克

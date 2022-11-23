@@ -9,6 +9,7 @@ use Rice\Basic\DTO\BaseDTO;
  * @method setName(string $string)
  * Class ObjDTOBase
  */
-class ObjDTO extends BaseDTO {
+class ObjDTO extends BaseDTO
+{
     public $name;
 }
