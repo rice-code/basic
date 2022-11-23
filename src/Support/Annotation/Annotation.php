@@ -1,53 +1,48 @@
 <?php
 
-
 namespace Rice\Basic\Support\Annotation;
-
 
 use ReflectionClass;
 use Rice\Basic\Support\Contracts\AutoFillCacheContract;
 use Rice\Basic\Support\Decide;
 use Rice\Basic\Support\FileNamespace;
 
-class Annotation
-{
+class Annotation {
     /**
-     * 缓存实体
+     * 缓存实体.
      * @var AutoFillCacheContract
      */
     private $cache;
 
     /**
-     * 反射类
+     * 反射类.
      * @var ReflectionClass
      */
     private $class;
 
     /**
-     * 属性映射数组
+     * 属性映射数组.
      * @var array
      */
     private $propertyMap;
 
     /**
-     * 命名空间映射数组
+     * 命名空间映射数组.
      * @var array
      */
     private $fileNamespaceMap = [];
 
     /**
-     * 对象属性解析队列
+     * 对象属性解析队列.
      * @var array
      */
     private $queue;
 
-    public function __construct($cache = null)
-    {
+    public function __construct($cache = null) {
         $this->cache = $cache;
     }
 
-    public function execute($class): Annotation
-    {
+    public function execute($class): self {
         // 构建命名空间
         $this->queue[] = $class;
         while (!empty($this->queue)) {
@@ -61,13 +56,12 @@ class Annotation
     }
 
     /**
-     * 构建反射类
+     * 构建反射类.
      * @param $class
      * @return $this
      * @throws \ReflectionException
      */
-    public function buildClass($class): self
-    {
+    public function buildClass($class): self {
         $this->class     = new ReflectionClass($class);
         $classNamespace  = $this->class->getName();
         $modifyTimestamp = $classNamespace . '_timestamp';
@@ -77,6 +71,7 @@ class Annotation
             $content    = json_decode($this->cache->get($classNamespace), true);
             if (Decide::notNullAndNotEmpty($content) && $modifyTime == filemtime($classFileName)) {
                 $this->fileNamespaceMap = $content;
+
                 return $this;
             }
         }
@@ -90,8 +85,7 @@ class Annotation
         return $this;
     }
 
-    public function analysisAttr(): void
-    {
+    public function analysisAttr(): void {
         $properties = $this->class->getProperties(\ReflectionProperty::IS_PUBLIC);
         $pattern    = '/.*@var\s+(\S+)/';
         $className  = $this->class->getName();
@@ -102,6 +96,7 @@ class Annotation
                 $docProperty                                    = (new Property($matches[1]));
                 $this->propertyMap[$className][$property->name] = $docProperty;
                 $docProperty->namespace                         = $this->selectNamespace($docProperty);
+
                 continue;
             }
 
@@ -113,36 +108,34 @@ class Annotation
      * @param $property
      * @return string
      */
-    public function selectNamespace(Property $property): string
-    {
+    public function selectNamespace(Property $property): string {
         $fileNamespaceMap = $this->fileNamespaceMap[$this->class->getName()];
         if (class_exists($namespace = $fileNamespaceMap['this'] . '\\' . $property->name)) {
             $property->isClass = true;
             $this->queue[]     = $namespace;
+
             return $namespace;
         }
 
         if (isset($fileNamespaceMap[$property->name]) && class_exists($namespace = $fileNamespaceMap[$property->name] . '\\' . $property->name)) {
             $property->isClass = true;
             $this->queue[]     = $namespace;
+
             return $namespace;
         }
 
         return '';
     }
 
-    public function getFileName(): string
-    {
+    public function getFileName(): string {
         return $this->class->getFileName();
     }
 
-    public function getNamespaceList(): array
-    {
+    public function getNamespaceList(): array {
         return $this->fileNamespaceMap;
     }
 
-    public function getProperty(): array
-    {
+    public function getProperty(): array {
         // 兼容类无 public 变量问题
         return $this->propertyMap ?? [];
     }

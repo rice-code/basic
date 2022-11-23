@@ -1,8 +1,6 @@
 <?php
 
-
 namespace Rice\Basic\Support\Traits;
-
 
 use Rice\Basic\Exception\TypeException;
 use Rice\Basic\Support\Annotation\Annotation;
@@ -10,18 +8,15 @@ use Rice\Basic\Support\Annotation\Property;
 use Rice\Basic\Support\Contracts\AutoFillCacheContract;
 use Rice\Basic\Support\converts\TypeConvert;
 use Rice\Basic\Support\DataExtract;
-use Rice\Basic\Support\Debug;
 use Rice\Basic\Support\verify;
 
-trait AutoFillProperties
-{
+trait AutoFillProperties {
     private $_params;
     private $_propertyArr;
     private $_cache;
     private $_idx;
 
-    public function __construct($params, AutoFillCacheContract $cache = null, $idx = '')
-    {
+    public function __construct($params, AutoFillCacheContract $cache = null, $idx = '') {
         if (empty($params)) {
             return;
         }
@@ -42,25 +37,21 @@ trait AutoFillProperties
         $this->handle();
     }
 
-    protected function handle(): void
-    {
+    protected function handle(): void {
         $this->beforeFillHook($params);
 
         $this->fill();
 
         $this->afterFillHook($params);
-
     }
 
-    public function fill(): void
-    {
+    public function fill(): void {
         $propertyArr = DataExtract::getCamelCase($this->_propertyArr, get_class($this));
 
         /**
-         * @var $property Property
+         * @var Property $property
          */
         foreach ($propertyArr as $name => $property) {
-
             $propertyName = snake_case_to_camel_case($name);
 
             if ($this->_idx) {
@@ -73,6 +64,7 @@ trait AutoFillProperties
 
             if (is_null($property)) {
                 $this->{$name} = $value;
+
                 continue;
             }
 
@@ -98,11 +90,9 @@ trait AutoFillProperties
         }
     }
 
-    public function beforeFillHook(&$params): void
-    {
+    public function beforeFillHook(&$params): void {
     }
 
-    public function afterFillHook(&$params): void
-    {
+    public function afterFillHook(&$params): void {
     }
 }

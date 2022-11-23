@@ -2,7 +2,5 @@
 
 namespace Rice\Basic\Enum;
 
-
-abstract class BaseEnum
-{
+abstract class BaseEnum {
 }

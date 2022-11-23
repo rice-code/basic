@@ -4,27 +4,25 @@ namespace Rice\Basic\Support;
 
 use Rice\Basic\Support\Traits\Singleton;
 
-class FileNamespace
-{
+class FileNamespace {
     use Singleton;
 
     public const START_PATTERN = '/^namespace\s+(.*);$/';
-    public const END_PATTERN = '/^class\s*(.*)$/';
-    public const USE_PATTERN = '/^use\s*([\S]+)[\s*;](?:AS|as)?\s*(\w*)[;]?$/';
+    public const END_PATTERN   = '/^class\s*(.*)$/';
+    public const USE_PATTERN   = '/^use\s*([\S]+)[\s*;](?:AS|as)?\s*(\w*)[;]?$/';
 
     protected $objectMap = [];
 
-    public function analysisNamespaces($namespace, $rowData): bool
-    {
+    public function analysisNamespaces($namespace, $rowData): bool {
         $matches = [];
         if (preg_match(self::START_PATTERN, $rowData, $matches)) {
             $this->objectMap[$namespace]['this'] = $matches[1] ?? '';
         } elseif (preg_match(self::USE_PATTERN, $rowData, $matches)) {
             $useNamespace = $matches[1] ?? '';
-            $alias = $matches[2] ?? '';
+            $alias        = $matches[2] ?? '';
             if ($useNamespace) {
-                $words = explode('\\', $useNamespace);
-                $alias = array_pop($words);
+                $words                               = explode('\\', $useNamespace);
+                $alias                               = array_pop($words);
                 $this->objectMap[$namespace][$alias] = implode('\\', $words);
             }
         } elseif (preg_match(self::END_PATTERN, $rowData, $matches)) {
@@ -34,10 +32,9 @@ class FileNamespace
         return false;
     }
 
-    public function matchNamespace($namespace, $path): FileNamespace
-    {
+    public function matchNamespace($namespace, $path): self {
         $file = (new File($path));
-        $row = $file->readLine();
+        $row  = $file->readLine();
         while ($row->valid()) {
             $isDone = $this->analysisNamespaces($namespace, $row->current());
             if ($isDone) {
@@ -46,11 +43,11 @@ class FileNamespace
             $row->next();
         }
         $file->close();
+
         return $this;
     }
 
-    public function getNamespaces(): array
-    {
+    public function getNamespaces(): array {
         return $this->objectMap;
     }
 }

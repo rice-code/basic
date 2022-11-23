@@ -2,9 +2,7 @@
 
 namespace Rice\Basic\Support\converts;
 
-
-class LengthConvert extends BaseMeter
-{
+class LengthConvert extends BaseMeter {
     // 公制
     public const METRIC_KM = 'km';  // 千米
     public const METRIC_M  = 'm';   // 米
@@ -20,7 +18,7 @@ class LengthConvert extends BaseMeter
 
     /**
      * @overwrite
-     * @var string $anchorPointUnit
+     * @var string
      */
     protected $anchorPointUnit = self::METRIC_M;
 

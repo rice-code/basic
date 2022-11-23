@@ -1,18 +1,13 @@
 <?php
 
-
 namespace Lang;
 
-
 use PHPUnit\Framework\TestCase;
-use Rice\Basic\Enum\BaseEnum;
 use Rice\Basic\Exception\CommonException;
 use Rice\Basic\Support\Lang;
 
-class LangTest extends TestCase
-{
-    public function testLang(): void
-    {
+class LangTest extends TestCase {
+    public function testLang(): void {
         $this->assertEquals(
             'string is empty',
             Lang::getInstance()

@@ -2,10 +2,7 @@
 
 namespace Rice\Basic\Support\converts;
 
-
-class WeightConvert extends BaseMeter
-{
-
+class WeightConvert extends BaseMeter {
     // 公制
     public const METRIC_T  = 't';          // 吨
     public const METRIC_KG = 'kg';         // 千克
@@ -21,18 +18,18 @@ class WeightConvert extends BaseMeter
 
     /**
      * @overwrite
-     * @var string $anchorPointUnit
+     * @var string
      */
     protected $anchorPointUnit = self::METRIC_KG;
 
     protected $calculates = [
         // 公制
         self::METRIC_T    => '1000',
-        self::METRIC_KG => '1',
-        self::METRIC_G  => '0.001',
-        self::METRIC_MG => '0.000001',
+        self::METRIC_KG   => '1',
+        self::METRIC_G    => '0.001',
+        self::METRIC_MG   => '0.000001',
         // 常衡制
-        self::BRITISH_ST => '6.35029',
+        self::BRITISH_ST  => '6.35029',
         self::BRITISH_UKT => '1016.047',
         self::BRITISH_UST => '907.1847',
         self::BRITISH_LB  => '0.453592',

@@ -1,11 +1,8 @@
 <?php
 
-
 namespace Rice\Basic\Exception;
 
-
-class CommonException extends BaseException
-{
+class CommonException extends BaseException {
     public const STRING_IS_EMPTY = 'string_is_empty';
 
     public const INVALID_PARAM = 'invalid_param';
@@ -14,8 +11,7 @@ class CommonException extends BaseException
 
     public const CLASS_PROPERTY_IS_NOT_OVERRIDDEN = 'class_property_is_not_overridden';
 
-    public static function getLangName(): string
-    {
+    public static function getLangName(): string {
         return 'common';
     }
 }

@@ -1,26 +1,21 @@
 <?php
 
-
 namespace Tests\Support;
 
-
 use PHPUnit\Framework\TestCase;
-use Rice\Basic\Support\Debug;
 use Tests\Support\Annotation\Cat;
 
-class FillTest extends TestCase
-{
-    public function testAutoFill()
-    {
+class FillTest extends TestCase {
+    public function testAutoFill() {
         $params = [
             'eyes'  => 'big eyes',
             'speak' => [
-                'language' => 'english'
+                'language' => 'english',
             ],
             'hair'  => [
                 'short',
-                'long'
-            ]
+                'long',
+            ],
         ];
 
         $cat = new Cat($params);

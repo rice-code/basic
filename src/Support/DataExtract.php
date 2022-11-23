@@ -4,10 +4,9 @@ namespace Rice\Basic\Support;
 
 /**
  * 数据提取
- * Class DataExtract
+ * Class DataExtract.
  */
-class DataExtract
-{
+class DataExtract {
     /**
      * @var bool 是否驼峰
      */
@@ -19,14 +18,13 @@ class DataExtract
     public static $snakeCase = false;
 
     /**
-     * 数据提取
-     * @param string|array|object $source 数据源
-     * @param string $key 提取key
-     * @param null $default 默认值
+     * 数据提取.
+     * @param string|array|object $source  数据源
+     * @param string              $key     提取key
+     * @param null                $default 默认值
      * @return mixed|null
      */
-    public static function get($source, $key, $default = null)
-    {
+    public static function get($source, $key, $default = null) {
         if (is_string($source)) {
             $source = json_decode($source, true);
         }
@@ -37,7 +35,6 @@ class DataExtract
 
         $keys = explode('.', $key);
         foreach ($keys as $name) {
-
             if (self::$camelCase) {
                 $name = snake_case_to_camel_case($name);
             }
@@ -51,22 +48,21 @@ class DataExtract
             }
             $source = $source[$name];
         }
+
         return $source;
     }
 
-    public static function getCamelCase($source, $key, $default = null)
-    {
+    public static function getCamelCase($source, $key, $default = null) {
         self::$camelCase = true;
-        $val = self::get($source, $key, $default);
+        $val             = self::get($source, $key, $default);
         self::$camelCase = false;
 
         return $val;
     }
 
-    public static function getSnakeCase($source, $key, $default = null)
-    {
+    public static function getSnakeCase($source, $key, $default = null) {
         self::$snakeCase = true;
-        $val = self::get($source, $key, $default);
+        $val             = self::get($source, $key, $default);
         self::$snakeCase = false;
 
         return $val;

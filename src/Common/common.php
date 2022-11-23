@@ -1,12 +1,10 @@
 <?php
 
 use Rice\Basic\Exception\CommonException;
-use Rice\Basic\Lang;
 
 // 大写字母判断
 if (!function_exists('is_upper')) {
-    function is_upper(string $str)
-    {
+    function is_upper(string $str) {
         if (strlen($str) > 1) {
             throw new CommonException(CommonException::INVALID_PARAM);
         }
@@ -21,8 +19,7 @@ if (!function_exists('is_upper')) {
 
 // 小写字母判断
 if (!function_exists('is_lower')) {
-    function is_lower(string $str)
-    {
+    function is_lower(string $str) {
         if (strlen($str) > 1) {
             throw new CommonException(CommonException::INVALID_PARAM);
         }
@@ -35,23 +32,21 @@ if (!function_exists('is_lower')) {
     }
 }
 
-
 // 驼峰转蛇形
 if (!function_exists('camel_case_to_snake_case')) {
-    function camel_case_to_snake_case($name)
-    {
-
+    function camel_case_to_snake_case($name) {
         $len = strlen($name);
 
-        if ($len === 0) {
+        if (0 === $len) {
             throw new CommonException(CommonException::INVALID_PARAM);
         }
 
         $newName = $name[0];
-        for ($i = 1; $i < $len; $i++) {
+        for ($i = 1; $i < $len; ++$i) {
             $char = $name[$i];
             if (is_upper($char)) {
                 $newName .= '_' . strtolower($char);
+
                 continue;
             }
 
@@ -64,17 +59,18 @@ if (!function_exists('camel_case_to_snake_case')) {
 
 // 蛇形转驼峰
 if (!function_exists('snake_case_to_camel_case')) {
-    function snake_case_to_camel_case($name)
-    {
+    function snake_case_to_camel_case($name) {
         $newName = '';
         $wordArr = explode('_', $name);
         foreach ($wordArr as $word) {
-            if ($newName == '') {
+            if ('' == $newName) {
                 $newName .= $word;
+
                 continue;
             }
             $newName .= ucfirst($word);
         }
+
         return $newName;
     }
 }

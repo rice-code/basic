@@ -1,11 +1,8 @@
 <?php
 
-
 namespace Rice\Basic\Exception;
 
-
-class CodeException extends BaseException
-{
+class CodeException extends BaseException {
     // 成功
     public const SUCCESS = 0;
     // 参数非法
@@ -15,8 +12,7 @@ class CodeException extends BaseException
     // 异常中断
     public const ABNORMAL_INTERRUPT = 100003;
 
-    public static function getLangName(): string
-    {
+    public static function getLangName(): string {
         return 'code';
     }
 }

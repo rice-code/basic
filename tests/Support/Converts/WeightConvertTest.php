@@ -1,16 +1,12 @@
 <?php
 
-
 namespace Tests\Support\Converts;
-
 
 use PHPUnit\Framework\TestCase;
 use Rice\Basic\Support\converts\WeightConvert;
 
-class WeightConvertTest extends TestCase
-{
-    public function testLengthConvert(): void
-    {
+class WeightConvertTest extends TestCase {
+    public function testLengthConvert(): void {
         $weightConvert = new WeightConvert('1', WeightConvert::METRIC_G);
         $this->assertEquals('0.001', $weightConvert->getNum(3));
 
@@ -20,6 +16,5 @@ class WeightConvertTest extends TestCase
         $this->assertEquals('6.3', $weightConvert->to(WeightConvert::BRITISH_ST, 1));
 
         $this->assertEquals('0.0283', $weightConvert->to(WeightConvert::BRITISH_OZ));
-
     }
 }

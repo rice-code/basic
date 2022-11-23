@@ -4,7 +4,6 @@ namespace Rice\Basic\Entity;
 
 use Rice\Basic\Support\Traits\Accessor;
 
-class BaseEntity
-{
+class BaseEntity {
     use Accessor;
 }
