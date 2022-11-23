@@ -45,8 +45,6 @@ $rules = [
     'self_accessor'                              => true, // 在当前类中使用 self 代替类名
     'php_unit_construct'                         => true,
     'single_quote'                               => true,                 // 简单字符串应该使用单引号代替双引号
-    'no_singleline_whitespace_before_semicolons' => true,                 // 禁止只有单行空格和分号的写法
-    'no_empty_statement'                         => true,                 // 多余的分号
     'no_whitespace_in_blank_line'                => true,                 // 删除空行中的空格
     'standardize_not_equals'                     => true,                 // 使用 <> 代替 !=
     'combine_consecutive_unsets'                 => true,                 // 当多个 unset 使用的时候，合并处理
@@ -72,7 +70,6 @@ $rules = [
     'phpdoc_line_span'                           => true,
     'no_empty_phpdoc'                            => true,
     'phpdoc_separation'                          => false, // 不同注释部分按照单空行隔开
-    'phpdoc_single_line_var_spacing'             => true,
     'phpdoc_indent'                              => true,
     'no_superfluous_phpdoc_tags'                 => false, // 删除没有提供有效信息的@param和@return注解
     'phpdoc_single_line_var_spacing'             => true,
@@ -87,8 +84,8 @@ $rules = [
 
     // Semicolon
     'multiline_whitespace_before_semicolons'     => true,
-    'no_empty_statement'                         => true,
-    'no_singleline_whitespace_before_semicolons' => true,
+    'no_empty_statement'                         => true, // 多余的分号
+    'no_singleline_whitespace_before_semicolons' => true, // 禁止只有单行空格和分号的写法
     'space_after_semicolon'                      => ['remove_in_empty_for_expressions' => true],
 
     'lowercase_cast'                     => true, // 类型强制小写
