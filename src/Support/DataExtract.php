@@ -2,6 +2,8 @@
 
 namespace Rice\Basic\Support;
 
+use Rice\Basic\Support\Utils\StrUtil;
+
 /**
  * 数据提取
  * Class DataExtract.
@@ -38,11 +40,11 @@ class DataExtract
         $keys = explode('.', $key);
         foreach ($keys as $name) {
             if (self::$camelCase) {
-                $name = snake_case_to_camel_case($name);
+                $name = StrUtil::snakeCaseToCamelCase($name);
             }
 
             if (self::$snakeCase) {
-                $name = camel_case_to_snake_case($name);
+                $name = StrUtil::camelCaseToSnakeCase($name);
             }
 
             if (!isset($source[$name])) {

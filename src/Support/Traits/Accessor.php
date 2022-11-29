@@ -5,6 +5,7 @@ namespace Rice\Basic\Support\Traits;
 use Rice\Basic\Enum\NameTypeBaseEnum;
 use Rice\Basic\Exception\CommonException;
 use Rice\Basic\Exception\DTOException;
+use Rice\Basic\Support\Utils\StrUtil;
 
 trait Accessor
 {
@@ -47,8 +48,8 @@ trait Accessor
 
     /**
      * @param object $obj
-     * @param array  $fields
-     * @param int    $nameType
+     * @param array $fields
+     * @param int $nameType
      * @return array
      * @throws CommonException
      */
@@ -63,11 +64,11 @@ trait Accessor
 
             switch ($nameType) {
                 case NameTypeBaseEnum::CAMEL_CASE:
-                    $key = snake_case_to_camel_case($key);
+                    $key = StrUtil::snakeCaseToCamelCase($key);
 
                     break;
                 case NameTypeBaseEnum::SNAKE_CASE:
-                    $key = camel_case_to_snake_case($key);
+                    $key = StrUtil::camelCaseToSnakeCase($key);
 
                     break;
             }

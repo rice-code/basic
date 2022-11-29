@@ -3,7 +3,7 @@
 namespace Tests\Support\Converts;
 
 use PHPUnit\Framework\TestCase;
-use Rice\Basic\Support\converts\WeightConvert;
+use Rice\Basic\Support\Converts\WeightConvert;
 
 class WeightConvertTest extends TestCase
 {

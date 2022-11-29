@@ -11,7 +11,8 @@ class FileNamespaceTest extends TestCase
     public function testGetNamespaces(): void
     {
         FileNamespace::getInstance()->matchNamespace(Cat::class, __DIR__ . DIRECTORY_SEPARATOR . 'Annotation' . DIRECTORY_SEPARATOR . 'Cat.php');
-        $namespaces = FileNamespace::getInstance()->getNamespaces();
-        $this->assertArrayHasKey(Cat::class, $namespaces);
+        $uses = FileNamespace::getInstance()->getUses();
+
+        $this->assertArrayHasKey(Cat::class, $uses);
     }
 }

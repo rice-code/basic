@@ -2,11 +2,13 @@
 
 namespace Tests\Support\Entity;
 
+use Rice\Basic\Support\Traits\Accessor;
 use Rice\Basic\Support\Traits\AutoFillProperties;
 
 class Speak
 {
     use AutoFillProperties;
+    use Accessor;
 
-    public $language;
+    protected $language;
 }

@@ -2,9 +2,9 @@
 
 namespace Tests\Support\Annotation;
 
+use Tests\Support\Entity\Speak as S;
 use Rice\Basic\Support\Traits\Accessor;
 use Rice\Basic\Support\Traits\AutoFillProperties;
-use Tests\Support\Entity\Speak;
 
 class Cat
 {
@@ -18,20 +18,20 @@ class Cat
      * @var    string
      * @Param $class
      */
-    public $eyes;
+    protected $eyes;
 
     /**
      * @var Eat
      */
-    public $eat;
+    protected $eat;
 
     /**
-     * @var Speak
+     * @var S
      */
-    public $speak;
+    protected $speak;
 
     /**
      * @var string[]
      */
-    public $hair;
+    protected $hair;
 }

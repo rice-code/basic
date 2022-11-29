@@ -1,6 +1,6 @@
 <?php
 
-namespace Rice\Basic\Support\Annotation;
+namespace Rice\Basic\Support\Generate\Annotation;
 
 class Property
 {
@@ -8,7 +8,7 @@ class Property
      * 属性类型.
      * @var string
      */
-    public $name;
+    public $type;
 
     /**
      * 属性命名空间.
@@ -35,6 +35,6 @@ class Property
             $name          = str_replace('[]', '', $name);
         }
 
-        $this->name = $name;
+        $this->type = $name;
     }
 }

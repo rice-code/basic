@@ -1,6 +1,6 @@
 <?php
 
-namespace Rice\Basic\Support\converts;
+namespace Rice\Basic\Support\Converts;
 
 use Rice\Basic\Exception\CalculateException;
 use Rice\Basic\Exception\CommonException;

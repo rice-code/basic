@@ -1,6 +1,6 @@
 <?php
 
-namespace Rice\Basic\Support\converts;
+namespace Rice\Basic\Support\Converts;
 
 class LengthConvert extends BaseMeter
 {

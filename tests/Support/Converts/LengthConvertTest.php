@@ -3,7 +3,7 @@
 namespace Tests\Support\Converts;
 
 use PHPUnit\Framework\TestCase;
-use Rice\Basic\Support\converts\LengthConvert;
+use Rice\Basic\Support\Converts\LengthConvert;
 
 class LengthConvertTest extends TestCase
 {

@@ -2,18 +2,20 @@
 
 namespace Rice\Basic\Support\Traits;
 
-use Rice\Basic\Exception\TypeException;
-use Rice\Basic\Support\Annotation\Annotation;
-use Rice\Basic\Support\Annotation\Property;
-use Rice\Basic\Support\Contracts\AutoFillCacheContract;
-use Rice\Basic\Support\converts\TypeConvert;
-use Rice\Basic\Support\DataExtract;
+use Rice\Basic\Support\Generate\Annotation\Property;
 use Rice\Basic\Support\verify;
+use Rice\Basic\Support\DataExtract;
+use Rice\Basic\Support\Utils\StrUtil;
+use Rice\Basic\Exception\TypeException;
+use Rice\Basic\Support\Converts\TypeConvert;
+use Rice\Basic\Support\Generate\Annotation\Annotation;
+use Rice\Basic\Support\Contracts\AutoFillCacheContract;
 
 trait AutoFillProperties
 {
     private $_params;
     private $_propertyArr;
+    private $_alias;
     private $_cache;
     private $_idx;
 
@@ -32,7 +34,9 @@ trait AutoFillProperties
         }
 
         $this->_params      = $params;
-        $this->_propertyArr = (new Annotation($cache))->execute($this)->getProperty();
+        $annotation         = (new Annotation($cache));
+        $this->_propertyArr = $annotation->execute($this)->getProperty();
+        $this->_alias       = $annotation->getAlias();
         $this->_cache       = $cache;
         $this->_idx         = $idx;
 
@@ -56,7 +60,7 @@ trait AutoFillProperties
          * @var Property $property
          */
         foreach ($propertyArr as $name => $property) {
-            $propertyName = snake_case_to_camel_case($name);
+            $propertyName = StrUtil::snakeCaseToCamelCase($name);
 
             if ($this->_idx) {
                 $loopIdx = "{$this->_idx}.{$propertyName}";
@@ -84,11 +88,9 @@ trait AutoFillProperties
                 }
             } elseif ($property->isArray) {
                 foreach ($value as $k => $v) {
-                    verify::throwStrongType($property->name, $v);
                     $this->{$name}[] = $v;
                 }
             } else {
-                verify::throwStrongType($property->name, $value);
                 $this->{$name} = $value;
             }
         }

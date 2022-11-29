@@ -12,20 +12,27 @@ class FileNamespace
     public const END_PATTERN   = '/^class\s*(.*)$/';
     public const USE_PATTERN   = '/^use\s*([\S]+)[\s*;](?:AS|as)?\s*(\w*)[;]?$/';
 
-    protected $objectMap = [];
+    protected $uses = [];
 
-    public function analysisNamespaces($namespace, $rowData): bool
+    protected $alias = [];
+
+    public function analysisNamespaces($classNamespace, $rowData): bool
     {
         $matches = [];
         if (preg_match(self::START_PATTERN, $rowData, $matches)) {
-            $this->objectMap[$namespace]['this'] = $matches[1] ?? '';
+            $this->uses[$classNamespace]['this'] = $matches[1] ?? '';
         } elseif (preg_match(self::USE_PATTERN, $rowData, $matches)) {
             $useNamespace = $matches[1] ?? '';
-            $alias        = $matches[2] ?? '';
+            $as           = $matches[2] ?? '';
             if ($useNamespace) {
-                $words                               = explode('\\', $useNamespace);
-                $alias                               = array_pop($words);
-                $this->objectMap[$namespace][$alias] = implode('\\', $words);
+                $words   = explode('\\', $useNamespace);
+                $objName = array_pop($words);
+
+                if (!empty($as)) {
+                    $this->alias[$classNamespace][$as] = $objName;
+                }
+
+                $this->uses[$classNamespace][$objName] = implode('\\', $words);
             }
         } elseif (preg_match(self::END_PATTERN, $rowData, $matches)) {
             return true;
@@ -50,8 +57,13 @@ class FileNamespace
         return $this;
     }
 
-    public function getNamespaces(): array
+    public function getUses(): array
     {
-        return $this->objectMap;
+        return $this->uses;
+    }
+
+    public function getAlias(): array
+    {
+        return $this->alias;
     }
 }

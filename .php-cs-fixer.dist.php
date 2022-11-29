@@ -23,21 +23,21 @@ $rules = [
     // Array Notation
     'header_comment'                      => ['header' => ''], // 文件头注释
     'array_syntax'                        => ['syntax' => 'short'],
-    'no_whitespace_before_comma_in_array' => ['after_heredoc' => true], // 数组中逗号前面没有空格
-    'trim_array_spaces'                   => true,                      // 去掉数组中多余的空格
+    'no_whitespace_before_comma_in_array' => ['after_heredoc' => true],                           // 数组中逗号前面没有空格
+    'trim_array_spaces'                   => true,                                                // 去掉数组中多余的空格
 
     // Basic
-    'braces' => [
+    'braces'                              => [
         'allow_single_line_anonymous_class_with_empty_body' => true,
         'allow_single_line_closure'                         => true,
     ],
 
     // Comment
-    'no_empty_comment' => true, // 去掉空注释
+    'no_empty_comment'                    => true,                                                // 去掉空注释
 
     // Import
-    'ordered_imports'                     => true,                      // 按顺序use导入
-    'no_unused_imports'                   => true,                      // 删除没用到的use
+    'ordered_imports'                     => ['sort_algorithm' => 'length'],                      // 按顺序use导入
+    'no_unused_imports'                   => true,                                                // 删除没用到的use
 
     'no_useless_else'                            => true, // 删除没有使用的else节点
     'no_useless_return'                          => true, // 删除没有使用的return语句
@@ -79,7 +79,7 @@ $rules = [
             'param', 'throws', 'type', 'var', 'property',
         ],
     ],
-    'phpdoc_var_annotation_correct_order' => true,
+    'phpdoc_var_annotation_correct_order'        => true,
 
     // Semicolon
     'multiline_whitespace_before_semicolons'     => true,
