@@ -7,6 +7,7 @@ use Rice\Basic\Support\Decide;
 use Rice\Basic\Support\FileNamespace;
 use Rice\Basic\Support\Contracts\AutoFillCacheContract;
 use Rice\Basic\Support\generate\Properties\Properties;
+use Rice\Basic\Support\Generate\Properties\Property;
 
 class Annotation
 {

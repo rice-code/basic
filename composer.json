@@ -6,8 +6,7 @@
   "require": {
     "php": ">=7.4",
     "ext-json": "*",
-    "ext-bcmath": "*",
-    "symfony/finder": "5.4.x-dev"
+    "ext-bcmath": "*"
   },
   "autoload": {
     "psr-4": {
@@ -18,14 +17,16 @@
   },
   "authors": [
     {
-      "name": "dengminfeng",
+      "name": "dengmf",
       "email": "1015814408@qq.com"
     }
   ],
   "minimum-stability": "dev",
   "require-dev": {
     "phpunit/phpunit": "^9",
-    "friendsofphp/php-cs-fixer": "^3.4"
+    "friendsofphp/php-cs-fixer": "^3.4",
+    "symfony/finder": "5.4.x-dev",
+    "symfony/console": "5.4.x-dev"
   },
   "autoload-dev": {
     "psr-4": {

@@ -1,13 +1,13 @@
 <?php
 
-namespace Rice\Basic\Support\generate\Properties;
+namespace Rice\Basic\Support\Generate\Properties;
 
 class Properties
 {
     protected $refectionClass;
 
     /**
-     * @var \ReflectionProperty[]
+     * @var Properties $properties
      */
     protected $properties;
 
@@ -16,20 +16,20 @@ class Properties
         $this->refectionClass = new \ReflectionClass($namespace);
     }
 
-    public function getHeadComment()
-    {
-        return $this->refectionClass->getDocComment();
-    }
-
-    public function getProperties()
+    public function getProperties($filter = \ReflectionProperty::IS_PROTECTED): array
     {
         if (isset($this->properties)) {
             return $this->properties;
         }
 
-        $properties = $this->refectionClass->getProperties(\ReflectionProperty::IS_PROTECTED);
+        $properties = $this->refectionClass->getProperties($filter);
+
         foreach ($properties as $property) {
-            $this->properties[] = $property;
+            $newProperty             = new Property($property->getType());
+            $newProperty->name       = $property->getName();
+            $newProperty->docComment = $property->getDocComment();
+
+            $this->properties[] = $newProperty;
         }
 
         return $this->properties;

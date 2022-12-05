@@ -5,9 +5,10 @@ namespace Rice\Basic\Support\Generate\Documentation;
 use PhpCsFixer\Preg;
 use PhpCsFixer\Tokenizer\Token;
 use PhpCsFixer\DocBlock\DocBlock;
+use Rice\Basic\Support\Generate\Properties\Property;
 use Tests\Support\Annotation\Cat;
-use App\generate\Properties\Properties;
 use Rice\Basic\Support\Generate\Generator;
+use Rice\Basic\Support\generate\Properties\Properties;
 
 class AccessorGenerator extends Generator
 {
@@ -34,7 +35,7 @@ class AccessorGenerator extends Generator
             $idx = $this->tokens->getPrevTokenOfKind($index, [[T_DOC_COMMENT]]);
 
             if (null !== $idx) {
-                $this->tokens[$idx] =  new Token([T_DOC_COMMENT, $this->updateDoc($this->tokens[$idx])]);
+                $this->tokens[$idx] = new Token([T_DOC_COMMENT, $this->updateDoc($this->tokens[$idx])]);
 
                 continue;
             }
@@ -47,16 +48,20 @@ class AccessorGenerator extends Generator
 
     public function generateLines()
     {
-        $properties    = new Properties(Cat::class);
-        $lines         = [];
-        $docMap        = [];
+        $namespace  = $this->getNamespace()[0]->getFullName() . DIRECTORY_SEPARATOR . $this->getClassName();
+        $properties = new Properties($namespace);
+        $lines      = [];
+        $docMap     = [];
         foreach ($properties->getProperties() as $property) {
-            $propertyDocType = $this->getDocPropertyType($property->getDocComment());
+            /**
+             * @var Property $property
+             */
+            $propertyDocType = $this->getDocPropertyType($property->docComment);
 
-            $name            = ucfirst($property->getName());
+            $name = ucfirst($property->name);
             if ('' !== $propertyDocType || null !== $property->getType()) {
-                $typeName        = $property->getType() ? $property->getType()->getName() : $propertyDocType;
-                $lines[]         =  sprintf(
+                $typeName        = $property->type ? $property->name : $propertyDocType;
+                $lines[]         = sprintf(
                     '@method self set%s(%s $value)',
                     $name,
                     $typeName
@@ -66,7 +71,7 @@ class AccessorGenerator extends Generator
                     $name,
                     $typeName
                 );
-                $lines[]         =  sprintf(
+                $lines[]         = sprintf(
                     '@method %s get%s()',
                     $typeName,
                     $name
@@ -81,7 +86,7 @@ class AccessorGenerator extends Generator
             }
             $lines[]         = sprintf('@method self set%s($value)', $name);
             $docMap[$name][] = sprintf('set%s($value)', $name);
-            $lines[]         =  sprintf('@method get%s()', $name);
+            $lines[]         = sprintf('@method get%s()', $name);
             $docMap[$name][] = sprintf('get%s()', $name);
         }
 

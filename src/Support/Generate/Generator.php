@@ -2,6 +2,8 @@
 
 namespace Rice\Basic\Support\Generate;
 
+use PhpCsFixer\Tokenizer\Analyzer\NamespacesAnalyzer;
+use PhpCsFixer\Tokenizer\Token;
 use PhpCsFixer\Tokenizer\Tokens;
 use Symfony\Component\Filesystem\Filesystem;
 use PhpCsFixer\Fixer\Phpdoc\PhpdocAlignFixer;
@@ -18,7 +20,7 @@ abstract class Generator
 
     /**
      * 文件token.
-     * @var Tokens
+     * @var Tokens $tokens
      */
     protected $tokens;
 
@@ -32,6 +34,7 @@ abstract class Generator
 
         $content      = file_get_contents($this->filePath);
         $this->tokens = Tokens::fromCode($content);
+
     }
 
     /**
@@ -40,7 +43,7 @@ abstract class Generator
      */
     protected function alignCommentBlock(): self
     {
-        $tags = [
+        $tags  = [
             'param',
             'property',
             'property-read',
@@ -67,6 +70,32 @@ abstract class Generator
         }
 
         return $comment . ' */' . PHP_EOL;
+    }
+
+    protected function getNamespace()
+    {
+        return (new NamespacesAnalyzer())->getDeclarations($this->tokens);
+    }
+
+    public function getClassName()
+    {
+        $maxLen = count($this->tokens);
+        foreach ($this->tokens as $idx => $token) {
+            /**
+             * @var Token $token
+             */
+            if (!$token->isGivenKind(T_CLASS)) {
+                continue;
+            }
+
+            while ($idx < $maxLen) {
+                if ($this->tokens[++$idx]->getId() !== T_WHITESPACE) {
+                    return $this->tokens[$idx]->getContent();
+                }
+            }
+
+            throw new \Exception('this file not class');
+        }
     }
 
     abstract public function apply();
