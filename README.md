@@ -169,6 +169,99 @@ class TestController extends BaseController
 > Request 对象相当于是一个防腐层一样，一个业务中会存在展示，修改，删除等功能。每一部分参数都有些许不一致，但
 > 是不可能给增删改查单独写一个 Request 类，不然编码上面太多类了。
 
+### 访问器自动生成注释
+
+以这个 `tests\Support\Annotation\Cat.php` 文件为例，我们使用了 `Accessor` 这个 `trait`。所以会
+存在 `setxxx()` 和 `getxxx()`，但是这里面会造成实例化类后调用没有相关的函数提示。为了解决这个问题，可以
+使用 `php generator.php xxx\tests\Support\Annotation\Cat.php` 去执行自动生成注释。
+
+> 只会生成protected 属性的注释，如果属性没有指定类型，那么会查看注释是否有 @var 指定相关类型，有的
+> 话自动获取
+
+生成前：
+```php
+class Cat
+{
+    use AutoFillProperties;
+    use Accessor;
+
+    /**
+     * 眼睛.
+     *
+     * @return $this
+     *
+     * @throws \Exception
+     *
+     * @var string
+     * @Param $class
+     */
+    protected $eyes;
+
+    /**
+     * @var Eat
+     */
+    protected $eat;
+
+    /**
+     * @var S
+     */
+    protected $speak;
+
+    /**
+     * @var string[]
+     */
+    protected $hair;
+}
+```
+
+生成后：
+```php
+/**
+ * Class Cat.
+ * @method self     setEyes(string $value)
+ * @method string   getEyes()
+ * @method self     setEat(Eat $value)
+ * @method Eat      getEat()
+ * @method self     setSpeak(S $value)
+ * @method S        getSpeak()
+ * @method self     setHair(string[] $value)
+ * @method string[] getHair()
+ */
+class Cat
+{
+    use AutoFillProperties;
+    use Accessor;
+
+    /**
+     * 眼睛.
+     *
+     * @return $this
+     *
+     * @throws \Exception
+     *
+     * @var string
+     * @Param $class
+     */
+    protected $eyes;
+
+    /**
+     * @var Eat
+     */
+    protected $eat;
+
+    /**
+     * @var S
+     */
+    protected $speak;
+
+    /**
+     * @var string[]
+     */
+    protected $hair;
+}
+
+```
+
 ### 文章
 
 [创建属于自己的 composer 包](https://dmf-code.github.io/posts/54650cde2a44/)
