@@ -2,11 +2,15 @@
 
 namespace Rice\Basic\Support\Generate;
 
-use PhpCsFixer\Tokenizer\Analyzer\NamespacesAnalyzer;
+use PhpCsFixer\Fixer\Comment\NoEmptyCommentFixer;
+use PhpCsFixer\Fixer\Phpdoc\NoEmptyPhpdocFixer;
+use PhpCsFixer\Fixer\Phpdoc\PhpdocIndentFixer;
+use PhpCsFixer\Fixer\Phpdoc\PhpdocSeparationFixer;
 use PhpCsFixer\Tokenizer\Token;
 use PhpCsFixer\Tokenizer\Tokens;
 use Symfony\Component\Filesystem\Filesystem;
 use PhpCsFixer\Fixer\Phpdoc\PhpdocAlignFixer;
+use PhpCsFixer\Tokenizer\Analyzer\NamespacesAnalyzer;
 use Symfony\Component\Filesystem\Exception\IOException;
 
 abstract class Generator
@@ -20,7 +24,8 @@ abstract class Generator
 
     /**
      * 文件token.
-     * @var Tokens $tokens
+     *
+     * @var Tokens
      */
     protected $tokens;
 
@@ -34,7 +39,6 @@ abstract class Generator
 
         $content      = file_get_contents($this->filePath);
         $this->tokens = Tokens::fromCode($content);
-
     }
 
     /**
@@ -89,7 +93,7 @@ abstract class Generator
             }
 
             while ($idx < $maxLen) {
-                if ($this->tokens[++$idx]->getId() !== T_WHITESPACE) {
+                if (T_WHITESPACE !== $this->tokens[++$idx]->getId()) {
                     return $this->tokens[$idx]->getContent();
                 }
             }

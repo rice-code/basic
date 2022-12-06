@@ -5,9 +5,8 @@ namespace Rice\Basic\Support\Generate\Documentation;
 use PhpCsFixer\Preg;
 use PhpCsFixer\Tokenizer\Token;
 use PhpCsFixer\DocBlock\DocBlock;
-use Rice\Basic\Support\Generate\Properties\Property;
-use Tests\Support\Annotation\Cat;
 use Rice\Basic\Support\Generate\Generator;
+use Rice\Basic\Support\Generate\Properties\Property;
 use Rice\Basic\Support\generate\Properties\Properties;
 
 class AccessorGenerator extends Generator
@@ -43,7 +42,7 @@ class AccessorGenerator extends Generator
         }
 
         $this->alignCommentBlock();
-        file_put_contents($this->filePath . '.php', $this->tokens->generateCode());
+        file_put_contents($this->filePath, $this->tokens->generateCode());
     }
 
     public function generateLines()
@@ -97,38 +96,37 @@ class AccessorGenerator extends Generator
     {
         $doc   = new DocBlock($token->getContent());
         $lines = $doc->getLines();
+        $len   = count($lines) - 1;
         foreach ($lines as $idx => $line) {
+
             if (!$line->containsUsefulContent()) {
                 continue;
             }
 
+            $len = $idx + 1;
             Preg::match('/@method.*set(\S+)\(/ux', $line->getContent(), $matchs);
             if (!empty($matchs)) {
-                $line->setContent(Preg::replace('/@method\s*(.*\))/', $this->docMap[$matchs[1]][0], $line->getContent()));
-                unset($this->docMap[$matchs[1]][0]);
+                $content                     = Preg::replace('/@method\s*(.*\))/', $this->docMap[$matchs[1]][0], $line->getContent());
+                $this->docMap[$matchs[1]][0] = trim($content, " \t\n\r\0\x0B*");
+                $lines[$idx]->setContent('');
             }
 
             Preg::match('/@method.*get(\S+)\(/ux', $line->getContent(), $matchs);
             if (!empty($matchs)) {
-                $line->setContent(Preg::replace('/@method\s*(.*\))/', $this->docMap[$matchs[1]][1], $line->getContent()));
-                unset($this->docMap[$matchs[1]][1]);
+                $content                     = Preg::replace('/@method\s*(.*\))/', $this->docMap[$matchs[1]][1], $line->getContent());
+                $this->docMap[$matchs[1]][1] = trim($content, " \t\n\r\0\x0B*");
+                $lines[$idx]->setContent('');
             }
         }
 
-        $lineCnt = count($lines) - 1;
-        $lineEnd = $lines[$lineCnt];
+        [$firstArr, $secondArr] = array_chunk($lines, $len);
+
         foreach ($this->docMap as $item) {
-            if (isset($item[0])) {
-                $lines[$lineCnt++] = ' * ' . $item[0] . PHP_EOL;
-            }
-
-            if (isset($item[1])) {
-                $lines[$lineCnt++] = ' * ' . $item[1] . PHP_EOL;
-            }
+            $firstArr[$len++] = ' * ' . $item[0] . PHP_EOL;
+            $firstArr[$len++] = ' * ' . $item[1] . PHP_EOL;
         }
-        $lines[$lineCnt] = $lineEnd;
 
-        return implode('', $lines);
+        return implode('', array_merge($firstArr, $secondArr));
     }
 
     public function getDocPropertyType($doc): string

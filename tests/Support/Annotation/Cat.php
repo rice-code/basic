@@ -7,10 +7,15 @@ use Rice\Basic\Support\Traits\Accessor;
 use Rice\Basic\Support\Traits\AutoFillProperties;
 
 /**
- * Class Cat
- * @package Tests\Support\Annotation
- *
+ * Class Cat.
+ * @method self     setEyes(string $value)
+ * @method string   getEyes()
+ * @method self     setEat(Eat $value)
+ * @method Eat      getEat()
+ * @method self     setSpeak(S $value)
+ * @method S        getSpeak()
  * @method self     setHair(string[] $value)
+ * @method string[] getHair()
  */
 class Cat
 {
@@ -19,9 +24,12 @@ class Cat
 
     /**
      * 眼睛.
+     *
      * @return $this
+     *
      * @throws \Exception
-     * @var    string
+     *
+     * @var string
      * @Param $class
      */
     protected $eyes;
