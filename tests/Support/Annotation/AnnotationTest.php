@@ -3,7 +3,7 @@
 namespace Tests\Support\Annotation;
 
 use PHPUnit\Framework\TestCase;
-use Rice\Basic\Support\Annotation\Annotation;
+use Rice\Basic\Support\Generate\Annotation\Annotation;
 
 class AnnotationTest extends TestCase
 {
@@ -11,7 +11,7 @@ class AnnotationTest extends TestCase
     {
         $annotation = new Annotation();
 
-        $this->assertIsArray($annotation->execute(Cat::class)->getNamespaceList());
+        $this->assertIsArray($annotation->execute(Cat::class)->getUses());
     }
 
     public function testProperty(): void
