@@ -1,5 +1,5 @@
 
-![image](https://user-images.githubusercontent.com/22268578/206155572-aaecbacd-830c-4343-8f28-16d1d4add9f7.png)
+![image](./doc/imgs/rice_basic.png)
 
 [![License](https://img.shields.io/badge/license-Apache%202-4EB1BA.svg)](https://www.apache.org/licenses/LICENSE-2.0.html)
 [![github star](https://img.shields.io/github/stars/dmf-code/basic.svg)]('https://github.com/dmf-code/basic/stargazers')
@@ -13,17 +13,32 @@
 composer require rice/basic
 ```
 
-### 目录
+工具包封装了 `DTO`, `Entity`, `Enum` 相关常用的抽象类，统一使用 `Base` 开头。
 
-#### Common
-公共函数目录,主要供其它模块进行调用
+常用的继承对象类：
+```text
+BaseDTO
+BaseEntity
+BaseEnum
+BaseException
+```
 
 #### DTO
-数据传输层对象目录，主要继承 `BaseDTO` 类。该层主要是聚合业务层中的多个参数变量，保证编写的代码更加整洁，
+数据传输层对象，主要继承 `BaseDTO` 类。该层主要是聚合业务层中的多个参数变量，保证编写的代码更加整洁，
 并且参数变量更加直观。
 
+> 采用失血模型，基本上只做数据传输，不存在业务行为
+
+![dto](./doc/imgs/dto.png)
+
 #### Entity
-实体对象目录，主要继承 `BaseEntity` 类，业务逻辑中构建的具体实体模型。
+实体对象目录，主要继承 `BaseEntity` 类，业务逻辑中构建的具体实体模型。继承该抽象类的主体是业务中的
+实体对象，主要考验个人对于建模的能力。这里和数据库的模型区别在于，模型是基于数据表进行建模的，实体是
+基于业务进行建模的。
+
+> 采用充血模型，提高实体的内聚性
+
+
 
 #### Enum
 枚举类目录
