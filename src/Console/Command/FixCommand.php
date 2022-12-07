@@ -17,11 +17,6 @@ class FixCommand extends Command
     // the command description shown when running "php bin/console list"
     protected static $defaultDescription = 'Creates a new setting getting function doc.';
 
-    public function __construct(string $name = null)
-    {
-        parent::__construct($name);
-    }
-
     // ...
     protected function configure(): void
     {
@@ -33,20 +28,10 @@ class FixCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        // outputs multiple lines to the console (adding "\n" at the end of each line)
-        $output->writeln([
-            'User Creator',
-            '============',
-            '',
-        ]);
-
-        // outputs a message followed by a "\n"
-        $output->writeln('Whoa!');
         $path = $input->getArgument('path')[0];
         (new AccessorGenerator($path))->apply();
-        // outputs a message without adding a "\n" at the end of the line
-        $output->write('You are about to ');
-        $output->write('create a user.');
+
+        $output->write('done.');
 
         return Command::SUCCESS;
     }

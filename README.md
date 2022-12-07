@@ -180,7 +180,7 @@ class TestController extends BaseController
 
 以这个 `tests\Support\Annotation\Cat.php` 文件为例，我们使用了 `Accessor` 这个 `trait`。所以会
 存在 `setxxx()` 和 `getxxx()`，但是这里面会造成实例化类后调用没有相关的函数提示。为了解决这个问题，可以
-使用 `php generator.php xxx\tests\Support\Annotation\Cat.php` 去执行自动生成注释。
+使用 `php generator.php rice:accessor xxx\tests\Support\Annotation\Cat.php` 去执行自动生成注释。
 
 > 只会生成protected 属性的注释，如果属性没有指定类型，那么会查看注释是否有 @var 指定相关类型，有的
 > 话自动获取
