@@ -4,7 +4,10 @@
 namespace Rice\Basic\Exception;
 
 
-class AssemblerException
+class AssemblerException extends BaseException
 {
-
+    public static function getLangName(): string
+    {
+        return 'assembler';
+    }
 }

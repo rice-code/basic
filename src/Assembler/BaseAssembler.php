@@ -4,7 +4,6 @@
 namespace Rice\Basic\Assembler;
 
 
-class BaseAssembler
+interface BaseAssembler
 {
-
 }
