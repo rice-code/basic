@@ -17,11 +17,19 @@ composer require rice/basic
 
 常用的继承对象类：
 ```text
+BaseAssembler
 BaseDTO
 BaseEntity
 BaseEnum
 BaseException
 ```
+
+#### Assembler
+数据装配器，主要继承 `BaseAssembler` 类。该层主要是统一将 `DTO` 和 `Entity` 相互转换，如果缺少了
+装配这一层，大部分代码可能就会落在 `Service` 层里面，而且参数这些会比较多，就会造成函数膨胀起来。代码
+整洁的原理就是尽量细分，归类，所以提供装配器接口（面向接口编程而非实现）。
+
+> 可选，代码重构时可做优化，提高代码可读性
 
 #### DTO
 数据传输层对象，主要继承 `BaseDTO` 类。该层主要是聚合业务层中的多个参数变量，保证编写的代码更加整洁，
@@ -37,8 +45,6 @@ BaseException
 基于业务进行建模的。
 
 > 采用充血模型，提高实体的内聚性
-
-
 
 #### Enum
 枚举类目录
