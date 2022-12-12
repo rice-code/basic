@@ -2,8 +2,9 @@
 
 namespace Rice\Basic\Support\Converts;
 
-use Rice\Basic\Exception\CalculateException;
 use Rice\Basic\Exception\CommonException;
+use Rice\Basic\Exception\SupportException;
+use Rice\Basic\Exception\CalculateException;
 
 abstract class BaseMeter
 {
@@ -45,7 +46,7 @@ abstract class BaseMeter
     /**
      * 相加.
      * @param string $num
-     * @param int    $scale
+     * @param int $scale
      * @return $this
      */
     public function add(string $num, $scale = 0): self
@@ -56,7 +57,7 @@ abstract class BaseMeter
     }
 
     /**
-     * @param string   $num
+     * @param string $num
      * @param int|null $scale
      * @return $this
      */
@@ -70,7 +71,7 @@ abstract class BaseMeter
     /**
      * 乘法.
      * @param string $num
-     * @param int    $scale
+     * @param int $scale
      * @return $this
      */
     public function mul(string $num, $scale = 0): self
@@ -83,14 +84,14 @@ abstract class BaseMeter
     /**
      * 除法.
      * @param string $num
-     * @param int    $scale
+     * @param int $scale
      * @return $this
-     * @throws CalculateException
+     * @throws SupportException
      */
     public function div(string $num, $scale = 0): self
     {
         if ('' === $num || '0' === $num) {
-            throw new CalculateException(CalculateException::CANNOT_DIVIDE_BY_ZERO);
+            throw new SupportException(SupportException::CANNOT_DIVIDE_BY_ZERO);
         }
 
         $this->num = bcdiv($this->num, $num, $scale);
@@ -101,7 +102,7 @@ abstract class BaseMeter
     /**
      * 取余.
      * @param string $num
-     * @param int    $scale
+     * @param int $scale
      * @return $this
      */
     public function mod(string $num, $scale = 0): self
@@ -114,7 +115,7 @@ abstract class BaseMeter
     /**
      * 乘方.
      * @param string $exponent
-     * @param int    $scale
+     * @param int $scale
      * @return $this
      */
     public function pow(string $exponent, $scale = 0): self
@@ -128,7 +129,7 @@ abstract class BaseMeter
      * 乘方再取余.
      * @param string $exponent
      * @param string $modulus
-     * @param int    $scale
+     * @param int $scale
      * @return $this
      */
     public function powmod(string $exponent, string $modulus, int $scale = 0): self
@@ -154,7 +155,7 @@ abstract class BaseMeter
      * 数字大小比较
      * 两个数相等时返回 0； $this->num 比 $num 大时返回 1； 其他则返回 -1。
      * @param string $num
-     * @param int    $scale
+     * @param int $scale
      * @return int
      */
     public function comp(string $num, $scale = 0): int
@@ -165,7 +166,7 @@ abstract class BaseMeter
     /**
      * 大于.
      * @param string $num
-     * @param int    $scale
+     * @param int $scale
      * @return bool
      */
     public function gt(string $num, $scale = 0): bool
@@ -176,7 +177,7 @@ abstract class BaseMeter
     /**
      * 小于.
      * @param string $num
-     * @param int    $scale
+     * @param int $scale
      * @return bool
      */
     public function lt(string $num, $scale = 0): bool
@@ -187,7 +188,7 @@ abstract class BaseMeter
     /**
      * 等于.
      * @param string $num
-     * @param int    $scale
+     * @param int $scale
      * @return bool
      */
     public function eq(string $num, $scale = 0): bool

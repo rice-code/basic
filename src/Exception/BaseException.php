@@ -2,11 +2,13 @@
 
 namespace Rice\Basic\Exception;
 
+use Rice\Basic\Enum\ExceptionEnum;
 use Rice\Basic\Support\Lang;
 use Throwable;
 
 abstract class BaseException extends \Exception
 {
+
     /**
      * 获取语言包文件名称.
      * @return string
@@ -17,6 +19,7 @@ abstract class BaseException extends \Exception
     {
         // 语言包重写错误信息
         Lang::getInstance()->setFileName($this::getLangName())->loadFile();
+
         if (Lang::getInstance()->existKey($message)) {
             $message = Lang::getInstance()->getMessage($message);
         }

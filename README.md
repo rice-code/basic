@@ -31,6 +31,26 @@ BaseException
 
 > 可选，代码重构时可做优化，提高代码可读性
 
+```php
+<?php
+
+namespace App\Assembler;
+
+use App\DTO\TestDTO;
+use Illuminate\Http\Request;
+
+class TestAssembler implements BaseAssembler
+{
+    public function toDTO(Request $request)
+    {
+        return (new TestDTO())
+            ->setName($request->name)
+            ->setPassword($request->password);
+    }
+}
+
+```
+
 #### DTO
 数据传输层对象，主要继承 `BaseDTO` 类。该层主要是聚合业务层中的多个参数变量，保证编写的代码更加整洁，
 并且参数变量更加直观。
@@ -154,16 +174,6 @@ class TestRequest extends BaseRequest
      * @var string 密码
      */
     public $password;
-
-    /**
-     * @return TestDTO
-     */
-    public function newTestDTO(): TestDTO
-    {
-        return (new TestDTO())
-            ->setName($this->name)
-            ->setPassword($this->password);
-    }
 }
 ```
 
@@ -172,9 +182,10 @@ class TestRequest extends BaseRequest
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\TestRequest;
 use App\Logic\TestLogic;
 use Illuminate\Http\Request;
+use App\Assembler\TestAssembler;
+use App\Http\Requests\TestRequest;
 use Illuminate\Support\Facades\Response;
 
 class TestController extends BaseController
@@ -182,10 +193,12 @@ class TestController extends BaseController
     public function test(Request $request): \Illuminate\Http\JsonResponse
     {
         $testRequest = new TestRequest($request->all());
-        $testLogic   = (new TestLogic());
+        $testRequest->check();
+        $testLogic = (new TestLogic());
         
-        $dto  = $testRequest->newTestDTO();
+        $dto  = TestAssembler::toDTO($request);
         $resp = $testLogic->doSomethink($dto);
+
         return Response::json($resp);
     }
 }
