@@ -33,14 +33,14 @@ class PathManager
     {
         $this->project   = __DIR__ . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR;
         $this->src       = $this->project . 'src' . DIRECTORY_SEPARATOR;
-        $this->test      = $this->project . 'test' . DIRECTORY_SEPARATOR;
-        $this->assembler = $this->src . 'assembler' . DIRECTORY_SEPARATOR;
-        $this->console   = $this->src . 'console' . DIRECTORY_SEPARATOR;
-        $this->dto       = $this->src . 'dto' . DIRECTORY_SEPARATOR;
-        $this->entity    = $this->src . 'entity' . DIRECTORY_SEPARATOR;
-        $this->enum      = $this->src . 'enum' . DIRECTORY_SEPARATOR;
-        $this->exception = $this->src . 'exception' . DIRECTORY_SEPARATOR;
-        $this->lang      = $this->src . 'lang' . DIRECTORY_SEPARATOR;
-        $this->support   = $this->src . 'support' . DIRECTORY_SEPARATOR;
+        $this->test      = $this->project . 'tests' . DIRECTORY_SEPARATOR;
+        $this->assembler = $this->src . 'Assembler' . DIRECTORY_SEPARATOR;
+        $this->console   = $this->src . 'Console' . DIRECTORY_SEPARATOR;
+        $this->dto       = $this->src . 'DTO' . DIRECTORY_SEPARATOR;
+        $this->entity    = $this->src . 'Entity' . DIRECTORY_SEPARATOR;
+        $this->enum      = $this->src . 'Enum' . DIRECTORY_SEPARATOR;
+        $this->exception = $this->src . 'Exception' . DIRECTORY_SEPARATOR;
+        $this->lang      = $this->src . 'Lang' . DIRECTORY_SEPARATOR;
+        $this->support   = $this->src . 'Support' . DIRECTORY_SEPARATOR;
     }
 }
