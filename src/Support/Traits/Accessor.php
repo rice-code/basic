@@ -2,10 +2,11 @@
 
 namespace Rice\Basic\Support\Traits;
 
-use Rice\Basic\Enum\NameTypeBaseEnum;
-use Rice\Basic\Exception\CommonException;
-use Rice\Basic\Exception\DTOException;
+use Rice\Basic\Enum\NameTypeEnum;
+use Rice\Basic\Enum\ExceptionEnum;
 use Rice\Basic\Support\Utils\StrUtil;
+use Rice\Basic\Exception\DTOException;
+use Rice\Basic\Exception\SupportException;
 
 trait Accessor
 {
@@ -21,7 +22,7 @@ trait Accessor
         }
 
         if (!property_exists($this, $attrName)) {
-            throw new DTOException(DTOException::ATTR_NOT_DEFINE);
+            throw new SupportException(ExceptionEnum::ATTR_NOT_DEFINE);
         }
 
         switch ($style) {
@@ -51,7 +52,6 @@ trait Accessor
      * @param array $fields
      * @param int $nameType
      * @return array
-     * @throws CommonException
      */
     private function assignElement(object $obj, array $fields, int $nameType): array
     {
@@ -63,11 +63,11 @@ trait Accessor
             }
 
             switch ($nameType) {
-                case NameTypeBaseEnum::CAMEL_CASE:
+                case NameTypeEnum::CAMEL_CASE:
                     $key = StrUtil::snakeCaseToCamelCase($key);
 
                     break;
-                case NameTypeBaseEnum::SNAKE_CASE:
+                case NameTypeEnum::SNAKE_CASE:
                     $key = StrUtil::camelCaseToSnakeCase($key);
 
                     break;
@@ -99,16 +99,16 @@ trait Accessor
 
     public function toArray($fields = []): array
     {
-        return $this->assignElement($this, $fields, NameTypeBaseEnum::UNLIMITED);
+        return $this->assignElement($this, $fields, NameTypeEnum::UNLIMITED);
     }
 
     public function toSnakeCaseArray($fields = []): array
     {
-        return $this->assignElement($this, $fields, NameTypeBaseEnum::SNAKE_CASE);
+        return $this->assignElement($this, $fields, NameTypeEnum::SNAKE_CASE);
     }
 
     public function toCamelCaseArray($fields = []): array
     {
-        return $this->assignElement($this, $fields, NameTypeBaseEnum::CAMEL_CASE);
+        return $this->assignElement($this, $fields, NameTypeEnum::CAMEL_CASE);
     }
 }

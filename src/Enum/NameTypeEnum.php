@@ -2,7 +2,7 @@
 
 namespace Rice\Basic\Enum;
 
-class NameTypeBaseEnum extends BaseEnum
+class NameTypeEnum extends BaseEnum
 {
     // 无限制
     public const UNLIMITED = 0;

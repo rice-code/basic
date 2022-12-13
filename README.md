@@ -161,8 +161,6 @@ class BaseRequest extends FormRequest
 
 namespace App\Http\Requests;
 
-use App\DTO\TestDTO;
-
 class TestRequest extends BaseRequest
 {
     /**

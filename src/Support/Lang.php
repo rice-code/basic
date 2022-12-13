@@ -2,16 +2,16 @@
 
 namespace Rice\Basic\Support;
 
+use Rice\Basic\PathManager;
 use Rice\Basic\Support\Traits\Singleton;
+use Symfony\Component\Filesystem\Path;
 
 class Lang
 {
     use Singleton;
 
-    private $locale     = 'zh-CN';
-    private $fileName   = 'common';
-    private $key        = '';
-    protected $messages = [];
+    private $locale = 'zh-CN';
+    private $fileName = 'base';
 
     /**
      * @param string $locale
@@ -51,41 +51,9 @@ class Lang
         return $this->fileName;
     }
 
-    /**
-     * @param string $key
-     * @return Lang
-     */
-    public function setKey(string $key): self
+    public function loadFile(): array
     {
-        $this->key = $key;
-
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getKey(): string
-    {
-        return $this->key;
-    }
-
-    public function loadFile(): self
-    {
-        $this->messages = require __DIR__ . DIRECTORY_SEPARATOR . '..' .
-            DIRECTORY_SEPARATOR . 'Lang' . DIRECTORY_SEPARATOR .
-            $this->locale . DIRECTORY_SEPARATOR . $this->fileName . '.php';
-
-        return $this;
-    }
-
-    public function getMessage(string $key): string
-    {
-        return $this->messages[$key];
-    }
-
-    public function existKey(string $key): bool
-    {
-        return isset($this->messages[$key]);
+        $langPath = PathManager::getInstance()->lang . $this->locale . DIRECTORY_SEPARATOR . $this->fileName . '.php';
+        return (require $langPath);
     }
 }

@@ -2,9 +2,8 @@
 
 namespace Rice\Basic\Support\Converts;
 
-use Rice\Basic\Exception\CommonException;
+use Rice\Basic\Enum\BaseEnum;
 use Rice\Basic\Exception\SupportException;
-use Rice\Basic\Exception\CalculateException;
 
 abstract class BaseMeter
 {
@@ -35,7 +34,7 @@ abstract class BaseMeter
     public function __construct(string $num, string $unit, $scale = 4)
     {
         if (is_null($this->anchorPointUnit)) {
-            throw new CommonException(CommonException::CLASS_PROPERTY_IS_NOT_OVERRIDDEN);
+            throw new SupportException(BaseEnum::CLASS_PROPERTY_IS_NOT_OVERRIDDEN);
         }
 
         $this->num  = $num;

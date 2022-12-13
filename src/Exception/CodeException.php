@@ -2,6 +2,8 @@
 
 namespace Rice\Basic\Exception;
 
+use Rice\Basic\Enum\LangEnum;
+
 class CodeException extends BaseException
 {
     // 成功
@@ -15,6 +17,6 @@ class CodeException extends BaseException
 
     public static function getLangName(): string
     {
-        return 'code';
+        return LangEnum::CODE;
     }
 }
