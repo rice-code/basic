@@ -1,8 +1,6 @@
 <?php
 
-
 namespace Tests\Support;
-
 
 use PHPUnit\Framework\TestCase;
 use Rice\Basic\Enum\ExceptionEnum;

@@ -5,13 +5,13 @@ declare(strict_types=1);
 namespace Rice\Basic\Console;
 
 use Rice\Basic\Console\Command\FixCommand;
-use Symfony\Component\Console\Application as BaseApplication;
+use Rice\Basic\Console\Command\JsonToClassCommand;
 use Symfony\Component\Console\Command\HelpCommand;
 use Symfony\Component\Console\Command\ListCommand;
 use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Output\ConsoleOutputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-
+use Symfony\Component\Console\Output\ConsoleOutputInterface;
+use Symfony\Component\Console\Application as BaseApplication;
 
 final class Application extends BaseApplication
 {
@@ -24,11 +24,12 @@ final class Application extends BaseApplication
 
         // in alphabetical order
         $this->add(new FixCommand());
+        $this->add(new JsonToClassCommand());
     }
 
     public static function getMajorVersion(): int
     {
-        return (int)explode('.', self::VERSION)[0];
+        return (int) explode('.', self::VERSION)[0];
     }
 
     /**

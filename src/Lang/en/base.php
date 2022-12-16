@@ -9,4 +9,6 @@ return [
     BaseEnum::INVALID_PARAM                    => 'invalid param',
     BaseEnum::CLASS_DOES_NOT_EXIST             => 'class does not exist',
     BaseEnum::CLASS_PROPERTY_IS_NOT_OVERRIDDEN => 'class property is not overridden',
+    BaseEnum::FILE_NOT_EXISTS                  => 'file not exists',
+    BaseEnum::DIR_NOT_EXISTS                   => 'dir not exists',
 ];

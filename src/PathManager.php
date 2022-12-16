@@ -1,17 +1,13 @@
 <?php
 
-
 namespace Rice\Basic;
-
 
 use Rice\Basic\Support\Traits\Singleton;
 
 /**
- *
- * Class PathManager
+ * Class PathManager.
  *
  * @internal
- * @package Rice\Basic
  */
 class PathManager
 {
@@ -28,6 +24,7 @@ class PathManager
     public string $exception;
     public string $lang;
     public string $support;
+    public string $template;
 
     public function __construct()
     {
@@ -42,5 +39,6 @@ class PathManager
         $this->exception = $this->src . 'Exception' . DIRECTORY_SEPARATOR;
         $this->lang      = $this->src . 'Lang' . DIRECTORY_SEPARATOR;
         $this->support   = $this->src . 'Support' . DIRECTORY_SEPARATOR;
+        $this->template  = $this->src . 'Template' . DIRECTORY_SEPARATOR;
     }
 }

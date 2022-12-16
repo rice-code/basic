@@ -4,13 +4,12 @@ namespace Rice\Basic\Support;
 
 use Rice\Basic\PathManager;
 use Rice\Basic\Support\Traits\Singleton;
-use Symfony\Component\Filesystem\Path;
 
 class Lang
 {
     use Singleton;
 
-    private $locale = 'zh-CN';
+    private $locale   = 'zh-CN';
     private $fileName = 'base';
 
     /**
@@ -54,6 +53,7 @@ class Lang
     public function loadFile(): array
     {
         $langPath = PathManager::getInstance()->lang . $this->locale . DIRECTORY_SEPARATOR . $this->fileName . '.php';
-        return (require $langPath);
+
+        return require $langPath;
     }
 }

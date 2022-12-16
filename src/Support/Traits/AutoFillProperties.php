@@ -2,12 +2,11 @@
 
 namespace Rice\Basic\Support\Traits;
 
-use Rice\Basic\Support\Generate\Annotation\Property;
-use Rice\Basic\Support\verify;
 use Rice\Basic\Support\DataExtract;
 use Rice\Basic\Support\Utils\StrUtil;
 use Rice\Basic\Exception\TypeException;
 use Rice\Basic\Support\Converts\TypeConvert;
+use Rice\Basic\Support\Generate\Annotation\Property;
 use Rice\Basic\Support\Generate\Annotation\Annotation;
 use Rice\Basic\Support\Contracts\AutoFillCacheContract;
 

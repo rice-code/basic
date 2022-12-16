@@ -49,8 +49,8 @@ trait Accessor
 
     /**
      * @param object $obj
-     * @param array $fields
-     * @param int $nameType
+     * @param array  $fields
+     * @param int    $nameType
      * @return array
      */
     private function assignElement(object $obj, array $fields, int $nameType): array

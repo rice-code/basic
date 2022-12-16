@@ -1,8 +1,6 @@
 <?php
 
-
 namespace Rice\Basic\Enum;
-
 
 class LangEnum extends BaseEnum
 {

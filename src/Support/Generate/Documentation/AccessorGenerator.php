@@ -5,7 +5,6 @@ namespace Rice\Basic\Support\Generate\Documentation;
 use PhpCsFixer\Preg;
 use PhpCsFixer\Tokenizer\Token;
 use PhpCsFixer\DocBlock\DocBlock;
-use Rice\Basic\Support\Generate\Generator;
 use Rice\Basic\Support\Generate\Properties\Property;
 use Rice\Basic\Support\generate\Properties\Properties;
 
@@ -41,7 +40,6 @@ class AccessorGenerator extends Generator
             $this->tokens->insertAt($index, [new Token([T_DOC_COMMENT, $this->getCommentBlock($this->lines)])]);
         }
 
-        $this->alignCommentBlock();
         file_put_contents($this->filePath, $this->tokens->generateCode());
     }
 
@@ -58,7 +56,8 @@ class AccessorGenerator extends Generator
             $propertyDocType = $this->getDocPropertyType($property->docComment);
 
             $name = ucfirst($property->name);
-            if ('' !== $propertyDocType || null !== $property->getType()) {
+
+            if ('' !== $propertyDocType || !is_null($property->type)) {
                 $typeName        = $property->type ? $property->name : $propertyDocType;
                 $lines[]         = sprintf(
                     '@method self set%s(%s $value)',
@@ -83,10 +82,11 @@ class AccessorGenerator extends Generator
 
                 continue;
             }
+
             $lines[]         = sprintf('@method self set%s($value)', $name);
-            $docMap[$name][] = sprintf('set%s($value)', $name);
+            $docMap[$name][] = sprintf('@method self set%s($value)', $name);
             $lines[]         = sprintf('@method get%s()', $name);
-            $docMap[$name][] = sprintf('get%s()', $name);
+            $docMap[$name][] = sprintf('@method get%s()', $name);
         }
 
         return [$lines, $docMap];
@@ -98,7 +98,6 @@ class AccessorGenerator extends Generator
         $lines = $doc->getLines();
         $len   = count($lines) - 1;
         foreach ($lines as $idx => $line) {
-
             if (!$line->containsUsefulContent()) {
                 continue;
             }

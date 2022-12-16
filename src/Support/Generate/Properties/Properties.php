@@ -7,7 +7,7 @@ class Properties
     protected $refectionClass;
 
     /**
-     * @var Properties $properties
+     * @var Property[]
      */
     protected $properties;
 
@@ -32,6 +32,6 @@ class Properties
             $this->properties[] = $newProperty;
         }
 
-        return $this->properties;
+        return $this->properties ?? [];
     }
 }

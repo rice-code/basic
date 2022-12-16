@@ -17,6 +17,10 @@ abstract class BaseEnum
 
     public const CLASS_PROPERTY_IS_NOT_OVERRIDDEN = 'class_property_is_not_overridden';
 
+    public const FILE_NOT_EXISTS = 'file_not_exists';
+
+    public const DIR_NOT_EXISTS = 'dir_not_exists';
+
     // 全部常量
     public static $consts = null;
 

@@ -11,14 +11,14 @@ class Property
     public $type;
 
     /**
-     * 属性名称
+     * 属性名称.
      *
      * @var string
      */
     public $name;
 
     /**
-     * 属性的注释
+     * 属性的注释.
      *
      * @var string
      */

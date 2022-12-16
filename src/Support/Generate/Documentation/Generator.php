@@ -1,17 +1,13 @@
 <?php
 
-namespace Rice\Basic\Support\Generate;
+namespace Rice\Basic\Support\Generate\Documentation;
 
-use PhpCsFixer\Fixer\Comment\NoEmptyCommentFixer;
-use PhpCsFixer\Fixer\Phpdoc\NoEmptyPhpdocFixer;
-use PhpCsFixer\Fixer\Phpdoc\PhpdocIndentFixer;
-use PhpCsFixer\Fixer\Phpdoc\PhpdocSeparationFixer;
+use Rice\Basic\Enum\BaseEnum;
 use PhpCsFixer\Tokenizer\Token;
 use PhpCsFixer\Tokenizer\Tokens;
+use Rice\Basic\Exception\SupportException;
 use Symfony\Component\Filesystem\Filesystem;
-use PhpCsFixer\Fixer\Phpdoc\PhpdocAlignFixer;
 use PhpCsFixer\Tokenizer\Analyzer\NamespacesAnalyzer;
-use Symfony\Component\Filesystem\Exception\IOException;
 
 abstract class Generator
 {
@@ -34,35 +30,11 @@ abstract class Generator
         $this->filePath = $filePath;
 
         if (!(new Filesystem())->exists($this->filePath)) {
-            throw new IOException('not exists file');
+            throw new SupportException(BaseEnum::FILE_NOT_EXISTS);
         }
 
         $content      = file_get_contents($this->filePath);
         $this->tokens = Tokens::fromCode($content);
-    }
-
-    /**
-     * 元素对齐.
-     * @return $this
-     */
-    protected function alignCommentBlock(): self
-    {
-        $tags  = [
-            'param',
-            'property',
-            'property-read',
-            'property-write',
-            'return',
-            'throws',
-            'type',
-            'var',
-            'method',
-        ];
-        $fixer = (new PhpdocAlignFixer());
-        $fixer->configure(['align' => 'vertical', 'tags' => $tags]);
-        $fixer->fix(new \SplFileInfo($this->filePath), $this->tokens);
-
-        return $this;
     }
 
     protected function getCommentBlock($lines): string

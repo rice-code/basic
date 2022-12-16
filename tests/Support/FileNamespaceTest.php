@@ -3,8 +3,8 @@
 namespace Tests\Support;
 
 use PHPUnit\Framework\TestCase;
-use Rice\Basic\Support\FileNamespace;
 use Tests\Support\Annotation\Cat;
+use Rice\Basic\Support\FileNamespace;
 
 class FileNamespaceTest extends TestCase
 {
