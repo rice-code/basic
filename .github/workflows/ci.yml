@@ -23,7 +23,6 @@ jobs:
 
     - name: Cache Composer packages
       id: composer-cache
-      run: echo "::set-output name=dir::$(composer config cache-dir)"
       uses: actions/cache@v3
       with:
         path: vendor
