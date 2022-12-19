@@ -1,8 +1,8 @@
 <?php
 
-namespace Test\Support;
+namespace Tests\Support;
 
-use Test\Support\Entity\Cat;
+use Tests\Support\Entity\Cat;
 use PHPUnit\Framework\TestCase;
 use Rice\Basic\Support\FileNamespace;
 

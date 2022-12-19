@@ -1,10 +1,10 @@
 <?php
 
-namespace Test\Support\Entity;
+namespace Tests\Support\Entity;
 
 use Rice\Basic\Support\Traits\Accessor;
 use Rice\Basic\Support\Traits\AutoFillProperties;
-use Test\Support\Entity\Speak as S;
+use Tests\Support\Entity\Speak as S;
 
 /**
  * Class Cat.

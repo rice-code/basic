@@ -12,9 +12,10 @@ permissions:
 jobs:
   build:
 
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
 
     steps:
+    - name: Checkout code
     - uses: actions/checkout@v3
 
     - name: Validate composer.json and composer.lock
@@ -22,6 +23,7 @@ jobs:
 
     - name: Cache Composer packages
       id: composer-cache
+      run: echo "::set-output name=dir::$(composer config cache-dir)"
       uses: actions/cache@v3
       with:
         path: vendor

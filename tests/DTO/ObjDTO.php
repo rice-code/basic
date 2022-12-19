@@ -1,6 +1,6 @@
 <?php
 
-namespace Test\DTO;
+namespace Tests\DTO;
 
 use Rice\Basic\DTO\BaseDTO;
 
