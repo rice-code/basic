@@ -1,6 +1,6 @@
 <?php
 
-namespace Rice\Basic\Support\Generate\Properties;
+namespace Rice\Basic\Support\Properties;
 
 class Property
 {

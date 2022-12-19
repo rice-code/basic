@@ -1,9 +1,10 @@
 <?php
 
-namespace Tests\Support\Annotation;
+namespace Test\Support\Annotation;
 
+use Test\Support\Entity\Cat;
 use PHPUnit\Framework\TestCase;
-use Rice\Basic\Support\Generate\Annotation\Annotation;
+use Rice\Basic\Support\Annotation\Annotation;
 
 class AnnotationTest extends TestCase
 {

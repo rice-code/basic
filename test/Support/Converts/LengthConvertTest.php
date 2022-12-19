@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Support\Converts;
+namespace Test\Support\Converts;
 
 use PHPUnit\Framework\TestCase;
 use Rice\Basic\Support\Converts\LengthConvert;

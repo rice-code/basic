@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Support;
+namespace Test\Support;
 
 use PHPUnit\Framework\TestCase;
 use Rice\Basic\Support\DataExtract;

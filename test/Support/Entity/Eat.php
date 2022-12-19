@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Support\Annotation;
+namespace Test\Support\Entity;
 
 use Rice\Basic\Support\Traits\AutoFillProperties;
 

@@ -1,9 +1,9 @@
 <?php
 
-namespace Tests\Support;
+namespace Test\Support;
 
+use Test\Support\Entity\Cat;
 use PHPUnit\Framework\TestCase;
-use Tests\Support\Annotation\Cat;
 
 class FillTest extends TestCase
 {

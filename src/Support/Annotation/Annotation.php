@@ -1,13 +1,13 @@
 <?php
 
-namespace Rice\Basic\Support\Generate\Annotation;
+namespace Rice\Basic\Support\Annotation;
 
 use ReflectionClass;
+use Rice\Basic\Support\Contracts\AutoFillCacheContract;
 use Rice\Basic\Support\Decide;
 use Rice\Basic\Support\FileNamespace;
-use Rice\Basic\Support\Generate\Properties\Property;
-use Rice\Basic\Support\generate\Properties\Properties;
-use Rice\Basic\Support\Contracts\AutoFillCacheContract;
+use Rice\Basic\Support\Properties\Properties;
+use Rice\Basic\Support\Properties\Property;
 
 class Annotation
 {
