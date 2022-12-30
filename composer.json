@@ -2,7 +2,7 @@
   "name": "rice/basic",
   "description": "basic tool",
   "type": "library",
-  "license": "MIT",
+  "license": "Apache-2.0",
   "require": {
     "php": ">=7.4",
     "ext-json": "*",
