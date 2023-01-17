@@ -3,10 +3,10 @@
 namespace Rice\Basic\Support\Annotation;
 
 use ReflectionClass;
-use Rice\Basic\Support\Decide;
+use ReflectionException;
 use Rice\Basic\Support\FileNamespace;
+use Rice\Basic\Support\Utils\VerifyUtil;
 use Rice\Basic\Support\Properties\Property;
-use Rice\Basic\Support\Properties\Properties;
 use Rice\Basic\Support\Contracts\CacheContract;
 
 class Annotation
@@ -52,6 +52,9 @@ class Annotation
         $this->cache = $cache;
     }
 
+    /**
+     * @throws ReflectionException
+     */
     public function execute($class): self
     {
         // 构建命名空间
@@ -70,7 +73,7 @@ class Annotation
      * 构建反射类.
      * @param $class
      * @return $this
-     * @throws \ReflectionException
+     * @throws ReflectionException
      */
     public function buildClass($class): self
     {
@@ -79,11 +82,11 @@ class Annotation
         $modifyTimestamp = $classNamespace . '_timestamp';
         $aliasNamespace  = $classNamespace . '_alias';
         $classFileName   = $this->class->getFileName();
-        if (Decide::notNull($this->cache)) {
+        if (VerifyUtil::notNull($this->cache)) {
             $modifyTime = $this->cache->get($modifyTimestamp);
             $content    = json_decode($this->cache->get($classNamespace), true);
             $alias      = json_decode($this->cache->get($aliasNamespace), true);
-            if (Decide::notNullAndNotEmpty($content) && $modifyTime == filemtime($classFileName)) {
+            if (VerifyUtil::notNullAndNotEmpty($content) && $modifyTime == filemtime($classFileName)) {
                 $this->uses = $content;
 
                 return $this;
@@ -92,7 +95,7 @@ class Annotation
         $this->uses  = FileNamespace::getInstance()->matchNamespace($classNamespace, $classFileName)->getUses();
         $this->alias = FileNamespace::getInstance()->getAlias();
 
-        if (Decide::notNull($this->cache)) {
+        if (VerifyUtil::notNull($this->cache)) {
             $this->cache->set($modifyTimestamp, filemtime($classFileName));
             $this->cache->set($classNamespace, json_encode($this->uses, JSON_UNESCAPED_UNICODE));
             $this->cache->set($aliasNamespace, json_encode($this->alias, JSON_UNESCAPED_UNICODE));
