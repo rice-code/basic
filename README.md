@@ -220,8 +220,8 @@ class TestController extends BaseController
 
 #### rice/ctl
 
-1. setting, getting 注释生成命令 [锚点](#访问器自动生成注释)
-2. json 转 class 对象命令 [锚点](#json-转-class-对象)
+1. setting, getting 注释生成命令 [锚点](https://github.com/rice-code/ctl#%E8%AE%BF%E9%97%AE%E5%99%A8%E8%87%AA%E5%8A%A8%E7%94%9F%E6%88%90%E6%B3%A8%E9%87%8A)
+2. json 转 class 对象命令 [锚点](https://github.com/rice-code/ctl#json-%E8%BD%AC-class-%E5%AF%B9%E8%B1%A1)
 
 ```shell script
 composer require rice/ctl
