@@ -4,7 +4,7 @@ namespace Rice\Basic\Support\Traits;
 
 use Rice\Basic\Exception\TypeException;
 use Rice\Basic\Support\Annotation\Annotation;
-use Rice\Basic\Support\Contracts\AutoFillCacheContract;
+use Rice\Basic\Support\Contracts\CacheContract;
 use Rice\Basic\Support\Converts\TypeConvert;
 use Rice\Basic\Support\DataExtract;
 use Rice\Basic\Support\Generate\Annotation\Property;
@@ -18,7 +18,7 @@ trait AutoFillProperties
     private $_cache;
     private $_idx;
 
-    public function __construct($params, AutoFillCacheContract $cache = null, $idx = '')
+    public function __construct($params, CacheContract $cache = null, $idx = '')
     {
         if (empty($params)) {
             return;

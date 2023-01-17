@@ -12,9 +12,9 @@ class FileNamespace
     public const END_PATTERN   = '/^class\s*(.*)$/';
     public const USE_PATTERN   = '/^use\s*([\S]+)[\s*;](?:AS|as)?\s*(\w*)[;]?$/';
 
-    protected $uses = [];
+    protected array $uses = [];
 
-    protected $alias = [];
+    protected array $alias = [];
 
     public function analysisNamespaces($classNamespace, $rowData): bool
     {

@@ -3,17 +3,17 @@
 namespace Rice\Basic\Support\Annotation;
 
 use ReflectionClass;
-use Rice\Basic\Support\Contracts\AutoFillCacheContract;
 use Rice\Basic\Support\Decide;
 use Rice\Basic\Support\FileNamespace;
-use Rice\Basic\Support\Properties\Properties;
 use Rice\Basic\Support\Properties\Property;
+use Rice\Basic\Support\Properties\Properties;
+use Rice\Basic\Support\Contracts\CacheContract;
 
 class Annotation
 {
     /**
      * 缓存实体.
-     * @var AutoFillCacheContract
+     * @var CacheContract
      */
     private $cache;
 
@@ -21,31 +21,31 @@ class Annotation
      * 反射类.
      * @var ReflectionClass
      */
-    private $class;
+    private ReflectionClass $class;
 
     /**
      * 属性映射数组.
-     * @var Properties
+     * @var array
      */
-    private $properties;
+    private array $properties = [];
 
     /**
      * 命名空间映射数组.
      * @var array
      */
-    private $uses = [];
+    private array $uses = [];
 
     /**
      * 命名空间别名映射数组.
      * @var array
      */
-    private $alias = [];
+    private array $alias = [];
 
     /**
      * 对象属性解析队列.
      * @var array
      */
-    private $queue;
+    private array $queue;
 
     public function __construct($cache = null)
     {
@@ -112,7 +112,7 @@ class Annotation
             if (isset($matches[1]) && !empty($matches[1])) {
                 $docProperty                                   = (new Property($matches[1]));
                 $this->properties[$className][$property->name] = $docProperty;
-                $docProperty->namespace                        = $this->selectNamespace($docProperty);
+                $docProperty->namespace                        = $this->findNamespace($docProperty);
 
                 continue;
             }
@@ -122,10 +122,11 @@ class Annotation
     }
 
     /**
-     * @param $property
+     * 根据类属性查询命名空间
+     * @param Property $property
      * @return string
      */
-    public function selectNamespace(Property $property): string
+    public function findNamespace(Property $property): string
     {
         $className = $this->class->getName();
         $uses      = $this->uses[$className];
@@ -172,6 +173,6 @@ class Annotation
     public function getProperty(): array
     {
         // 兼容类无 protected 变量问题
-        return $this->properties ?? [];
+        return $this->properties;
     }
 }
