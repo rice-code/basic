@@ -92,7 +92,7 @@ class Annotation
                 return $this;
             }
         }
-        $this->uses  = FileNamespace::getInstance()->matchNamespace($classNamespace, $classFileName)->getUses();
+        $this->uses  = FileNamespace::getInstance()->execute($classNamespace, $classFileName)->getUses();
         $this->alias = FileNamespace::getInstance()->getAlias();
 
         if (VerifyUtil::notNull($this->cache)) {

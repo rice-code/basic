@@ -2,6 +2,7 @@
 
 namespace Rice\Basic\Support\Traits;
 
+use Rice\Basic\Enum\BaseEnum;
 use Rice\Basic\Enum\NameTypeEnum;
 use Rice\Basic\Enum\ExceptionEnum;
 use Rice\Basic\Support\Utils\StrUtil;
@@ -10,6 +11,10 @@ use Rice\Basic\Exception\SupportException;
 
 trait Accessor
 {
+    /**
+     * @throws SupportException
+     * @throws DTOException
+     */
     public function __call($name, $args)
     {
         preg_match('/^([sg]et)(.*)/', $name, $matchArr);
@@ -37,7 +42,7 @@ trait Accessor
         throw new DTOException(DTOException::METHOD_NOT_DEFINE);
     }
 
-    private function setValue($attrName, $args)
+    private function setValue($attrName, $args): void
     {
         $this->{$attrName} = $args[0];
     }
@@ -49,9 +54,10 @@ trait Accessor
 
     /**
      * @param object $obj
-     * @param array  $fields
-     * @param int    $nameType
+     * @param array $fields
+     * @param int $nameType
      * @return array
+     * @throws SupportException
      */
     private function assignElement(object $obj, array $fields, int $nameType): array
     {
@@ -97,16 +103,25 @@ trait Accessor
         return $result ?? [];
     }
 
+    /**
+     * @throws SupportException
+     */
     public function toArray($fields = []): array
     {
         return $this->assignElement($this, $fields, NameTypeEnum::UNLIMITED);
     }
 
+    /**
+     * @throws SupportException
+     */
     public function toSnakeCaseArray($fields = []): array
     {
         return $this->assignElement($this, $fields, NameTypeEnum::SNAKE_CASE);
     }
 
+    /**
+     * @throws SupportException
+     */
     public function toCamelCaseArray($fields = []): array
     {
         return $this->assignElement($this, $fields, NameTypeEnum::CAMEL_CASE);

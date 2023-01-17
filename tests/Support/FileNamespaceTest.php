@@ -10,7 +10,7 @@ class FileNamespaceTest extends TestCase
 {
     public function testGetNamespaces(): void
     {
-        FileNamespace::getInstance()->matchNamespace(Cat::class, __DIR__ . DIRECTORY_SEPARATOR . 'Entity' . DIRECTORY_SEPARATOR . 'Cat.php');
+        FileNamespace::getInstance()->execute(Cat::class, __DIR__ . DIRECTORY_SEPARATOR . 'Entity' . DIRECTORY_SEPARATOR . 'Cat.php');
         $uses = FileNamespace::getInstance()->getUses();
 
         $this->assertArrayHasKey(Cat::class, $uses);

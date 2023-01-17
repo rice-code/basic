@@ -18,7 +18,7 @@ class File
         }
     }
 
-    public function close()
+    public function close(): void
     {
         if (!is_null($this->handle)) {
             fclose($this->handle);
@@ -26,7 +26,7 @@ class File
         }
     }
 
-    public function readLine()
+    public function readLine(): \Generator
     {
         while (!feof($this->handle)) {
             yield trim(fgets($this->handle));
