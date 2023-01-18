@@ -2,12 +2,14 @@
 
 namespace Rice\Basic\Support\Traits;
 
+use ReflectionException;
+use Rice\Basic\Exception\SupportException;
 use Rice\Basic\Exception\TypeException;
 use Rice\Basic\Support\Annotation\Annotation;
-use Rice\Basic\Support\Contracts\AutoFillCacheContract;
+use Rice\Basic\Support\Contracts\CacheContract;
 use Rice\Basic\Support\Converts\TypeConvert;
-use Rice\Basic\Support\DataExtract;
-use Rice\Basic\Support\Generate\Annotation\Property;
+use Rice\Basic\Support\Properties\Property;
+use Rice\Basic\Support\Utils\ExtractUtil;
 use Rice\Basic\Support\Utils\StrUtil;
 
 trait AutoFillProperties
@@ -18,7 +20,10 @@ trait AutoFillProperties
     private $_cache;
     private $_idx;
 
-    public function __construct($params, AutoFillCacheContract $cache = null, $idx = '')
+    /**
+     * @throws ReflectionException
+     */
+    public function __construct($params, CacheContract $cache = null, $idx = '')
     {
         if (empty($params)) {
             return;
@@ -51,9 +56,12 @@ trait AutoFillProperties
         $this->afterFillHook($params);
     }
 
+    /**
+     * @throws SupportException
+     */
     public function fill(): void
     {
-        $propertyArr = DataExtract::getCamelCase($this->_propertyArr, get_class($this));
+        $propertyArr = ExtractUtil::getCamelCase($this->_propertyArr, get_class($this));
 
         /**
          * @var Property $property
@@ -67,7 +75,7 @@ trait AutoFillProperties
                 $loopIdx = $propertyName;
             }
 
-            $value = DataExtract::get($this->_params, $loopIdx);
+            $value = ExtractUtil::get($this->_params, $loopIdx);
 
             if (is_null($property)) {
                 $this->{$name} = $value;

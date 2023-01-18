@@ -1,33 +1,34 @@
 <?php
 
-namespace Rice\Basic\Support;
+namespace Rice\Basic\Support\Utils;
 
-use Rice\Basic\Support\Utils\StrUtil;
+use Rice\Basic\Exception\SupportException;
 
 /**
  * 数据提取
- * Class DataExtract.
+ * Class ExtractUtil.
  */
-class DataExtract
+class ExtractUtil
 {
     /**
      * @var bool 是否驼峰
      */
-    public static $camelCase = false;
+    public static bool $camelCase = false;
 
     /**
      * @var bool 是否蛇形
      */
-    public static $snakeCase = false;
+    public static bool $snakeCase = false;
 
     /**
      * 数据提取.
-     * @param string|array|object $source  数据源
-     * @param string              $key     提取key
-     * @param null                $default 默认值
+     * @param string|array|object $source 数据源
+     * @param string $key 提取key
+     * @param null $default 默认值
      * @return mixed|null
+     * @throws SupportException
      */
-    public static function get($source, $key, $default = null)
+    public static function get($source, string $key, $default = null)
     {
         if (is_string($source)) {
             $source = json_decode($source, true);
@@ -56,6 +57,9 @@ class DataExtract
         return $source;
     }
 
+    /**
+     * @throws SupportException
+     */
     public static function getCamelCase($source, $key, $default = null)
     {
         self::$camelCase = true;
@@ -65,6 +69,9 @@ class DataExtract
         return $val;
     }
 
+    /**
+     * @throws SupportException
+     */
     public static function getSnakeCase($source, $key, $default = null)
     {
         self::$snakeCase = true;

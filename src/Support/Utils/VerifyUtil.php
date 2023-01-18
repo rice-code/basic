@@ -1,16 +1,31 @@
 <?php
 
-namespace Rice\Basic\Support;
+namespace Rice\Basic\Support\Utils;
 
 use Rice\Basic\Exception\TypeException;
 
-class verify
+class VerifyUtil
 {
     /**
      * 是否开启强类型校验.
      * @var bool
      */
-    public static $strongTypeIsEnable = true;
+    public static bool $strongTypeIsEnable = true;
+
+    public static function notNull($obj): bool
+    {
+        return !is_null($obj);
+    }
+
+    public static function notEmpty($obj): bool
+    {
+        return !empty($obj);
+    }
+
+    public static function notNullAndNotEmpty($obj): bool
+    {
+        return self::notNull($obj) && self::notEmpty($obj);
+    }
 
     /**
      * 只校验已知类型.

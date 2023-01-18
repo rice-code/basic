@@ -12,11 +12,17 @@ class FileNamespace
     public const END_PATTERN   = '/^class\s*(.*)$/';
     public const USE_PATTERN   = '/^use\s*([\S]+)[\s*;](?:AS|as)?\s*(\w*)[;]?$/';
 
-    protected $uses = [];
+    protected array $uses = [];
 
-    protected $alias = [];
+    protected array $alias = [];
 
-    public function analysisNamespaces($classNamespace, $rowData): bool
+    /**
+     * 文件命名空间分析
+     * @param $classNamespace
+     * @param $rowData
+     * @return bool
+     */
+    public function analysis($classNamespace, $rowData): bool
     {
         $matches = [];
         if (preg_match(self::START_PATTERN, $rowData, $matches)) {
@@ -41,12 +47,18 @@ class FileNamespace
         return false;
     }
 
-    public function matchNamespace($namespace, $path): self
+    /**
+     * 分析文件命名空间执行入口
+     * @param string $namespace
+     * @param string $path
+     * @return $this
+     */
+    public function execute(string $namespace, string $path): self
     {
         $file = (new File($path));
         $row  = $file->readLine();
         while ($row->valid()) {
-            $isDone = $this->analysisNamespaces($namespace, $row->current());
+            $isDone = $this->analysis($namespace, $row->current());
             if ($isDone) {
                 break;
             }

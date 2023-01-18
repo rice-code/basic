@@ -3,17 +3,17 @@
 namespace Rice\Basic\Support\Annotation;
 
 use ReflectionClass;
-use Rice\Basic\Support\Contracts\AutoFillCacheContract;
-use Rice\Basic\Support\Decide;
+use ReflectionException;
 use Rice\Basic\Support\FileNamespace;
-use Rice\Basic\Support\Properties\Properties;
+use Rice\Basic\Support\Utils\VerifyUtil;
 use Rice\Basic\Support\Properties\Property;
+use Rice\Basic\Support\Contracts\CacheContract;
 
 class Annotation
 {
     /**
      * 缓存实体.
-     * @var AutoFillCacheContract
+     * @var CacheContract
      */
     private $cache;
 
@@ -21,37 +21,40 @@ class Annotation
      * 反射类.
      * @var ReflectionClass
      */
-    private $class;
+    private ReflectionClass $class;
 
     /**
      * 属性映射数组.
-     * @var Properties
+     * @var array
      */
-    private $properties;
+    private array $properties = [];
 
     /**
      * 命名空间映射数组.
      * @var array
      */
-    private $uses = [];
+    private array $uses = [];
 
     /**
      * 命名空间别名映射数组.
      * @var array
      */
-    private $alias = [];
+    private array $alias = [];
 
     /**
      * 对象属性解析队列.
      * @var array
      */
-    private $queue;
+    private array $queue;
 
     public function __construct($cache = null)
     {
         $this->cache = $cache;
     }
 
+    /**
+     * @throws ReflectionException
+     */
     public function execute($class): self
     {
         // 构建命名空间
@@ -70,7 +73,7 @@ class Annotation
      * 构建反射类.
      * @param $class
      * @return $this
-     * @throws \ReflectionException
+     * @throws ReflectionException
      */
     public function buildClass($class): self
     {
@@ -79,20 +82,20 @@ class Annotation
         $modifyTimestamp = $classNamespace . '_timestamp';
         $aliasNamespace  = $classNamespace . '_alias';
         $classFileName   = $this->class->getFileName();
-        if (Decide::notNull($this->cache)) {
+        if (VerifyUtil::notNull($this->cache)) {
             $modifyTime = $this->cache->get($modifyTimestamp);
             $content    = json_decode($this->cache->get($classNamespace), true);
             $alias      = json_decode($this->cache->get($aliasNamespace), true);
-            if (Decide::notNullAndNotEmpty($content) && $modifyTime == filemtime($classFileName)) {
+            if (VerifyUtil::notNullAndNotEmpty($content) && $modifyTime == filemtime($classFileName)) {
                 $this->uses = $content;
 
                 return $this;
             }
         }
-        $this->uses  = FileNamespace::getInstance()->matchNamespace($classNamespace, $classFileName)->getUses();
+        $this->uses  = FileNamespace::getInstance()->execute($classNamespace, $classFileName)->getUses();
         $this->alias = FileNamespace::getInstance()->getAlias();
 
-        if (Decide::notNull($this->cache)) {
+        if (VerifyUtil::notNull($this->cache)) {
             $this->cache->set($modifyTimestamp, filemtime($classFileName));
             $this->cache->set($classNamespace, json_encode($this->uses, JSON_UNESCAPED_UNICODE));
             $this->cache->set($aliasNamespace, json_encode($this->alias, JSON_UNESCAPED_UNICODE));
@@ -112,7 +115,7 @@ class Annotation
             if (isset($matches[1]) && !empty($matches[1])) {
                 $docProperty                                   = (new Property($matches[1]));
                 $this->properties[$className][$property->name] = $docProperty;
-                $docProperty->namespace                        = $this->selectNamespace($docProperty);
+                $docProperty->namespace                        = $this->findNamespace($docProperty);
 
                 continue;
             }
@@ -122,10 +125,11 @@ class Annotation
     }
 
     /**
-     * @param $property
+     * 根据类属性查询命名空间
+     * @param Property $property
      * @return string
      */
-    public function selectNamespace(Property $property): string
+    public function findNamespace(Property $property): string
     {
         $className = $this->class->getName();
         $uses      = $this->uses[$className];
@@ -172,6 +176,6 @@ class Annotation
     public function getProperty(): array
     {
         // 兼容类无 protected 变量问题
-        return $this->properties ?? [];
+        return $this->properties;
     }
 }

@@ -2,7 +2,7 @@
 
 namespace Rice\Basic\Support\Contracts;
 
-interface AutoFillCacheContract
+interface CacheContract
 {
     public function set($key, $value);
 
