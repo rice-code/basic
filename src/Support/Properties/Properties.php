@@ -2,15 +2,20 @@
 
 namespace Rice\Basic\Support\Properties;
 
+use ReflectionException;
+
 class Properties
 {
-    protected $refectionClass;
+    protected \ReflectionClass $refectionClass;
 
     /**
      * @var Property[]
      */
-    protected $properties;
+    protected array $properties;
 
+    /**
+     * @throws ReflectionException
+     */
     public function __construct(string $namespace)
     {
         $this->refectionClass = new \ReflectionClass($namespace);

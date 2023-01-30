@@ -19,11 +19,11 @@ class LengthConvert extends BaseMeter
 
     /**
      * @overwrite
-     * @var string
+     * @var ?string
      */
-    protected $anchorPointUnit = self::METRIC_M;
+    protected ?string $anchorPointUnit = self::METRIC_M;
 
-    protected $calculates = [
+    protected array $calculates = [
         // 公制
         self::METRIC_KM  => '1000',
         self::METRIC_M   => '1',

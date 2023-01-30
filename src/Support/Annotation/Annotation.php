@@ -3,6 +3,7 @@
 namespace Rice\Basic\Support\Annotation;
 
 use ReflectionClass;
+use ReflectionProperty;
 use ReflectionException;
 use Rice\Basic\Support\FileNamespace;
 use Rice\Basic\Support\Utils\VerifyUtil;
@@ -11,6 +12,8 @@ use Rice\Basic\Support\Contracts\CacheContract;
 
 class Annotation
 {
+    private const VAR_PATTERN = '/.*@var\s+(\S+)/';
+
     /**
      * 缓存实体.
      * @var CacheContract
@@ -82,50 +85,74 @@ class Annotation
         $modifyTimestamp = $classNamespace . '_timestamp';
         $aliasNamespace  = $classNamespace . '_alias';
         $classFileName   = $this->class->getFileName();
+
+        if ($this->readCache($classFileName, $modifyTimestamp, $classNamespace, $aliasNamespace)) {
+            return $this;
+        }
+
+        $this->uses  = FileNamespace::getInstance()->execute($classNamespace, $classFileName)->getUses();
+        $this->alias = FileNamespace::getInstance()->getAlias();
+
+        $this->writeCache($classFileName, $modifyTimestamp, $classNamespace, $aliasNamespace);
+
+        return $this;
+    }
+
+    public function readCache($classFileName, $modifyTimestamp, $classNamespace, $aliasNamespace): bool
+    {
         if (VerifyUtil::notNull($this->cache)) {
             $modifyTime = $this->cache->get($modifyTimestamp);
             $content    = json_decode($this->cache->get($classNamespace), true);
             $alias      = json_decode($this->cache->get($aliasNamespace), true);
             if (VerifyUtil::notNullAndNotEmpty($content) && $modifyTime == filemtime($classFileName)) {
-                $this->uses = $content;
+                $this->uses  = $content;
+                $this->alias = $alias;
 
-                return $this;
+                return true;
             }
         }
-        $this->uses  = FileNamespace::getInstance()->execute($classNamespace, $classFileName)->getUses();
-        $this->alias = FileNamespace::getInstance()->getAlias();
 
+        return false;
+    }
+
+    public function writeCache($classFileName, $modifyTimestamp, $classNamespace, $aliasNamespace): void
+    {
         if (VerifyUtil::notNull($this->cache)) {
             $this->cache->set($modifyTimestamp, filemtime($classFileName));
             $this->cache->set($classNamespace, json_encode($this->uses, JSON_UNESCAPED_UNICODE));
             $this->cache->set($aliasNamespace, json_encode($this->alias, JSON_UNESCAPED_UNICODE));
         }
-
-        return $this;
     }
 
     public function analysisAttr(): void
     {
-        $properties = $this->class->getProperties(\ReflectionProperty::IS_PROTECTED);
-        $pattern    = '/.*@var\s+(\S+)/';
+        $properties = $this->class->getProperties(ReflectionProperty::IS_PROTECTED);
         $className  = $this->class->getName();
         foreach ($properties as $property) {
-            $matches = [];
-            preg_match($pattern, $property->getDocComment(), $matches);
-            if (isset($matches[1]) && !empty($matches[1])) {
-                $docProperty                                   = (new Property($matches[1]));
-                $this->properties[$className][$property->name] = $docProperty;
-                $docProperty->namespace                        = $this->findNamespace($docProperty);
-
-                continue;
-            }
-
-            $this->properties[$className][$property->name] = null;
+            $this->matchProperties($property, $className);
         }
     }
 
     /**
-     * 根据类属性查询命名空间
+     * @param ReflectionProperty $property
+     * @param string             $className
+     */
+    public function matchProperties(ReflectionProperty $property, string $className): void
+    {
+        $matches = [];
+        preg_match(self::VAR_PATTERN, $property->getDocComment(), $matches);
+
+        $this->properties[$className][$property->name] = null;
+
+        if (isset($matches[1]) && !empty($matches[1])) {
+            $docProperty                                   = (new Property($matches[1]));
+            $this->properties[$className][$property->name] = $docProperty;
+            $docProperty->namespace                        = $this->findNamespace($docProperty);
+        }
+    }
+
+    /**
+     * 根据类属性查询命名空间.
      * @param Property $property
      * @return string
      */

@@ -11,26 +11,29 @@ abstract class BaseMeter
      * 数值
      * @var string
      */
-    protected $num;
+    protected string $num;
 
     /**
      * 锚点单位.
-     * @var string
+     * @var ?string
      */
-    protected $anchorPointUnit = null;
+    protected ?string $anchorPointUnit = null;
 
     /**
      * 计算公式.
      * @var array
      */
-    protected $calculates = [];
+    protected array $calculates = [];
 
     /**
      * 单位.
      * @var string
      */
-    protected $unit;
+    protected string $unit;
 
+    /**
+     * @throws SupportException
+     */
     public function __construct(string $num, string $unit, $scale = 4)
     {
         if (is_null($this->anchorPointUnit)) {
@@ -45,10 +48,10 @@ abstract class BaseMeter
     /**
      * 相加.
      * @param string $num
-     * @param int    $scale
+     * @param int $scale
      * @return $this
      */
-    public function add(string $num, $scale = 0): self
+    public function add(string $num, int $scale = 0): self
     {
         $this->num = bcadd($this->num, $num, $scale);
 
@@ -70,10 +73,10 @@ abstract class BaseMeter
     /**
      * 乘法.
      * @param string $num
-     * @param int    $scale
+     * @param int $scale
      * @return $this
      */
-    public function mul(string $num, $scale = 0): self
+    public function mul(string $num, int $scale = 0): self
     {
         $this->num = bcmul($this->num, $num, $scale);
 
@@ -83,11 +86,11 @@ abstract class BaseMeter
     /**
      * 除法.
      * @param string $num
-     * @param int    $scale
+     * @param int $scale
      * @return $this
      * @throws SupportException
      */
-    public function div(string $num, $scale = 0): self
+    public function div(string $num, int $scale = 0): self
     {
         if ('' === $num || '0' === $num) {
             throw new SupportException(SupportException::CANNOT_DIVIDE_BY_ZERO);
@@ -101,10 +104,10 @@ abstract class BaseMeter
     /**
      * 取余.
      * @param string $num
-     * @param int    $scale
+     * @param int $scale
      * @return $this
      */
-    public function mod(string $num, $scale = 0): self
+    public function mod(string $num, int $scale = 0): self
     {
         $this->num = bcmod($this->num, $num, $scale);
 
@@ -114,10 +117,10 @@ abstract class BaseMeter
     /**
      * 乘方.
      * @param string $exponent
-     * @param int    $scale
+     * @param int $scale
      * @return $this
      */
-    public function pow(string $exponent, $scale = 0): self
+    public function pow(string $exponent, int $scale = 0): self
     {
         $this->num = bcpow($this->num, $exponent, $scale);
 
@@ -154,10 +157,10 @@ abstract class BaseMeter
      * 数字大小比较
      * 两个数相等时返回 0； $this->num 比 $num 大时返回 1； 其他则返回 -1。
      * @param string $num
-     * @param int    $scale
+     * @param int $scale
      * @return int
      */
-    public function comp(string $num, $scale = 0): int
+    public function comp(string $num, int $scale = 0): int
     {
         return bccomp($this->num, $num, $scale);
     }
@@ -165,10 +168,10 @@ abstract class BaseMeter
     /**
      * 大于.
      * @param string $num
-     * @param int    $scale
+     * @param int $scale
      * @return bool
      */
-    public function gt(string $num, $scale = 0): bool
+    public function gt(string $num, int $scale = 0): bool
     {
         return 1 === $this->comp($num, $scale);
     }
@@ -176,10 +179,10 @@ abstract class BaseMeter
     /**
      * 小于.
      * @param string $num
-     * @param int    $scale
+     * @param int $scale
      * @return bool
      */
-    public function lt(string $num, $scale = 0): bool
+    public function lt(string $num, int $scale = 0): bool
     {
         return -1 === $this->comp($num, $scale);
     }
@@ -187,10 +190,10 @@ abstract class BaseMeter
     /**
      * 等于.
      * @param string $num
-     * @param int    $scale
+     * @param int $scale
      * @return bool
      */
-    public function eq(string $num, $scale = 0): bool
+    public function eq(string $num, int $scale = 0): bool
     {
         return 0 === $this->comp($num, $scale);
     }
@@ -212,7 +215,7 @@ abstract class BaseMeter
      * @param int $scale
      * @return string
      */
-    public function getNum($scale = 0): string
+    public function getNum(int $scale = 0): string
     {
         return number_format($this->num, $scale, '.', '');
     }
@@ -223,7 +226,7 @@ abstract class BaseMeter
      * @param int $scale
      * @return string
      */
-    public function to($unit, $scale = 4): string
+    public function to($unit, int $scale = 4): string
     {
         $handle = $this->calculates[$unit];
         if (is_callable($handle)) {
@@ -239,7 +242,7 @@ abstract class BaseMeter
      * @param int $scale
      * @return $this
      */
-    protected function from($unit, $scale = 4): self
+    protected function from($unit, int $scale = 4): self
     {
         $handle = $this->calculates[$unit];
         if (is_callable($handle)) {

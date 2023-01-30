@@ -19,11 +19,11 @@ class WeightConvert extends BaseMeter
 
     /**
      * @overwrite
-     * @var string
+     * @var ?string
      */
-    protected $anchorPointUnit = self::METRIC_KG;
+    protected ?string $anchorPointUnit = self::METRIC_KG;
 
-    protected $calculates = [
+    protected array $calculates = [
         // 公制
         self::METRIC_T    => '1000',
         self::METRIC_KG   => '1',

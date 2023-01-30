@@ -8,8 +8,8 @@ class FileNamespace
 {
     use Singleton;
 
-    public const START_PATTERN = '/^namespace\s+(.*);$/';
-    public const END_PATTERN   = '/^class\s*(.*)$/';
+    public const NAMESPACE_PATTERN = '/^namespace\s+(.*);$/';
+    public const CLASS_DEFINE_PATTERN   = '/^class\s*(.*)$/';
     public const USE_PATTERN   = '/^use\s*([\S]+)[\s*;](?:AS|as)?\s*(\w*)[;]?$/';
 
     protected array $uses = [];
@@ -25,9 +25,17 @@ class FileNamespace
     public function analysis($classNamespace, $rowData): bool
     {
         $matches = [];
-        if (preg_match(self::START_PATTERN, $rowData, $matches)) {
+
+        if (preg_match(self::CLASS_DEFINE_PATTERN, $rowData, $matches)) {
+            return true;
+        }
+        
+        if (preg_match(self::NAMESPACE_PATTERN, $rowData, $matches)) {
             $this->uses[$classNamespace]['this'] = $matches[1] ?? '';
-        } elseif (preg_match(self::USE_PATTERN, $rowData, $matches)) {
+            return false;
+        }
+
+        if (preg_match(self::USE_PATTERN, $rowData, $matches)) {
             $useNamespace = $matches[1] ?? '';
             $as           = $matches[2] ?? '';
             if ($useNamespace) {
@@ -40,8 +48,8 @@ class FileNamespace
 
                 $this->uses[$classNamespace][$objName] = implode('\\', $words);
             }
-        } elseif (preg_match(self::END_PATTERN, $rowData, $matches)) {
-            return true;
+
+            return false;
         }
 
         return false;

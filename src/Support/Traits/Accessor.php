@@ -4,9 +4,9 @@ namespace Rice\Basic\Support\Traits;
 
 use Rice\Basic\Enum\BaseEnum;
 use Rice\Basic\Enum\NameTypeEnum;
-use Rice\Basic\Enum\ExceptionEnum;
 use Rice\Basic\Support\Utils\StrUtil;
 use Rice\Basic\Exception\DTOException;
+use Rice\Basic\Exception\BaseException;
 use Rice\Basic\Exception\SupportException;
 
 trait Accessor
@@ -14,6 +14,7 @@ trait Accessor
     /**
      * @throws SupportException
      * @throws DTOException
+     * @throws BaseException
      */
     public function __call($name, $args)
     {
@@ -27,7 +28,7 @@ trait Accessor
         }
 
         if (!property_exists($this, $attrName)) {
-            throw new SupportException(ExceptionEnum::ATTR_NOT_DEFINE);
+            throw new SupportException(BaseEnum::ATTR_NOT_DEFINE);
         }
 
         switch ($style) {
@@ -39,7 +40,7 @@ trait Accessor
                 return $this->getValue($attrName);
         }
 
-        throw new DTOException(DTOException::METHOD_NOT_DEFINE);
+        throw new SupportException(BaseEnum::METHOD_NOT_DEFINE);
     }
 
     private function setValue($attrName, $args): void
@@ -54,8 +55,8 @@ trait Accessor
 
     /**
      * @param object $obj
-     * @param array $fields
-     * @param int $nameType
+     * @param array  $fields
+     * @param int    $nameType
      * @return array
      * @throws SupportException
      */
