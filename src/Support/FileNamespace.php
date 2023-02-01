@@ -26,6 +26,15 @@ class FileNamespace
     {
         $matches = [];
 
+        // 初始化，保证遍历过的类文件都存在alias，uses数组 index
+        if (!isset($this->alias[$classNamespace])) {
+            $this->alias[$classNamespace] = [];
+        }
+
+        if (!isset($this->uses[$classNamespace])) {
+            $this->uses[$classNamespace] = [];
+        }
+
         if (preg_match(self::CLASS_DEFINE_PATTERN, $rowData, $matches)) {
             return true;
         }

@@ -12,20 +12,46 @@ use Rice\Basic\Exception\SupportException;
 trait Accessor
 {
     /**
+     * 默认开启 setter
+     * @var bool
+     */
+    protected bool $_setter = true;
+
+    /**
+     * 默认开启 getter
+     */
+    protected bool $_getter = true;
+
+    /**
      * @throws SupportException
-     * @throws DTOException
      * @throws BaseException
      */
     public function __call($name, $args)
     {
-        preg_match('/^([sg]et)(.*)/', $name, $matchArr);
-
-        $style    = $matchArr[1] ?? null;
-        $attrName = $matchArr[2] ?? null;
-
-        if (!is_null($attrName)) {
-            $attrName = lcfirst($attrName);
+        if (method_exists($this, 'resetAccessor')) {
+            $this->resetAccessor();
         }
+        $pattern = '/^([sg]et)(.*)/';
+
+        if ($this->_getter && !$this->_setter) {
+            $pattern = '/^(get)(.*)/';
+        }
+
+        if (!$this->_getter && $this->_setter) {
+            $pattern = '/^(set)(.*)/';
+        }
+
+        $matches = [];
+        preg_match($pattern, $name, $matches);
+
+        $style    = $matches[1] ?? null;
+        $attrName = $matches[2] ?? null;
+
+        if (is_null($style) && is_null($attrName)) {
+            throw new SupportException(BaseEnum::METHOD_NOT_DEFINE);
+        }
+
+        $attrName = lcfirst($attrName);
 
         if (!property_exists($this, $attrName)) {
             throw new SupportException(BaseEnum::ATTR_NOT_DEFINE);

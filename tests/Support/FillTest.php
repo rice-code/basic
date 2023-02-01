@@ -2,11 +2,16 @@
 
 namespace Tests\Support;
 
+use Rice\Basic\Exception\SupportException;
 use Tests\Support\Entity\Cat;
 use PHPUnit\Framework\TestCase;
 
 class FillTest extends TestCase
 {
+    /**
+     * @throws SupportException
+     * @throws \ReflectionException
+     */
     public function testAutoFill()
     {
         $params = [

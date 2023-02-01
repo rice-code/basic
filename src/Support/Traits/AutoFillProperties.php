@@ -3,6 +3,7 @@
 namespace Rice\Basic\Support\Traits;
 
 use ReflectionException;
+use Rice\Basic\Entity\FrameEntity;
 use Rice\Basic\Support\Utils\StrUtil;
 use Rice\Basic\Exception\TypeException;
 use Rice\Basic\Support\Utils\ExtractUtil;
@@ -14,11 +15,11 @@ use Rice\Basic\Support\Contracts\CacheContract;
 
 trait AutoFillProperties
 {
-    private $_params;
-    private $_propertyArr;
-    private $_alias;
-    private $_cache;
-    private $_idx;
+    private array $_params;
+    private array $_properties;
+    private array $_alias;
+    private ?CacheContract $_cache;
+    private string $_idx;
 
     /**
      * @throws ReflectionException
@@ -40,7 +41,7 @@ trait AutoFillProperties
 
         $this->_params      = $params;
         $annotation         = (new Annotation($cache));
-        $this->_propertyArr = $annotation->execute($this)->getProperty();
+        $this->_properties  = $annotation->execute($this)->getProperty();
         $this->_alias       = $annotation->getAlias();
         $this->_cache       = $cache;
         $this->_idx         = $idx;
@@ -65,13 +66,17 @@ trait AutoFillProperties
      */
     public function fill(): void
     {
-        $propertyArr = ExtractUtil::getCamelCase($this->_propertyArr, get_class($this));
+        $propertyArr = ExtractUtil::getCamelCase($this->_properties, get_class($this));
 
         /**
          * @var Property $property
          */
         foreach ($propertyArr as $name => $property) {
             $propertyName = StrUtil::snakeCaseToCamelCase($name);
+
+            if (FrameEntity::inFilter($name)) {
+                continue;
+            }
 
             if ($this->_idx) {
                 $loopIdx = "{$this->_idx}.{$propertyName}";
@@ -86,9 +91,8 @@ trait AutoFillProperties
 
                 continue;
             }
-
             if ($property->isClass) {
-                if (!isset($this->_propertyArr[$property->namespace])) {
+                if (!isset($this->_properties[$property->namespace])) {
                     $this->{$name} = null;
                 } elseif ($property->isArray) {
                     foreach ($value as $k => $v) {
@@ -98,8 +102,12 @@ trait AutoFillProperties
                     $this->{$name} = new $property->namespace($this->_params, $this->_cache, $loopIdx);
                 }
             } elseif ($property->isArray) {
-                foreach ($value as $k => $v) {
-                    $this->{$name}[] = $v;
+                $this->{$name} = [];
+
+                if (!is_null($value)) {
+                    foreach ($value as $k => $v) {
+                        $this->{$name}[] = $v;
+                    }
                 }
             } else {
                 $this->{$name} = $value;

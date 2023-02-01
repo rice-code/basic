@@ -20,6 +20,11 @@ composer require rice/basic
 
 工具包封装了 `DTO`, `Entity`, `Enum` 相关常用的抽象类，统一使用 `Base` 开头。
 
+### 使用场景
+1. 数组替换为对象进行管理
+2. 转换为对象后需要填充属性，可以使用参数自动填充功能
+3. 封装字段
+
 ### 常用的继承对象类
 ```text
 BaseAssembler
@@ -82,6 +87,26 @@ class TestAssembler implements BaseAssembler
 
 ### 样例
 
+#### 字段封装
+在类里面使用 `use Accessor` 对类的字段属性进行封装，之前设置为
+`public` 权限的全部改为 `protected` 或 `private`。
+
+> `Accessor` 类默认 `setter`, `getter` 都启用，如果只需要 `setter`
+> 或者 `getter` 的话，可以再 `use Setter` 或 `use Getter`
+
+##### bad
+```php
+$cat->speak;
+```
+
+##### better
+```php
+$cat->getSpeak();
+$cat->setSpeak($val);
+```
+
+> 面向对象三大特性之一封装，即隐藏对象内部数据的能力。如果都是公共属性的话，
+> 就会造成该对象没有任何限制的进行获取和修改属性数据，导致后续维护变得复杂。
 
 #### 注解使用
 
@@ -120,9 +145,21 @@ class Cat
 #### 请求参数自动数据填充
 `Laravel` 和 `Tp` 框架现在都支持自定义 `Request` 对象，所以这里我们可以定义所有的入参对象。然后使用 `basic`
  包的 `AutoFillProperties` 类就能实现参数自动填充到 `Request` 对象的类属性中去了。
- 
- > 对象属性不能够使用 $_xxx 的形式定义，因为这个被 `basic` 包底层规则占用了
- 
+
+`trait` `AutoFillProperties` 已使用类属性,使用该类必须避免重写问题。
+```php
+    private array $_filter = [
+        '_filter',
+        '_setter',
+        '_getter',
+        '_params',
+        '_properties',
+        '_alias',
+        '_cache',
+        '_idx',
+    ];
+```
+
 `Laravel` 例子：
 
 ```php
@@ -168,15 +205,17 @@ namespace App\Http\Requests;
 
 class TestRequest extends BaseRequest
 {
+    use AutoFillProperties;
+    
     /**
      * @var string 姓名
      */
-    public $name;
+    protected $name;
 
     /**
      * @var string 密码
      */
-    public $password;
+    protected $password;
 }
 ```
 

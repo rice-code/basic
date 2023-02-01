@@ -5,6 +5,7 @@ namespace Rice\Basic\Support\Annotation;
 use ReflectionClass;
 use ReflectionProperty;
 use ReflectionException;
+use Rice\Basic\Entity\FrameEntity;
 use Rice\Basic\Support\FileNamespace;
 use Rice\Basic\Support\Utils\VerifyUtil;
 use Rice\Basic\Support\Properties\Property;
@@ -126,9 +127,12 @@ class Annotation
 
     public function analysisAttr(): void
     {
-        $properties = $this->class->getProperties(ReflectionProperty::IS_PROTECTED);
+        $properties = $this->class->getProperties();
         $className  = $this->class->getName();
         foreach ($properties as $property) {
+            if (FrameEntity::inFilter($property->name)) {
+                continue;
+            }
             $this->matchProperties($property, $className);
         }
     }
