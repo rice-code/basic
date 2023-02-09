@@ -77,7 +77,45 @@ class TestAssembler implements BaseAssembler
 > 采用充血模型，提高实体的内聚性
 
 #### Enum
-枚举类目录
+枚举类目录，通常存放 `const` 变量, `ReturnCodeEnum` 类，按照阿里巴巴Java手册（泰山版）进行设计。
+
+```php
+class ReturnCodeEnum extends BaseEnum
+    implements ClientErrorCode, SystemErrorCode, ServiceErrorCode
+{
+    /**
+     * @default OK
+     */
+    public const OK = '00000';
+}
+```
+使用该包，默认强制要求使用枚举类进行定义返回码和异常码。这样子做可以使代码更可读，并且国际化的信息也能够
+与枚举类配合使用。例如：
+```php
+    /**
+     * @level 一级宏观错误码
+     * @zh-CN 用户端错误
+     */
+    public const CLIENT_ERROR = 'A0001';
+```
+`@zh-CN` 就是中文的描述,具体的标识可以参考国际化地区码。之前有使用过文件配置的方式进行配置结果发现，
+使用起来不方便。需要新建不同地区码文件，而且 `Enum` 类对应相关国际化文件过于分散，导致不直观。现在
+使用注解的形式进行捆绑在一起，变量与国际化信息更加聚合。
+
+[国际化地区码](./doc/国际化地区码.md)
+
+[阿里巴巴Java手册（泰山版）](https://developer.aliyun.com/article/766288)
+
+
+##### 使用场景
+对接第三方接口会存在请求 `uri` ，大多数时候我们可能会直接写在了 `service`
+类中。这样子写其实就把该变量耦合到该类中了，会导致如果我要做一个并发请求的
+`service` 类的话，那么我要么定义多次 `uri` 路由。要么就直接用 `service::const`
+直接从 `service2` 调用 `service1` 的代码。
+为了更好的解耦代码，我们就需要使用到 `Enum` 类，因为枚举类只保存数据，而没有
+业务行为，所以可以给多个 `service` 进行调用。
+
+> 为变量调用，提供解耦
 
 #### Exception
 异常类目录

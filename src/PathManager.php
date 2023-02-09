@@ -14,6 +14,7 @@ class PathManager
     use Singleton;
 
     public string $project;
+    public string $cache;
     public string $src;
     public string $test;
     public string $assembler;
@@ -29,6 +30,7 @@ class PathManager
     public function __construct()
     {
         $this->project   = __DIR__ . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR;
+        $this->cache     = $this->project . 'cache' . DIRECTORY_SEPARATOR;
         $this->src       = $this->project . 'src' . DIRECTORY_SEPARATOR;
         $this->test      = $this->project . 'tests' . DIRECTORY_SEPARATOR;
         $this->assembler = $this->src . 'Assembler' . DIRECTORY_SEPARATOR;
