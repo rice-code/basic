@@ -102,10 +102,6 @@ class ReturnCodeEnum extends BaseEnum
 使用起来不方便。需要新建不同地区码文件，而且 `Enum` 类对应相关国际化文件过于分散，导致不直观。现在
 使用注解的形式进行捆绑在一起，变量与国际化信息更加聚合。
 
-[国际化地区码](./doc/国际化地区码.md)
-
-[阿里巴巴Java手册（泰山版）](https://developer.aliyun.com/article/766288)
-
 
 ##### 使用场景
 对接第三方接口会存在请求 `uri` ，大多数时候我们可能会直接写在了 `service`
@@ -118,7 +114,8 @@ class ReturnCodeEnum extends BaseEnum
 > 为变量调用，提供解耦
 
 #### Exception
-异常类目录
+异常类目录, 与 `Enum` 类配合使用。按照功能模块等进行类的细化，做到单一责任。这样
+可以更好的在异常抛出后做出不同的兜底措施。
 
 #### phpunit 配置
 添加测试用例，保证源代码流程跑通，修改后的代码主流程不会报错。
@@ -187,9 +184,11 @@ class Cat
  包的 `AutoFillProperties` 类就能实现参数自动填充到 `Request` 对象的类属性中去了。
 
 `trait` `AutoFillProperties` 已使用类属性,使用该类必须避免重写问题。
+
+`src/Entity/FrameEntity.php`: 
+
 ```php
-    private array $_filter = [
-        '_filter',
+    private static array $_filter = [
         '_setter',
         '_getter',
         '_params',
@@ -307,12 +306,16 @@ composer require rice/ctl
 ```
 
 
-### 文章
+### 相关链接
 
 [创建属于自己的 composer 包](https://dmf-code.github.io/posts/54650cde2a44/)
 
+[国际化地区码](./doc/国际化地区码.md)
 
-### 赞助
+[阿里巴巴Java手册（泰山版）](https://developer.aliyun.com/article/766288)
+
+
+### 感谢 JetBrains 赞助
 
 ![](https://resources.jetbrains.com/storage/products/company/brand/logos/jb_beam.svg)
 
