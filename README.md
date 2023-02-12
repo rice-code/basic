@@ -191,6 +191,7 @@ class Cat
     private static array $_filter = [
         '_setter',
         '_getter',
+        '_readOnly',
         '_params',
         '_properties',
         '_alias',
