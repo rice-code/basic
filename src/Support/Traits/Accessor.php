@@ -22,6 +22,8 @@ trait Accessor
      */
     protected bool $_getter = true;
 
+    protected bool $_readOnly = true;
+
     /**
      * @throws SupportException
      * @throws BaseException
@@ -76,6 +78,11 @@ trait Accessor
 
     private function getValue($attrName)
     {
+        // 只读，因为对象 return 出去可以修改内部值，破坏封装性
+        if ($this->_readOnly && is_object($this->{$attrName})) {
+            return clone $this->{$attrName};
+        }
+
         return $this->{$attrName};
     }
 

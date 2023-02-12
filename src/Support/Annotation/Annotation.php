@@ -7,9 +7,9 @@ use ReflectionProperty;
 use ReflectionException;
 use Rice\Basic\Entity\FrameEntity;
 use Rice\Basic\Support\FileNamespace;
+use Rice\Basic\Contracts\CacheContract;
 use Rice\Basic\Support\Utils\VerifyUtil;
 use Rice\Basic\Support\Properties\Property;
-use Rice\Basic\Support\Contracts\CacheContract;
 
 class Annotation
 {

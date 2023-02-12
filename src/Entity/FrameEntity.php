@@ -7,6 +7,7 @@ class FrameEntity extends BaseEntity
     private static array $_filter = [
         '_setter',
         '_getter',
+        '_readOnly',
         '_params',
         '_properties',
         '_alias',

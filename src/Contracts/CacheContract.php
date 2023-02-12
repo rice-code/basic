@@ -1,6 +1,6 @@
 <?php
 
-namespace Rice\Basic\Support\Contracts;
+namespace Rice\Basic\Contracts;
 
 interface CacheContract
 {

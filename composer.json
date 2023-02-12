@@ -6,7 +6,11 @@
   "require": {
     "php": ">=7.4",
     "ext-json": "*",
-    "ext-bcmath": "*"
+    "ext-bcmath": "*",
+    "guzzlehttp/guzzle": "7.0"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "^9"
   },
   "autoload": {
     "psr-4": {
@@ -14,16 +18,6 @@
     },
     "files": [
     ]
-  },
-  "authors": [
-    {
-      "name": "dengmf",
-      "email": "1015814408@qq.com"
-    }
-  ],
-  "minimum-stability": "dev",
-  "require-dev": {
-    "phpunit/phpunit": "^9"
   },
   "autoload-dev": {
     "psr-4": {
@@ -33,6 +27,13 @@
       "tests/common.php"
     ]
   },
+  "authors": [
+    {
+      "name": "dengmf",
+      "email": "1015814408@qq.com"
+    }
+  ],
+  "minimum-stability": "dev",
   "scripts": {
     "test": [
       "phpunit"

@@ -3,15 +3,15 @@
 namespace Rice\Basic\Support\Traits;
 
 use ReflectionException;
+use Rice\Basic\Contracts\CacheContract;
 use Rice\Basic\Entity\FrameEntity;
-use Rice\Basic\Support\Utils\StrUtil;
-use Rice\Basic\Exception\TypeException;
-use Rice\Basic\Support\Utils\ExtractUtil;
 use Rice\Basic\Exception\SupportException;
-use Rice\Basic\Support\Properties\Property;
-use Rice\Basic\Support\Converts\TypeConvert;
+use Rice\Basic\Exception\TypeException;
 use Rice\Basic\Support\Annotation\Annotation;
-use Rice\Basic\Support\Contracts\CacheContract;
+use Rice\Basic\Support\Converts\TypeConvert;
+use Rice\Basic\Support\Properties\Property;
+use Rice\Basic\Support\Utils\ExtractUtil;
+use Rice\Basic\Support\Utils\StrUtil;
 
 trait AutoFillProperties
 {

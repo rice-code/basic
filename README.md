@@ -128,6 +128,8 @@ class ReturnCodeEnum extends BaseEnum
 #### 字段封装
 在类里面使用 `use Accessor` 对类的字段属性进行封装，之前设置为
 `public` 权限的全部改为 `protected` 或 `private`。
+当属性为对象时，`getter` 会获取其克隆对象。这样子做是为了避免对象
+暴漏出去后，不小心修改值，导致破坏内部封装，增加心智负担。
 
 > `Accessor` 类默认 `setter`, `getter` 都启用，如果只需要 `setter`
 > 或者 `getter` 的话，可以再 `use Setter` 或 `use Getter`
