@@ -10,8 +10,6 @@ use Rice\Basic\Enum\LangEnum;
  */
 class TypeException extends BaseException
 {
-    public const INVALID_TYPE = 'invalid type';
-
     public static function getLangName(): string
     {
         return LangEnum::TYPE;

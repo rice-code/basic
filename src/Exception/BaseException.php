@@ -24,18 +24,14 @@ abstract class BaseException extends \Exception
 
     public function __construct($message = '', $code = 0, Throwable $previous = null)
     {
-        if (!isset(self::$languages[LangEnum::BASE])) {
-            self::$languages[LangEnum::BASE] = Lang::getInstance()->setFileName(LangEnum::BASE)->loadFile();
-        }
-
         $langName = $this::getLangName();
         if (!isset(self::$languages[$langName])) {
             // 语言包重写错误信息
             self::$languages[$langName] = Lang::getInstance()->setFileName($langName)->loadFile();
         }
 
-        if (isset(self::$languages[$message])) {
-            $message = self::$languages[$message];
+        if (isset(self::$languages[$langName][$message])) {
+            $message = self::$languages[$langName][$message];
         }
         parent::__construct($message, $code, $previous);
     }

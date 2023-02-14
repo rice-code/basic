@@ -5,6 +5,7 @@ namespace Rice\Basic\Support\Traits;
 use ReflectionException;
 use Rice\Basic\Contracts\CacheContract;
 use Rice\Basic\Entity\FrameEntity;
+use Rice\Basic\Enum\TypeEnum;
 use Rice\Basic\Exception\SupportException;
 use Rice\Basic\Exception\TypeException;
 use Rice\Basic\Support\Annotation\Annotation;
@@ -32,7 +33,7 @@ trait AutoFillProperties
         }
 
         if (!is_object($params) || !is_array($params)) {
-            new TypeException(TypeException::INVALID_TYPE);
+            new TypeException(TypeEnum::INVALID_TYPE);
         }
 
         if (is_object($params)) {

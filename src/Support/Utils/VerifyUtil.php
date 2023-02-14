@@ -2,6 +2,7 @@
 
 namespace Rice\Basic\Support\Utils;
 
+use Rice\Basic\Enum\TypeEnum;
 use Rice\Basic\Exception\TypeException;
 
 class VerifyUtil
@@ -58,7 +59,7 @@ class VerifyUtil
     public static function throwStrongType($type, $value): void
     {
         if (self::$strongTypeIsEnable && !self::strongType($type, $value)) {
-            throw new TypeException(TypeException::INVALID_TYPE);
+            throw new TypeException(TypeEnum::INVALID_TYPE);
         }
     }
 }

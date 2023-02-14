@@ -3,6 +3,7 @@
 namespace Rice\Basic\Support\Converts;
 
 use Rice\Basic\Enum\BaseEnum;
+use Rice\Basic\Enum\SupportEnum;
 use Rice\Basic\Exception\SupportException;
 
 abstract class BaseMeter
@@ -93,7 +94,7 @@ abstract class BaseMeter
     public function div(string $num, int $scale = 0): self
     {
         if ('' === $num || '0' === $num) {
-            throw new SupportException(SupportException::CANNOT_DIVIDE_BY_ZERO);
+            throw new SupportException(SupportEnum::CANNOT_DIVIDE_BY_ZERO);
         }
 
         $this->num = bcdiv($this->num, $num, $scale);

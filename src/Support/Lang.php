@@ -52,8 +52,8 @@ class Lang
 
     public function loadFile(): array
     {
-        $langPath = PathManager::getInstance()->lang . $this->locale . DIRECTORY_SEPARATOR . $this->fileName . '.php';
+        $langPath = PathManager::getInstance()->lang . $this->locale . DIRECTORY_SEPARATOR . $this->fileName . '.json';
 
-        return require $langPath;
+        return json_decode(file_get_contents($langPath), true);
     }
 }
