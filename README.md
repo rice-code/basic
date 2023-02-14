@@ -315,6 +315,8 @@ composer require rice/ctl
 
 [阿里巴巴Java手册（泰山版）](https://developer.aliyun.com/article/766288)
 
+### Star History
+[![Star History Chart](https://api.star-history.com/svg?repos=dmf-code/basic&type=Date)](https://star-history.com/#dmf-code/basic&Date)
 
 ### 感谢 JetBrains 赞助
 
