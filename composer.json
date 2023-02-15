@@ -3,6 +3,12 @@
   "description": "basic tool",
   "type": "library",
   "license": "Apache-2.0",
+  "keywords": [
+    "php",
+    "tools",
+    "basic",
+    "Clean code"
+  ],
   "require": {
     "php": ">=7.4",
     "ext-json": "*",

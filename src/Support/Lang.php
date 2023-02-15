@@ -9,8 +9,8 @@ class Lang
 {
     use Singleton;
 
-    private $locale   = 'zh-CN';
-    private $fileName = 'base';
+    private string $locale   = 'zh-CN';
+    private string $fileName = 'base';
 
     /**
      * @param string $locale

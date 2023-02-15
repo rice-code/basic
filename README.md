@@ -25,7 +25,7 @@ composer require rice/basic
 2. 转换为对象后需要填充属性，可以使用参数自动填充功能
 3. 封装字段
 
-### 常用的继承对象类
+### 框架组件
 ```text
 BaseAssembler
 BaseDTO
@@ -33,6 +33,8 @@ BaseEntity
 BaseEnum
 BaseException
 ```
+
+![继承对象关系图解](./doc/imgs/base_relation.png)
 
 #### Assembler
 数据装配器，主要继承 `BaseAssembler` 类。该层主要是统一将 `DTO` 和 `Entity` 相互转换，如果缺少了

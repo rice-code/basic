@@ -7,6 +7,7 @@ use ReflectionException;
 use Rice\Basic\Enum\BaseEnum;
 use Rice\Basic\Exception\BaseException;
 use Rice\Basic\Exception\SupportException;
+use Rice\Basic\Support\Lang;
 use Tests\Support\Entity\Cat;
 use Tests\Support\Entity\GetterCat;
 use Tests\Support\Entity\SetterCat;
@@ -25,11 +26,12 @@ class AccessorTest extends TestCase
 
         $setterCat = new SetterCat(['eyes' => 'blue']);
 
+        Lang::getInstance()->setLocale('en');
         $setterCat->setEyes('red');
         try {
             $setterCat->getEyes();
         } catch (\Exception $e) {
-            $this->assertEquals(BaseEnum::METHOD_NOT_DEFINE, $e->getMessage());
+            $this->assertEquals('method not define', $e->getMessage());
         }
 
         $getterCat = new GetterCat(['eyes' => 'blue']);
