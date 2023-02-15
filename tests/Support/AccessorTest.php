@@ -39,7 +39,7 @@ class AccessorTest extends TestCase
         try {
             $getterCat->setEyes('red');
         } catch (\Exception $e) {
-            $this->assertEquals(BaseEnum::METHOD_NOT_DEFINE, $e->getMessage());
+            $this->assertEquals('method not define', $e->getMessage());
         }
 
     }
