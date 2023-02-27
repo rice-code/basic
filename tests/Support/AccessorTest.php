@@ -4,9 +4,7 @@ namespace Tests\Support;
 
 use PHPUnit\Framework\TestCase;
 use ReflectionException;
-use Rice\Basic\Enum\BaseEnum;
-use Rice\Basic\Exception\BaseException;
-use Rice\Basic\Exception\SupportException;
+use Rice\Basic\components\Exception\SupportException;
 use Rice\Basic\Support\Lang;
 use Tests\Support\Entity\Cat;
 use Tests\Support\Entity\GetterCat;

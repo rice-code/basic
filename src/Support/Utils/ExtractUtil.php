@@ -2,7 +2,7 @@
 
 namespace Rice\Basic\Support\Utils;
 
-use Rice\Basic\Exception\SupportException;
+use Rice\Basic\components\Exception\SupportException;
 
 /**
  * 数据提取

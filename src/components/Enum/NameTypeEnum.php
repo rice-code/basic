@@ -1,6 +1,6 @@
 <?php
 
-namespace Rice\Basic\Enum;
+namespace Rice\Basic\components\Enum;
 
 class NameTypeEnum extends BaseEnum
 {

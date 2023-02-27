@@ -3,11 +3,11 @@
 namespace Rice\Basic\Support\Traits;
 
 use ReflectionException;
+use Rice\Basic\components\Entity\FrameEntity;
+use Rice\Basic\components\Enum\TypeEnum;
+use Rice\Basic\components\Exception\SupportException;
+use Rice\Basic\components\Exception\TypeException;
 use Rice\Basic\Contracts\CacheContract;
-use Rice\Basic\Entity\FrameEntity;
-use Rice\Basic\Enum\TypeEnum;
-use Rice\Basic\Exception\SupportException;
-use Rice\Basic\Exception\TypeException;
 use Rice\Basic\Support\Annotation\Annotation;
 use Rice\Basic\Support\Converts\TypeConvert;
 use Rice\Basic\Support\Properties\Property;

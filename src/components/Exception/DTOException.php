@@ -1,8 +1,8 @@
 <?php
 
-namespace Rice\Basic\Exception;
+namespace Rice\Basic\components\Exception;
 
-use Rice\Basic\Enum\LangEnum;
+use Rice\Basic\components\Enum\LangEnum;
 
 /**
  * 数据传输对象异常

@@ -1,8 +1,8 @@
 <?php
 
-namespace Rice\Basic\Enum\ReturnCode;
+namespace Rice\Basic\components\Enum\ReturnCode;
 
-use Rice\Basic\Enum\BaseEnum;
+use Rice\Basic\components\Enum\BaseEnum;
 
 class ReturnCodeEnum extends BaseEnum
     implements ClientErrorCode, SystemErrorCode, ServiceErrorCode

@@ -1,10 +1,9 @@
 <?php
 
-namespace Rice\Basic\Exception;
+namespace Rice\Basic\components\Exception;
 
-use Throwable;
 use Rice\Basic\Support\Lang;
-use Rice\Basic\Enum\LangEnum;
+use Throwable;
 
 abstract class BaseException extends \Exception
 {

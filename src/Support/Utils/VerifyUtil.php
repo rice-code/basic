@@ -2,8 +2,8 @@
 
 namespace Rice\Basic\Support\Utils;
 
-use Rice\Basic\Enum\TypeEnum;
-use Rice\Basic\Exception\TypeException;
+use Rice\Basic\components\Enum\TypeEnum;
+use Rice\Basic\components\Exception\TypeException;
 
 class VerifyUtil
 {

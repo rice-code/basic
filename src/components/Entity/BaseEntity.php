@@ -1,6 +1,6 @@
 <?php
 
-namespace Rice\Basic\Entity;
+namespace Rice\Basic\components\Entity;
 
 use Rice\Basic\Support\Traits\Accessor;
 

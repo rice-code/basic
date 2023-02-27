@@ -1,6 +1,6 @@
 <?php
 
-namespace Rice\Basic\DTO;
+namespace Rice\Basic\components\DTO;
 
 class Response extends BaseDTO
 {

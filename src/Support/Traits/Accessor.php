@@ -2,12 +2,11 @@
 
 namespace Rice\Basic\Support\Traits;
 
-use Rice\Basic\Enum\BaseEnum;
-use Rice\Basic\Enum\NameTypeEnum;
+use Rice\Basic\components\Enum\BaseEnum;
+use Rice\Basic\components\Enum\NameTypeEnum;
+use Rice\Basic\components\Exception\BaseException;
+use Rice\Basic\components\Exception\SupportException;
 use Rice\Basic\Support\Utils\StrUtil;
-use Rice\Basic\Exception\DTOException;
-use Rice\Basic\Exception\BaseException;
-use Rice\Basic\Exception\SupportException;
 
 trait Accessor
 {
