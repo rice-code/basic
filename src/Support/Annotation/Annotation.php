@@ -68,8 +68,6 @@ class Annotation
             $this->buildClass($objClass)->analysisAttr();
         }
 
-        // 赋值
-
         return $this;
     }
 
@@ -91,12 +89,22 @@ class Annotation
             return $this;
         }
 
-        $this->uses  = FileNamespace::getInstance()->execute($classNamespace, $classFileName)->getUses();
-        $this->alias = FileNamespace::getInstance()->getAlias();
+        $this->parseFileForNamespace($classNamespace, $classFileName);
 
         $this->writeCache($classFileName, $modifyTimestamp, $classNamespace, $aliasNamespace);
 
         return $this;
+    }
+
+    /**
+     * @param string $classNamespace
+     * @param $classFileName
+     * @return void
+     */
+    private function parseFileForNamespace(string $classNamespace, $classFileName): void
+    {
+        $this->uses = FileNamespace::getInstance()->execute($classNamespace, $classFileName)->getUses();
+        $this->alias = FileNamespace::getInstance()->getAlias();
     }
 
     public function readCache($classFileName, $modifyTimestamp, $classNamespace, $aliasNamespace): bool
