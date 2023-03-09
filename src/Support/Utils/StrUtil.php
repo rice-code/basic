@@ -67,7 +67,7 @@ class StrUtil
         return $newName;
     }
 
-    public static function snakeCaseToCamelCase(string $name)
+    public static function snakeCaseToCamelCase(string $name): string
     {
         $newName = '';
         $wordArr = explode('_', $name);
@@ -82,4 +82,41 @@ class StrUtil
 
         return $newName;
     }
+
+    /**
+     * 字符串前缀
+     *
+     * @param string $haystack
+     * @param  string|string[]  $needles
+     * @return bool
+     */
+    public static function startsWith(string $haystack, $needles): bool
+    {
+        foreach ((array) $needles as $needle) {
+            if ($needle !== '' && strpos($haystack, (string)$needle) === 0) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * 字符串后缀
+     *
+     * @param string $haystack
+     * @param  string|string[]  $needles
+     * @return bool
+     */
+    public static function endsWith(string $haystack, $needles): bool
+    {
+        foreach ((array) $needles as $needle) {
+            if (substr($haystack, -strlen($needle)) === (string) $needle) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
 }
