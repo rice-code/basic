@@ -54,6 +54,12 @@ class Lang
     {
         $langPath = PathManager::getInstance()->lang . $this->locale . DIRECTORY_SEPARATOR . $this->fileName . '.json';
 
-        return json_decode(file_get_contents($langPath), true);
+        $content = [];
+
+        if (file_exists($langPath)) {
+            $content = json_decode(file_get_contents($langPath), true, 512, JSON_THROW_ON_ERROR);
+        }
+
+        return $content;
     }
 }

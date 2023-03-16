@@ -32,6 +32,10 @@ trait AutoFillProperties
             return;
         }
 
+        if (is_string($params)) {
+            $params = json_decode($params, true);
+        }
+
         if (!is_object($params) || !is_array($params)) {
             new TypeException(TypeEnum::INVALID_TYPE);
         }

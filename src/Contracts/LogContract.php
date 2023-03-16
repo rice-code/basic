@@ -4,9 +4,9 @@ namespace Rice\Basic\Contracts;
 
 interface LogContract
 {
-    public static function error(string $message, array $content);
-    public static function warning(string $message, array $content);
-    public static function info(string $message, array $content);
+    public function error(string $message, array $content): void;
+    public function warning(string $message, array $content): void;
+    public function info(string $message, array $content): void;
 
-    public static function debug(string $message, array $content);
+    public function debug(string $message, array $content): void;
 }

@@ -65,7 +65,8 @@ class Annotation
         $this->queue[] = $class;
         while (!empty($this->queue)) {
             $objClass = array_shift($this->queue);
-            $this->buildClass($objClass)->analysisAttr();
+            $this->buildClass($objClass);
+            $this->analysisAttr();
         }
 
         return $this;

@@ -17,6 +17,7 @@ composer require rice/basic
 ### 功能点
 1. 提供基础框架组件 [锚点](#框架组件)
 2. 参数自动填充 [锚点](#请求参数自动数据填充)
+3. 请求客户端封装 [锚点](#请求客户端封装)
 
 ### 使用场景
 1. 数组替换为对象进行管理
@@ -294,6 +295,125 @@ class TestController extends BaseController
 > Request 对象相当于是一个防腐层一样，一个业务中会存在展示，修改，删除等功能。每一部分参数都有些许不一致，但
 > 是不可能给增删改查单独写一个 Request 类，不然编码上面太多类了。
 
+#### 请求客户端封装
+`GuzzleClient` 包通用逻辑封装
+
+`Support/Abstracts/Guzzle/GuzzleClient.php`
+
+在 `GuzzleClient` 之上再抽离一个匹配对应框架的客户端 `LaravelClient`
+`Support/Abstracts/Guzzle/LaravelClient.php`
+
+因为 `GuzzleClient` 需要实例化的日志对象，所以需要适配不同的框架，可以类似
+`LaravelClient` 实现。
+
+```php
+abstract class LaravelClient extends GuzzleClient
+{
+    public static function build()
+    {
+        return new static(LaravelLog::build());
+    }
+}
+```
+
+> 具体的日志实现可参考 `Support/Loggers/LaravelLog.php`
+
+##### 使用场景
+该 `client` 只是对 `Guzzle` 包的业务封装，所以使用上与 `Guzzle` 无异。
+比如我们可以使用 `$this->options` 提前设置通用属性。`setCallback`函数
+必须要实现，这个是判断请求在业务上是否成功的标识。与 `isSuccess` 函数配套使用，
+这样子就能把重复的逻辑抽象出来，只处理变化的部分。
+
+```php
+class DouYinClient extends LaravelClient
+{
+    // 通用初始化，可调用基类的 options 属性等
+    public function init(): void
+    {
+         $this->options[RequestOptions::JSON] = [
+            'app_id' => DouYinEnum::APP_ID,
+            'secret' => DouYinEnum::SECRET,
+            'auth_code' => DouYinEnum::AUTH_CODE,
+        ];
+    }
+
+    /**
+     * @throws GuzzleException
+     * @throws ClientException
+     */
+    public function accessToken()
+    {
+        if ($accessToken = Redis::get(DouYinEnum::CACHE_KEY)) {
+            return json_decode($accessToken, true);
+        }
+
+        $url = DouYinEnum::DOMAIN_URL.DouYinEnum::ACCESS_TOKEN_URL;
+
+        $this->mergeOption(
+            RequestOptions::JSON,
+            [
+            'grant_type' => DouYinEnum::getGrantType(DouYinEnum::ACCESS_TOKEN_URL)
+            ]
+        );
+
+        return $this->handle($url);
+    }
+
+    /**
+     * @throws GuzzleException
+     * @throws ClientException|JsonException
+     */
+    public function refreshToken($refreshToken): array
+    {
+        $url = DouYinEnum::DOMAIN_URL.DouYinEnum::REFRESH_TOKEN_URL;
+
+        $time = time();
+
+        $this->mergeOption(
+            RequestOptions::JSON,
+            [
+                'grant_type' => DouYinEnum::getGrantType(DouYinEnum::REFRESH_TOKEN_URL),
+                'refresh_token' => $refreshToken,
+            ]
+        );
+
+        $data = $this->handle($url);
+
+        $data['time'] = $time;
+        Redis::set(DouYinEnum::CACHE_KEY, json_encode($data, JSON_UNESCAPED_UNICODE));
+        return $data;
+    }
+
+    /**
+     * @param string $url
+     * @return array
+     * @throws ClientException
+     * @throws GuzzleException
+     */
+    private function handle(string $url): array
+    {
+        $this->setCallback(function (?ResponseInterface $response) {
+            if (!$response) {
+                return false;
+            }
+
+            $res = json_decode($response->getBody(), true);
+            return $res['code'] === 0;
+        });
+
+        $res = $this->client->post($url, $this->options);
+
+        if (!$this->isSuccess()) {
+            throw new ClientException('请求失败');
+        }
+        return json_decode($res, true)['data'];
+    }
+}
+```
+
+> tip: 请求的逻辑都要在该client类中实现，比如我有获取token和刷新token的请求，
+> 那么全部逻辑应该集中到该 `DouYinClient` 类中。这样子做业务上更加内聚，影响
+> 范围不会扩散。
 
 ### 配套工具
 

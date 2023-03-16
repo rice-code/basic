@@ -8,6 +8,7 @@ use GuzzleHttp\Psr7\Uri;
 use Carbon\CarbonInterface;
 use GuzzleHttp\TransferStats;
 use GuzzleHttp\RequestOptions;
+use Psr\Http\Message\ResponseInterface;
 use Rice\Basic\Contracts\LogContract;
 
 abstract class GuzzleClient
@@ -16,6 +17,8 @@ abstract class GuzzleClient
     protected LogContract $log;
     protected array $options;
     protected Carbon $startAt;
+
+    protected \Closure $callback;
 
     /**
      * 请求是否报错标识.
@@ -45,7 +48,6 @@ abstract class GuzzleClient
         $this->init();
         $this->logs();
         $this->startAt = Carbon::now();
-        $this->send();
     }
 
     public function setBizReportError(bool $val): self
@@ -54,13 +56,6 @@ abstract class GuzzleClient
 
         return $this;
     }
-
-    /**
-     * 请求发送
-     *
-     * @return void
-     */
-    abstract public function send(): void;
 
     /**
      * 变量初始化.
@@ -74,7 +69,10 @@ abstract class GuzzleClient
      *
      * @return bool
      */
-    abstract public function isSuccess(): bool;
+    public function isSuccess(): bool
+    {
+        return $this->success;
+    }
 
     /**
      * 写日志.
@@ -97,7 +95,7 @@ abstract class GuzzleClient
             }
 
             if (!$this->error) {
-                $this->success = $this->isSuccess();
+                $this->success = $this->getCallback($stats->getResponse());
             }
 
             $logInfo = $this->getLogInfo($stats);
@@ -116,18 +114,18 @@ abstract class GuzzleClient
     {
         // 成功
         if ($this->success) {
-            $this->log::info($this->message, $logInfo);
+            $this->log->info($this->message, $logInfo);
         }
         // curl 请求报错
         if ($this->error) {
-            $this->log::warning($this->message, $logInfo);
+            $this->log->warning($this->message, $logInfo);
         }
         // 业务 请求报错
         if (!$this->error) {
             if ($this->bizReportError) {
-                $this->log::error($this->message, $logInfo);
+                $this->log->error($this->message, $logInfo);
             } else {
-                $this->log::debug($this->message, $logInfo);
+                $this->log->debug($this->message, $logInfo);
             }
         }
     }
@@ -166,6 +164,31 @@ abstract class GuzzleClient
             //发送请求时相关的上下文变量
             'extraContext' => $this->getContent(),
         ];
+    }
+
+    public function mergeOption(string $key, array $value): void
+    {
+        if (!isset($this->options[$key])) {
+            $this->options[$key] = $value;
+            return;
+        }
+        $this->options[$key] = array_merge($this->options[$key], $value);
+    }
+
+    /**
+     * @return bool
+     */
+    public function getCallback(?ResponseInterface $response): bool
+    {
+        return ($this->callback)($response);
+    }
+
+    /**
+     * @param \Closure $callback
+     */
+    public function setCallback(\Closure $callback): void
+    {
+        $this->callback = $callback;
     }
 
     /**
