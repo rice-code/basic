@@ -2,9 +2,9 @@
 
 namespace Tests\Support;
 
+use Tests\Support\Entity\Cat;
 use PHPUnit\Framework\TestCase;
 use Rice\Basic\components\Exception\SupportException;
-use Tests\Support\Entity\Cat;
 
 class FillTest extends TestCase
 {

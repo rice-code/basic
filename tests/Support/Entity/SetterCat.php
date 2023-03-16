@@ -2,10 +2,10 @@
 
 namespace Tests\Support\Entity;
 
+use Tests\Support\Entity\Speak as S;
+use Rice\Basic\Support\Traits\Setter;
 use Rice\Basic\Support\Traits\Accessor;
 use Rice\Basic\Support\Traits\AutoFillProperties;
-use Rice\Basic\Support\Traits\Setter;
-use Tests\Support\Entity\Speak as S;
 
 /**
  * Class Cat.

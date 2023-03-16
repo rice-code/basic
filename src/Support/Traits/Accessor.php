@@ -2,22 +2,22 @@
 
 namespace Rice\Basic\Support\Traits;
 
+use Rice\Basic\Support\Utils\StrUtil;
 use Rice\Basic\components\Enum\BaseEnum;
 use Rice\Basic\components\Enum\NameTypeEnum;
 use Rice\Basic\components\Exception\BaseException;
 use Rice\Basic\components\Exception\SupportException;
-use Rice\Basic\Support\Utils\StrUtil;
 
 trait Accessor
 {
     /**
-     * 默认开启 setter
+     * 默认开启 setter.
      * @var bool
      */
     protected bool $_setter = true;
 
     /**
-     * 默认开启 getter
+     * 默认开启 getter.
      */
     protected bool $_getter = true;
 

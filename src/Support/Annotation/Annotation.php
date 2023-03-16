@@ -3,13 +3,13 @@
 namespace Rice\Basic\Support\Annotation;
 
 use ReflectionClass;
-use ReflectionException;
 use ReflectionProperty;
-use Rice\Basic\components\Entity\FrameEntity;
-use Rice\Basic\Contracts\CacheContract;
+use ReflectionException;
 use Rice\Basic\Support\FileNamespace;
-use Rice\Basic\Support\Properties\Property;
+use Rice\Basic\Contracts\CacheContract;
 use Rice\Basic\Support\Utils\VerifyUtil;
+use Rice\Basic\Support\Properties\Property;
+use Rice\Basic\components\Entity\FrameEntity;
 
 class Annotation
 {
@@ -104,7 +104,7 @@ class Annotation
      */
     private function parseFileForNamespace(string $classNamespace, $classFileName): void
     {
-        $this->uses = FileNamespace::getInstance()->execute($classNamespace, $classFileName)->getUses();
+        $this->uses  = FileNamespace::getInstance()->execute($classNamespace, $classFileName)->getUses();
         $this->alias = FileNamespace::getInstance()->getAlias();
     }
 

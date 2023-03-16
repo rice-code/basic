@@ -3,16 +3,16 @@
 namespace Rice\Basic\Support\Traits;
 
 use ReflectionException;
-use Rice\Basic\components\Entity\FrameEntity;
-use Rice\Basic\components\Enum\TypeEnum;
-use Rice\Basic\components\Exception\SupportException;
-use Rice\Basic\components\Exception\TypeException;
-use Rice\Basic\Contracts\CacheContract;
-use Rice\Basic\Support\Annotation\Annotation;
-use Rice\Basic\Support\Converts\TypeConvert;
-use Rice\Basic\Support\Properties\Property;
-use Rice\Basic\Support\Utils\ExtractUtil;
 use Rice\Basic\Support\Utils\StrUtil;
+use Rice\Basic\Contracts\CacheContract;
+use Rice\Basic\components\Enum\TypeEnum;
+use Rice\Basic\Support\Utils\ExtractUtil;
+use Rice\Basic\Support\Properties\Property;
+use Rice\Basic\Support\Converts\TypeConvert;
+use Rice\Basic\components\Entity\FrameEntity;
+use Rice\Basic\Support\Annotation\Annotation;
+use Rice\Basic\components\Exception\TypeException;
+use Rice\Basic\components\Exception\SupportException;
 
 trait AutoFillProperties
 {

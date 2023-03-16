@@ -8,16 +8,16 @@ class FileNamespace
 {
     use Singleton;
 
-    public const NAMESPACE_PATTERN = '/^namespace\s+(.*);$/';
+    public const NAMESPACE_PATTERN      = '/^namespace\s+(.*);$/';
     public const CLASS_DEFINE_PATTERN   = '/^class\s*(.*)$/';
-    public const USE_PATTERN   = '/^use\s*([\S]+)[\s*;](?:AS|as)?\s*(\w*)[;]?$/';
+    public const USE_PATTERN            = '/^use\s*([\S]+)[\s*;](?:AS|as)?\s*(\w*)[;]?$/';
 
     protected array $uses = [];
 
     protected array $alias = [];
 
     /**
-     * 文件命名空间分析
+     * 文件命名空间分析.
      * @param $classNamespace
      * @param $rowData
      * @return bool
@@ -38,9 +38,10 @@ class FileNamespace
         if (preg_match(self::CLASS_DEFINE_PATTERN, $rowData, $matches)) {
             return true;
         }
-        
+
         if (preg_match(self::NAMESPACE_PATTERN, $rowData, $matches)) {
             $this->uses[$classNamespace]['this'] = $matches[1] ?? '';
+
             return false;
         }
 
@@ -65,7 +66,7 @@ class FileNamespace
     }
 
     /**
-     * 分析文件命名空间执行入口
+     * 分析文件命名空间执行入口.
      * @param string $namespace
      * @param string $path
      * @return $this

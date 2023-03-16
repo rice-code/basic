@@ -86,14 +86,14 @@ class StrUtil
     /**
      * 字符串前缀
      *
-     * @param string $haystack
-     * @param  string|string[]  $needles
+     * @param string          $haystack
+     * @param string|string[] $needles
      * @return bool
      */
     public static function startsWith(string $haystack, $needles): bool
     {
         foreach ((array) $needles as $needle) {
-            if ($needle !== '' && strpos($haystack, (string)$needle) === 0) {
+            if ('' !== $needle && 0 === strpos($haystack, (string) $needle)) {
                 return true;
             }
         }
@@ -104,8 +104,8 @@ class StrUtil
     /**
      * 字符串后缀
      *
-     * @param string $haystack
-     * @param  string|string[]  $needles
+     * @param string          $haystack
+     * @param string|string[] $needles
      * @return bool
      */
     public static function endsWith(string $haystack, $needles): bool
@@ -118,5 +118,4 @@ class StrUtil
 
         return false;
     }
-
 }

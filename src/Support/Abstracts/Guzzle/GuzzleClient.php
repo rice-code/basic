@@ -8,8 +8,8 @@ use GuzzleHttp\Psr7\Uri;
 use Carbon\CarbonInterface;
 use GuzzleHttp\TransferStats;
 use GuzzleHttp\RequestOptions;
-use Psr\Http\Message\ResponseInterface;
 use Rice\Basic\Contracts\LogContract;
+use Psr\Http\Message\ResponseInterface;
 
 abstract class GuzzleClient
 {
@@ -170,6 +170,7 @@ abstract class GuzzleClient
     {
         if (!isset($this->options[$key])) {
             $this->options[$key] = $value;
+
             return;
         }
         $this->options[$key] = array_merge($this->options[$key], $value);

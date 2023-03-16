@@ -2,9 +2,9 @@
 
 namespace Lang;
 
+use Rice\Basic\Support\Lang;
 use PHPUnit\Framework\TestCase;
 use Rice\Basic\components\Enum\BaseEnum;
-use Rice\Basic\Support\Lang;
 
 class LangTest extends TestCase
 {

@@ -7,6 +7,7 @@ use Rice\Basic\Contracts\LogContract;
 class LaravelLog implements LogContract
 {
     private $instance;
+
     public function error(string $message, array $content): void
     {
         $this->instance->error($message, $content);
@@ -27,11 +28,12 @@ class LaravelLog implements LogContract
         $this->instance->debug($message, $content);
     }
 
-    public static function build(): LaravelLog
+    public static function build(): self
     {
         $log = (new self());
         // app function
         $log->instance = app('log');
+
         return $log;
     }
 }
