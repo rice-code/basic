@@ -10,7 +10,7 @@ class Response extends BaseDTO
 
     private string $errMessage;
 
-    private array $data;
+    private array $data = [];
 
     /**
      * @return bool
