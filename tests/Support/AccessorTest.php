@@ -8,7 +8,7 @@ use Tests\Support\Entity\Cat;
 use PHPUnit\Framework\TestCase;
 use Tests\Support\Entity\GetterCat;
 use Tests\Support\Entity\SetterCat;
-use Rice\Basic\components\Exception\SupportException;
+use Rice\Basic\Components\Exception\SupportException;
 
 class AccessorTest extends TestCase
 {

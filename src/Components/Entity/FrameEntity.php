@@ -1,6 +1,6 @@
 <?php
 
-namespace Rice\Basic\components\Entity;
+namespace Rice\Basic\Components\Entity;
 
 class FrameEntity extends BaseEntity
 {

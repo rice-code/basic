@@ -3,7 +3,7 @@
 namespace Tests\Support;
 
 use PHPUnit\Framework\TestCase;
-use Rice\Basic\components\Enum\ExceptionEnum;
+use Rice\Basic\Components\Enum\ExceptionEnum;
 
 class EnumTest extends TestCase
 {

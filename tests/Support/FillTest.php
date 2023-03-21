@@ -4,7 +4,7 @@ namespace Tests\Support;
 
 use Tests\Support\Entity\Cat;
 use PHPUnit\Framework\TestCase;
-use Rice\Basic\components\Exception\SupportException;
+use Rice\Basic\Components\Exception\SupportException;
 
 class FillTest extends TestCase
 {

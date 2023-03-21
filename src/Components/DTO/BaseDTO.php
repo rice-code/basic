@@ -1,6 +1,6 @@
 <?php
 
-namespace Rice\Basic\components\DTO;
+namespace Rice\Basic\Components\DTO;
 
 use Rice\Basic\Support\Traits\Accessor;
 

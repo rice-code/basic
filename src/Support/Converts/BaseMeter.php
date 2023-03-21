@@ -2,9 +2,9 @@
 
 namespace Rice\Basic\Support\Converts;
 
-use Rice\Basic\components\Enum\BaseEnum;
-use Rice\Basic\components\Enum\SupportEnum;
-use Rice\Basic\components\Exception\SupportException;
+use Rice\Basic\Components\Enum\BaseEnum;
+use Rice\Basic\Components\Enum\SupportEnum;
+use Rice\Basic\Components\Exception\SupportException;
 
 abstract class BaseMeter
 {

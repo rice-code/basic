@@ -1,8 +1,8 @@
 <?php
 
-namespace Rice\Basic\components\Exception;
+namespace Rice\Basic\Components\Exception;
 
-use Rice\Basic\components\Enum\LangEnum;
+use Rice\Basic\Components\Enum\LangEnum;
 
 class SupportException extends BaseException
 {

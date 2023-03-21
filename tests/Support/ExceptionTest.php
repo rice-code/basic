@@ -4,8 +4,8 @@ namespace Tests\Support;
 
 use Rice\Basic\Support\Lang;
 use PHPUnit\Framework\TestCase;
-use Rice\Basic\components\Enum\SupportEnum;
-use Rice\Basic\components\Exception\SupportException;
+use Rice\Basic\Components\Enum\SupportEnum;
+use Rice\Basic\Components\Exception\SupportException;
 
 class ExceptionTest extends TestCase
 {

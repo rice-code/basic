@@ -3,10 +3,10 @@
 namespace Rice\Basic\Support\Traits;
 
 use Rice\Basic\Support\Utils\StrUtil;
-use Rice\Basic\components\Enum\BaseEnum;
-use Rice\Basic\components\Enum\NameTypeEnum;
-use Rice\Basic\components\Exception\BaseException;
-use Rice\Basic\components\Exception\SupportException;
+use Rice\Basic\Components\Enum\BaseEnum;
+use Rice\Basic\Components\Enum\NameTypeEnum;
+use Rice\Basic\Components\Exception\BaseException;
+use Rice\Basic\Components\Exception\SupportException;
 
 trait Accessor
 {

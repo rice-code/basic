@@ -2,7 +2,7 @@
 
 namespace Tests\DTO;
 
-use Rice\Basic\components\DTO\BaseDTO;
+use Rice\Basic\Components\DTO\BaseDTO;
 
 /**
  * Class ObjDTOBase.

@@ -1,6 +1,6 @@
 <?php
 
-namespace Rice\Basic\components\Enum\ReturnCode;
+namespace Rice\Basic\Components\Enum\ReturnCode;
 
 interface ClientErrorCode
 {

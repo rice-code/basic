@@ -3,8 +3,8 @@
 namespace Tests\Support;
 
 use PHPUnit\Framework\TestCase;
-use Rice\Basic\components\Exception\SupportException;
 use Rice\Basic\Support\Utils\ExtractUtil;
+use Rice\Basic\Components\Exception\SupportException;
 
 class DataExtractTest extends TestCase
 {

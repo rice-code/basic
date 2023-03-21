@@ -1,8 +1,8 @@
 <?php
 
-namespace Rice\Basic\components\DTO;
+namespace Rice\Basic\Components\DTO;
 
-use Rice\Basic\components\Enum\ReturnCode\ReturnCodeEnum;
+use Rice\Basic\Components\Enum\ReturnCode\ReturnCodeEnum;
 
 class Response extends BaseDTO
 {

@@ -2,8 +2,8 @@
 
 namespace Rice\Basic\Support\Utils;
 
-use Rice\Basic\components\Enum\BaseEnum;
-use Rice\Basic\components\Exception\SupportException;
+use Rice\Basic\Components\Enum\BaseEnum;
+use Rice\Basic\Components\Exception\SupportException;
 
 class StrUtil
 {

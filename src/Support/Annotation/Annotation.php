@@ -9,7 +9,7 @@ use Rice\Basic\Support\FileNamespace;
 use Rice\Basic\Contracts\CacheContract;
 use Rice\Basic\Support\Utils\VerifyUtil;
 use Rice\Basic\Support\Properties\Property;
-use Rice\Basic\components\Entity\FrameEntity;
+use Rice\Basic\Components\Entity\FrameEntity;
 
 class Annotation
 {

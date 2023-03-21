@@ -1,6 +1,6 @@
 <?php
 
-namespace Rice\Basic\components\Assembler;
+namespace Rice\Basic\Components\Assembler;
 
 interface BaseAssembler
 {

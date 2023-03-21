@@ -1,6 +1,6 @@
 <?php
 
-namespace Rice\Basic\components\Exception;
+namespace Rice\Basic\Components\Exception;
 
 use Throwable;
 use Rice\Basic\Support\Lang;
