@@ -89,7 +89,8 @@ trait AutoFillProperties
                 $loopIdx = $propertyName;
             }
 
-            $value = ExtractUtil::get($this->_params, $loopIdx);
+            // 提取变量值
+            $value = ExtractUtil::getValue($this->_params, $loopIdx);
 
             if (is_null($property)) {
                 $this->{$name} = $value;

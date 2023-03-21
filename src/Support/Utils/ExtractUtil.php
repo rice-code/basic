@@ -80,4 +80,23 @@ class ExtractUtil
 
         return $val;
     }
+
+    /**
+     * 按照 原键值 -> 驼峰 -> 蛇形 依次获取值
+     * @throws SupportException
+     */
+    public static function getValue($params, $key)
+    {
+        $value = self::get($params, $key);
+
+        if (is_null($value)) {
+            $value = self::getCamelCase($params, $key);
+        }
+
+        if (is_null($value)) {
+            $value = self::getSnakeCase($params, $key);
+        }
+
+        return $value;
+    }
 }

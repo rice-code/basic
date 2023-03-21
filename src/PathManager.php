@@ -34,7 +34,7 @@ class PathManager
         $this->cache      = $this->project . 'cache' . DIRECTORY_SEPARATOR;
         $this->src        = $this->project . 'src' . DIRECTORY_SEPARATOR;
         $this->test       = $this->project . 'tests' . DIRECTORY_SEPARATOR;
-        $this->components = $this->src . 'components' . DIRECTORY_SEPARATOR;
+        $this->components = $this->src . 'Components' . DIRECTORY_SEPARATOR;
         $this->assembler  = $this->components . 'Assembler' . DIRECTORY_SEPARATOR;
         $this->dto        = $this->components . 'DTO' . DIRECTORY_SEPARATOR;
         $this->entity     = $this->components . 'Entity' . DIRECTORY_SEPARATOR;
