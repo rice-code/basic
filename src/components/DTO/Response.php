@@ -2,13 +2,15 @@
 
 namespace Rice\Basic\components\DTO;
 
+use Rice\Basic\components\Enum\ReturnCode\ReturnCodeEnum;
+
 class Response extends BaseDTO
 {
-    private bool $success;
+    private bool $success = false;
 
-    private string $errCode;
+    private string $errCode = ReturnCodeEnum::OK;
 
-    private string $errMessage;
+    private string $errMessage = '';
 
     private array $data = [];
 
