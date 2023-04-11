@@ -8,6 +8,9 @@
 
 ## php工具包 （php basic tool）
 
+
+[中文文档](https://rice-code.github.io/zh/)
+
 ### 安装
 
 ```shell script
