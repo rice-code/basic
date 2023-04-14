@@ -5,6 +5,7 @@ namespace Rice\Basic\Support\Traits;
 use Rice\Basic\Support\Utils\StrUtil;
 use Rice\Basic\Components\Enum\BaseEnum;
 use Rice\Basic\Components\Enum\NameTypeEnum;
+use Rice\Basic\Components\Entity\FrameEntity;
 use Rice\Basic\Components\Exception\BaseException;
 use Rice\Basic\Components\Exception\SupportException;
 
@@ -94,10 +95,12 @@ trait Accessor
      */
     private function assignElement(object $obj, array $fields, int $nameType): array
     {
-        foreach (get_object_vars($obj) as $k => $v) {
-            $key = $k;
+        $oReflectionClass = new \ReflectionClass($obj);
+        foreach ($oReflectionClass->getProperties() as $property) {
+            $key = $property->getName();
 
-            if (isset($key[0]) && '_' === $key[0]) {
+            // 过滤框架内部定义字段
+            if (FrameEntity::inFilter($key)) {
                 continue;
             }
 
@@ -112,7 +115,9 @@ trait Accessor
                     break;
             }
 
-            $val = $v;
+            // 反射 private, protect 可见开启，保证能够获取属性值 （php8.1 默认开启）
+            $property->setAccessible(true);
+            $val = $property->getValue($obj);
 
             if (is_object($val)) {
                 $val = $this->assignElement($val, $fields, $nameType);

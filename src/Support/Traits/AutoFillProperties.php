@@ -133,7 +133,7 @@ trait AutoFillProperties
      */
     public function fillClass(Property $property, $name, $value, string $loopIdx): void
     {
-        if (!isset($this->_properties[$property->namespace])) {
+        if (!isset($this->_properties[$property->namespace]) || is_null($value)) {
             $this->{$name} = null;
 
             return;

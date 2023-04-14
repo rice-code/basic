@@ -2,10 +2,13 @@
 
 namespace Rice\Basic\Support\Properties;
 
+use ReflectionProperty;
 use ReflectionException;
+use Rice\Basic\Components\Entity\FrameEntity;
 
 class Properties
 {
+    private const VAR_PATTERN = '/.*@var\s+(\S+)/';
     protected \ReflectionClass $refectionClass;
 
     /**
@@ -30,13 +33,38 @@ class Properties
         $properties = $this->refectionClass->getProperties($filter);
 
         foreach ($properties as $property) {
-            $newProperty             = new Property($property->getType());
+            // 排除包内部使用变量
+            if (FrameEntity::inFilter($property->name)) {
+                continue;
+            }
+            $type                    = $property->getType();
+            $newProperty             = new Property($type);
             $newProperty->name       = $property->getName();
             $newProperty->docComment = $property->getDocComment();
 
-            $this->properties[] = $newProperty;
+            // 未指定变量类型，匹配注释类型
+            if (!$type) {
+                $newProperty->type = $this->matchVarDoc($property);
+            }
+            $this->properties[$newProperty->name] = $newProperty;
         }
 
         return $this->properties ?? [];
+    }
+
+    /**
+     * @param ReflectionProperty $property
+     * @return string|null
+     */
+    public function matchVarDoc(ReflectionProperty $property): ?string
+    {
+        $matches = [];
+        preg_match(self::VAR_PATTERN, $property->getDocComment(), $matches);
+
+        if (!empty($matches[1])) {
+            return $matches[1];
+        }
+
+        return null;
     }
 }
