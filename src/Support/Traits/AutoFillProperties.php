@@ -97,27 +97,20 @@ trait AutoFillProperties
 
                 continue;
             }
-            if ($property->isClass) {
-                if (!isset($this->_properties[$property->namespace])) {
-                    $this->{$name} = null;
-                } elseif ($property->isArray) {
-                    foreach ($value as $k => $v) {
-                        $this->{$name}[] = new $property->namespace($this->_params, $this->_cache, "{$loopIdx}.{$k}");
-                    }
-                } else {
-                    $this->{$name} = new $property->namespace($this->_params, $this->_cache, $loopIdx);
-                }
-            } elseif ($property->isArray) {
-                $this->{$name} = [];
 
-                if (!is_null($value)) {
-                    foreach ($value as $k => $v) {
-                        $this->{$name}[] = $v;
-                    }
-                }
-            } else {
-                $this->{$name} = $value;
+            if ($property->isClass) {
+                $this->fillClass($property, $name, $value, $loopIdx);
+
+                continue;
             }
+
+            if ($property->isArray) {
+                $this->fillArray($name, $value);
+
+                continue;
+            }
+
+            $this->{$name} = $value;
         }
     }
 
@@ -127,5 +120,51 @@ trait AutoFillProperties
 
     public function afterFillHook(&$params): void
     {
+    }
+
+    /**
+     * 填充类属性值为类的值
+     *
+     * @param Property $property
+     * @param $name
+     * @param $value
+     * @param string $loopIdx
+     * @return void
+     */
+    public function fillClass(Property $property, $name, $value, string $loopIdx): void
+    {
+        if (!isset($this->_properties[$property->namespace])) {
+            $this->{$name} = null;
+
+            return;
+        }
+
+        if ($property->isArray) {
+            foreach ($value as $k => $v) {
+                $this->{$name}[] = new $property->namespace($this->_params, $this->_cache, "{$loopIdx}.{$k}");
+            }
+
+            return;
+        }
+
+        $this->{$name} = new $property->namespace($this->_params, $this->_cache, $loopIdx);
+    }
+
+    /**
+     * 填充类属性为数组的值
+     *
+     * @param $name
+     * @param $value
+     * @return void
+     */
+    public function fillArray($name, $value): void
+    {
+        $this->{$name} = [];
+
+        if (!is_null($value)) {
+            foreach ($value as $v) {
+                $this->{$name}[] = $v;
+            }
+        }
     }
 }
