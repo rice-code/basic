@@ -11,6 +11,7 @@ use Rice\Basic\Support\Properties\Property;
 use Rice\Basic\Support\Converts\TypeConvert;
 use Rice\Basic\Components\Entity\FrameEntity;
 use Rice\Basic\Support\Annotation\Annotation;
+use Rice\Basic\Support\Utils\MethodExistsUtil;
 use Rice\Basic\Components\Exception\TypeException;
 use Rice\Basic\Components\Exception\SupportException;
 
@@ -28,6 +29,11 @@ trait AutoFillProperties
      */
     public function __construct($params, CacheContract $cache = null, $idx = '')
     {
+        // 父类注册到容器中（若不符合条件不注册）
+        if ('' === $idx) {
+            MethodExistsUtil::registerSingleton($this);
+        }
+
         if (empty($params)) {
             return;
         }

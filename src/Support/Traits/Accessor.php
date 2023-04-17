@@ -6,6 +6,7 @@ use Rice\Basic\Support\Utils\StrUtil;
 use Rice\Basic\Components\Enum\BaseEnum;
 use Rice\Basic\Components\Enum\NameTypeEnum;
 use Rice\Basic\Components\Entity\FrameEntity;
+use Rice\Basic\Support\Utils\MethodExistsUtil;
 use Rice\Basic\Components\Exception\BaseException;
 use Rice\Basic\Components\Exception\SupportException;
 
@@ -22,6 +23,10 @@ trait Accessor
      */
     protected bool $_getter = true;
 
+    /**
+     * 默认属性对象只读.
+     * @var bool
+     */
     protected bool $_readOnly = true;
 
     /**
@@ -30,18 +35,9 @@ trait Accessor
      */
     public function __call($name, $args)
     {
-        if (method_exists($this, 'resetAccessor')) {
-            $this->resetAccessor();
-        }
-        $pattern = '/^([sg]et)(.*)/';
+        MethodExistsUtil::resetAccessor($this);
 
-        if ($this->_getter && !$this->_setter) {
-            $pattern = '/^(get)(.*)/';
-        }
-
-        if (!$this->_getter && $this->_setter) {
-            $pattern = '/^(set)(.*)/';
-        }
+        $pattern = $this->getAuth();
 
         $matches = [];
         preg_match($pattern, $name, $matches);
@@ -69,6 +65,24 @@ trait Accessor
         }
 
         throw new SupportException(BaseEnum::METHOD_NOT_DEFINE);
+    }
+
+    /**
+     * @return string
+     */
+    public function getAuth(): string
+    {
+        $pattern = '/^([sg]et)(.*)/';
+
+        if ($this->_getter && !$this->_setter) {
+            $pattern = '/^(get)(.*)/';
+        }
+
+        if (!$this->_getter && $this->_setter) {
+            $pattern = '/^(set)(.*)/';
+        }
+
+        return $pattern;
     }
 
     private function setValue($attrName, $args): void
