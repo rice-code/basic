@@ -6,7 +6,6 @@ use Rice\Basic\Support\Utils\StrUtil;
 use Rice\Basic\Components\Enum\BaseEnum;
 use Rice\Basic\Components\Enum\NameTypeEnum;
 use Rice\Basic\Components\Entity\FrameEntity;
-use Rice\Basic\Support\Utils\MethodExistsUtil;
 use Rice\Basic\Components\Exception\BaseException;
 use Rice\Basic\Components\Exception\SupportException;
 
@@ -35,7 +34,9 @@ trait Accessor
      */
     public function __call($name, $args)
     {
-        MethodExistsUtil::resetAccessor($this);
+        if (method_exists($this, 'resetAccessor')) {
+            $this->resetAccessor();
+        }
 
         $pattern = $this->getAuth();
 
