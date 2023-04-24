@@ -76,7 +76,7 @@ class FileNamespace
         $file = (new File($path));
         $row  = $file->readLine();
         while ($row->valid()) {
-            $isDone = $this->analysis($namespace, $row->current());
+            $isDone = $this->analysis($namespace, trim($row->current()));
             if ($isDone) {
                 break;
             }

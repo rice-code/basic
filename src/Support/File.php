@@ -29,7 +29,7 @@ class File
     public function readLine(): \Generator
     {
         while (!feof($this->handle)) {
-            yield trim(fgets($this->handle));
+            yield fgets($this->handle);
         }
         fclose($this->handle);
         $this->handle = null;
