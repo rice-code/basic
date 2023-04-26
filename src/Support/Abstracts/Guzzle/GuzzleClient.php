@@ -217,4 +217,9 @@ abstract class GuzzleClient
     {
         return [];
     }
+
+    public function getOption(): array
+    {
+        return $this->options;
+    }
 }
