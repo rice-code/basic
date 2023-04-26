@@ -9,17 +9,25 @@ use Carbon\CarbonInterface;
 use GuzzleHttp\TransferStats;
 use GuzzleHttp\RequestOptions;
 use Rice\Basic\Contracts\LogContract;
+use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 
 abstract class GuzzleClient
 {
     protected Client $client;
+    protected RequestInterface $request;
+    protected ?ResponseInterface $response;
     protected LogContract $log;
-    protected array $options;
     protected Carbon $startAt;
 
     protected \Closure $callback;
 
+    /**
+     * 请求选项.
+     *
+     * @var array
+     */
+    private array $options = [];
     /**
      * 请求是否报错标识.
      *
@@ -87,15 +95,18 @@ abstract class GuzzleClient
     public function getLogClosure(): \Closure
     {
         return function (TransferStats $stats) {
-            $errorData = $stats->getHandlerErrorData();
+            $this->request  = $stats->getRequest();
+            $this->response = $stats->getResponse();
+            $errorData      = $stats->getHandlerErrorData();
 
             // https://curl.se/libcurl/c/libcurl-errors.html
             if (($errorData instanceof \Throwable) || (is_int($errorData) && $errorData > 0)) {
-                $this->error = true;
+                $this->error          = true;
+                $this->bizReportError = false;
             }
 
             if (!$this->error) {
-                $this->success = $this->getCallback($stats->getResponse());
+                $this->success = $this->getCallback();
             }
 
             $logInfo = $this->getLogInfo($stats);
@@ -132,26 +143,29 @@ abstract class GuzzleClient
 
     public function getLogInfo(TransferStats $stats): array
     {
-        $request  = $stats->getRequest();
-        $response = $stats->getResponse();
-
-        $this->message .= Uri::composeComponents($request->getUri()->getScheme(), $request->getUri()->getAuthority(), $request->getUri()->getPath(), '', '');
+        $this->message .= Uri::composeComponents(
+            $this->request->getUri()->getScheme(),
+            $this->request->getUri()->getAuthority(),
+            $this->request->getUri()->getPath(),
+            '',
+            ''
+        );
 
         return [
             //是否请求成功
             'succeed'      => $this->success,
             //请求相关数据
             'request'      => [
-                'uri'     => (string) $request->getUri(),
-                'method'  => $request->getMethod(),
-                'headers' => $request->getHeaders(),
-                'body'    => (string) $request->getBody(),
+                'uri'     => (string) $this->request->getUri(),
+                'method'  => $this->request->getMethod(),
+                'headers' => $this->request->getHeaders(),
+                'body'    => (string) $this->request->getBody(),
             ],
             //响应相关数据
             'response'     => [
-                'statusCode'   => $response ? $response->getStatusCode() : -1,
-                'reasonPhrase' => $response ? $response->getReasonPhrase() : '',
-                'body'         => $response ? (string) $response->getBody() : '',
+                'statusCode'   => $this->response ? $this->response->getStatusCode() : -1,
+                'reasonPhrase' => $this->response ? $this->response->getReasonPhrase() : '',
+                'body'         => $this->response ? (string) $this->response->getBody() : '',
             ],
             //请求耗时等详细数据
             'handlerStats' => $stats->getHandlerStats(),
@@ -179,15 +193,17 @@ abstract class GuzzleClient
     /**
      * @return bool
      */
-    public function getCallback(?ResponseInterface $response): bool
+    public function getCallback(): bool
     {
-        return ($this->callback)($response);
+        return ($this->callback)($this->response);
     }
 
     /**
+     * 设置请求结果是否成功闭包函数.
+     *
      * @param \Closure $callback
      */
-    public function setCallback(\Closure $callback): void
+    public function setSuccessCondition(\Closure $callback): void
     {
         $this->callback = $callback;
     }
