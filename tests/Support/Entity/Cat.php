@@ -8,8 +8,8 @@ use Rice\Basic\Support\Traits\AutoFillProperties;
 
 /**
  * Class Cat.
- * @method self     setEyes(string $value)
- * @method string   getEyes()
+ * @method self     setEyes(array $value)
+ * @method array   getEyes()
  * @method self     setEat(Eat $value)
  * @method Eat      getEat()
  * @method self     setSpeak(S $value)
@@ -29,7 +29,7 @@ class Cat
      *
      * @throws \Exception
      *
-     * @var string
+     * @var []Eye
      * @Param $class
      */
     protected $eyes;

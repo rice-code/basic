@@ -15,7 +15,7 @@ class FillTest extends TestCase
     public function testAutoFill()
     {
         $params = [
-            'eyes'  => 'big eyes',
+            'eyes'  => [['size' => 'big']],
             'speak' => [
                 'language' => 'english',
             ],
@@ -26,7 +26,7 @@ class FillTest extends TestCase
         ];
 
         $cat = new Cat($params);
-        $this->assertEquals('big eyes', $cat->getEyes());
+        $this->assertEquals('big', $cat->getEyes()[0]->getSize());
         $this->assertNull($cat->getEat());
         $this->assertEquals('english', $cat->getSpeak()->getLanguage());
         $this->assertIsArray($cat->getHair());

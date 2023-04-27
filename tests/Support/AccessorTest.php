@@ -18,11 +18,11 @@ class AccessorTest extends TestCase
      */
     public function testAccessor(): void
     {
-        $cat = new Cat(['eyes' => 'blue']);
+        $cat = new Cat(['eyes' => [['size' => 'big'], ['size' => 'small']]]);
 
-        $this->assertEquals('blue', $cat->getEyes());
+        $this->assertEquals('big', $cat->getEyes()[0]->getSize());
 
-        $setterCat = new SetterCat(['eyes' => 'blue']);
+        $setterCat = new SetterCat(['eyes' => [['size' => 'big'], ['size' => 'small']]]);
 
         Lang::getInstance()->setLocale('en');
         $setterCat->setEyes('red');
@@ -33,11 +33,11 @@ class AccessorTest extends TestCase
             $this->assertEquals('method not define', $e->getMessage());
         }
 
-        $getterCat = new GetterCat(['eyes' => 'blue']);
-        $this->assertEquals('blue', $getterCat->getEyes());
+        $getterCat = new GetterCat(['eyes' => [['size' => 'big'], ['size' => 'small']]]);
+        $this->assertEquals('small', $getterCat->getEyes()[1]->getSize());
 
         try {
-            $getterCat->setEyes('red');
+            $getterCat->setEyes([['size' => 'big'], ['size' => 'small']]);
         } catch (\Exception $e) {
             $this->assertEquals('method not define', $e->getMessage());
         }

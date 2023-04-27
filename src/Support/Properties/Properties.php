@@ -38,14 +38,14 @@ class Properties
                 continue;
             }
             $type                    = $property->getType();
+            // 未指定变量类型，匹配注释类型
+            if (!$type) {
+                $type = $this->matchVarDoc($property);
+            }
             $newProperty             = new Property($type);
             $newProperty->name       = $property->getName();
             $newProperty->docComment = $property->getDocComment();
 
-            // 未指定变量类型，匹配注释类型
-            if (!$type) {
-                $newProperty->type = $this->matchVarDoc($property);
-            }
             $this->properties[$newProperty->name] = $newProperty;
         }
 

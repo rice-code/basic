@@ -47,6 +47,11 @@ class Annotation
      * @var array
      */
     private array $queue;
+    /**
+     * 已解析类，不再重复添加进队列.
+     * @var array
+     */
+    private array $resolvedClass;
 
     public function __construct($cache = null)
     {
@@ -162,20 +167,31 @@ class Annotation
         }
 
         if (class_exists($namespace = $uses['this'] . '\\' . $propertyType)) {
-            $property->isClass = true;
-            $this->queue[]     = $namespace;
+            $this->classHandle($property, $namespace);
 
             return $namespace;
         }
 
         if (isset($uses[$propertyType]) && class_exists($namespace = $uses[$propertyType] . '\\' . $propertyType)) {
-            $property->isClass = true;
-            $this->queue[]     = $namespace;
+            $this->classHandle($property, $namespace);
 
             return $namespace;
         }
 
         return '';
+    }
+
+    /**
+     * @param Property $property
+     * @param string   $namespace
+     * @return void
+     */
+    public function classHandle(Property $property, string $namespace): void
+    {
+        $property->isClass = true;
+        if (!isset($this->resolvedClass[$namespace])) {
+            $this->queue[] = $namespace;
+        }
     }
 
     public function getFileName(): string
