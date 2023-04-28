@@ -42,7 +42,7 @@ class Properties
             if (!$type) {
                 $type = $this->matchVarDoc($property);
             }
-            $newProperty             = new Property($type);
+            $newProperty             = new Property(($type instanceof \ReflectionType) ? $type->getName() : $type);
             $newProperty->name       = $property->getName();
             $newProperty->docComment = $property->getDocComment();
 

@@ -191,6 +191,7 @@ class Annotation
         $property->isClass = true;
         if (!isset($this->resolvedClass[$namespace])) {
             $this->queue[] = $namespace;
+            $this->resolvedClass[$namespace] = true;
         }
     }
 
