@@ -20,16 +20,15 @@ trait AutoFillProperties
     private array $_properties;
     private array $_alias;
     private ?CacheContract $_cache;
-    private string $_idx;
 
     /**
      * @throws ReflectionException
      * @throws SupportException
      */
-    public function __construct($params, CacheContract $cache = null, $idx = '')
+    public function __construct($params, CacheContract $cache = null)
     {
         // 父类注册到容器中（若不符合条件不注册）
-        if ('' === $idx && method_exists($this, 'registerSingleton')) {
+        if (method_exists($this, 'registerSingleton')) {
             $this->registerSingleton();
         }
 
@@ -54,7 +53,6 @@ trait AutoFillProperties
         $this->_properties  = $annotation->execute($this)->getProperty();
         $this->_alias       = $annotation->getAlias();
         $this->_cache       = $cache;
-        $this->_idx         = $idx;
 
         $this->handle();
     }
@@ -82,16 +80,10 @@ trait AutoFillProperties
          * @var Property $property
          */
         foreach ($propertyArr as $name => $property) {
-            $propertyName = StrUtil::snakeCaseToCamelCase($name);
+            $loopIdx = StrUtil::snakeCaseToCamelCase($name);
 
             if (FrameEntity::inFilter($name)) {
                 continue;
-            }
-
-            if ($this->_idx) {
-                $loopIdx = "{$this->_idx}.{$propertyName}";
-            } else {
-                $loopIdx = $propertyName;
             }
 
             // 提取变量值
@@ -104,13 +96,13 @@ trait AutoFillProperties
             }
 
             if ($property->isClass) {
-                $this->fillClass($property, $name, $value, $loopIdx);
+                $this->fillClass($property, $name, $value);
 
                 continue;
             }
 
             if ($property->isArray) {
-                $this->fillArray($name, $value);
+                $this->fillArray($name, $value ?? []);
 
                 continue;
             }
@@ -132,44 +124,37 @@ trait AutoFillProperties
      *
      * @param Property $property
      * @param $name
-     * @param $value
-     * @param string $loopIdx
+     * @param $values
      * @return void
      */
-    public function fillClass(Property $property, $name, $value, string $loopIdx): void
+    public function fillClass(Property $property, $name, $values): void
     {
-        if (!isset($this->_properties[$property->namespace]) || is_null($value)) {
+        if (!isset($this->_properties[$property->namespace]) || is_null($values)) {
             $this->{$name} = null;
 
             return;
         }
 
         if ($property->isArray) {
-            foreach ($value as $k => $v) {
-                $this->{$name}[] = new $property->namespace($this->_params, $this->_cache, "{$loopIdx}.{$k}");
+            foreach ($values as $value) {
+                $this->{$name}[] = new $property->namespace($value, $this->_cache);
             }
 
             return;
         }
 
-        $this->{$name} = new $property->namespace($this->_params, $this->_cache, $loopIdx);
+        $this->{$name} = new $property->namespace($values, $this->_cache);
     }
 
     /**
      * 填充类属性为数组的值
      *
      * @param $name
-     * @param $value
+     * @param array $values
      * @return void
      */
-    public function fillArray($name, $value): void
+    public function fillArray($name, array $values): void
     {
-        $this->{$name} = [];
-
-        if (!is_null($value)) {
-            foreach ($value as $v) {
-                $this->{$name}[] = $v;
-            }
-        }
+        $this->{$name} = $values;
     }
 }

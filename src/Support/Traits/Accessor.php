@@ -106,7 +106,6 @@ trait Accessor
      * @param array  $fields
      * @param int    $nameType
      * @return array
-     * @throws SupportException
      */
     private function assignElement(object $obj, array $fields, int $nameType): array
     {
@@ -156,25 +155,16 @@ trait Accessor
         return $result ?? [];
     }
 
-    /**
-     * @throws SupportException
-     */
     public function toArray($fields = []): array
     {
         return $this->assignElement($this, $fields, NameTypeEnum::UNLIMITED);
     }
 
-    /**
-     * @throws SupportException
-     */
     public function toSnakeCaseArray($fields = []): array
     {
         return $this->assignElement($this, $fields, NameTypeEnum::SNAKE_CASE);
     }
 
-    /**
-     * @throws SupportException
-     */
     public function toCamelCaseArray($fields = []): array
     {
         return $this->assignElement($this, $fields, NameTypeEnum::CAMEL_CASE);

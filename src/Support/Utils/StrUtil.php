@@ -2,9 +2,6 @@
 
 namespace Rice\Basic\Support\Utils;
 
-use Rice\Basic\Components\Enum\BaseEnum;
-use Rice\Basic\Components\Exception\SupportException;
-
 class StrUtil
 {
     /**
@@ -42,17 +39,11 @@ class StrUtil
      *
      * @param string $name
      * @return string
-     * @throws SupportException
      */
     public static function camelCaseToSnakeCase(string $name): string
     {
-        $len = strlen($name);
-
-        if (0 === $len) {
-            throw new SupportException(BaseEnum::INVALID_PARAM);
-        }
-
-        $newName = $name[0];
+        $len     = strlen($name);
+        $newName = $name[0] ?? '';
         for ($i = 1; $i < $len; ++$i) {
             $char = $name[$i];
             if (self::isUpper($char)) {
