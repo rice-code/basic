@@ -10,6 +10,12 @@ class Property
     public ?string $type;
 
     /**
+     * 强类型
+     *
+     * @var bool $stronglyTyped
+     */
+    public bool $stronglyTyped = false;
+    /**
      * 属性名称.
      */
     public string $name;

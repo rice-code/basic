@@ -126,19 +126,22 @@ abstract class GuzzleClient
         // 成功
         if ($this->success) {
             $this->log->info($this->message, $logInfo);
+            return;
         }
         // curl 请求报错
         if ($this->error) {
             $this->log->warning($this->message, $logInfo);
+            return;
         }
+
         // 业务 请求报错
-        if (!$this->error) {
-            if ($this->bizReportError) {
-                $this->log->error($this->message, $logInfo);
-            } else {
-                $this->log->debug($this->message, $logInfo);
-            }
+        if ($this->bizReportError) {
+            $this->log->error($this->message, $logInfo);
+            return;
         }
+
+        $this->log->debug($this->message, $logInfo);
+
     }
 
     public function getLogInfo(TransferStats $stats): array

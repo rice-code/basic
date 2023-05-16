@@ -38,13 +38,16 @@ class Properties
                 continue;
             }
             $type                    = $property->getType();
+            $stronglyTyped           = true;
             // 未指定变量类型，匹配注释类型
             if (!$type) {
-                $type = $this->matchVarDoc($property);
+                $stronglyTyped = false;
+                $type          = $this->matchVarDoc($property);
             }
-            $newProperty             = new Property(($type instanceof \ReflectionType) ? $type->getName() : $type);
-            $newProperty->name       = $property->getName();
-            $newProperty->docComment = $property->getDocComment();
+            $newProperty                = new Property(($type instanceof \ReflectionType) ? $type->getName() : $type);
+            $newProperty->name          = $property->getName();
+            $newProperty->docComment    = $property->getDocComment();
+            $newProperty->stronglyTyped = $stronglyTyped;
 
             $this->properties[$newProperty->name] = $newProperty;
         }

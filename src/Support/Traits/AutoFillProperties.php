@@ -107,6 +107,11 @@ trait AutoFillProperties
                 continue;
             }
 
+            // 强类型未设置值时，设置为null会报错
+            if ($property->stronglyTyped && is_null($value)) {
+                continue;
+            }
+
             $this->{$name} = $value;
         }
     }
