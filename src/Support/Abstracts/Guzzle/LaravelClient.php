@@ -6,7 +6,7 @@ use Rice\Basic\Support\Loggers\LaravelLog;
 
 abstract class LaravelClient extends GuzzleClient
 {
-    public static function build()
+    public static function build(): LaravelClient
     {
         return new static(LaravelLog::build());
     }
