@@ -76,7 +76,7 @@ abstract class BaseEnum
     public static function getChildConstants(): array
     {
         if (is_null(self::$childConsts)) {
-            return self::$childConsts = array_diff(self::getConstants(), self::getParentConstants());
+            return self::$childConsts = array_diff_key(self::getConstants(), self::getParentConstants());
         }
 
         return self::$childConsts;
