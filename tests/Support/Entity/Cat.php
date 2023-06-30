@@ -30,7 +30,7 @@ class Cat
      * @throws \Exception
      *
      * @var []Eye
-     * @Param $class
+     * @Param
      */
     protected $eyes;
 

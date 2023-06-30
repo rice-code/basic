@@ -4,6 +4,8 @@ namespace Rice\Basic\Components\Exception;
 
 use Throwable;
 use Rice\Basic\Support\Lang;
+use Rice\Basic\Support\Properties\Property;
+use Rice\Basic\Support\Annotation\Annotation;
 
 abstract class BaseException extends \Exception
 {
@@ -19,19 +21,25 @@ abstract class BaseException extends \Exception
      *
      * @return string
      */
-    abstract public static function getLangName(): string;
+    abstract public static function enumClass(): string;
 
     public function __construct($message = '', $code = 0, Throwable $previous = null)
     {
-        $langName = $this::getLangName();
-        if (!isset(self::$languages[$langName])) {
-            // 语言包重写错误信息
-            self::$languages[$langName] = Lang::getInstance()->setFileName($langName)->loadFile();
+        $annotation = new Annotation();
+        $enumClass  = $this::enumClass();
+        $properties = $annotation->execute($enumClass)->getProperties();
+
+        if (isset($properties[$enumClass])) {
+            /**
+             * @var Property $property
+             */
+            foreach ($properties[$enumClass] as $property) {
+                if ($message === $property->getValue()) {
+                    $message = $property->getDocLabel(Lang::getInstance()->getLocale())[0];
+                }
+            }
         }
 
-        if (isset(self::$languages[$langName][$message])) {
-            $message = self::$languages[$langName][$message];
-        }
         parent::__construct($message, $code, $previous);
     }
 }

@@ -53,6 +53,13 @@ class Annotation
      */
     private array $resolvedClass;
 
+    /**
+     * 获取对应权限属性.
+     *
+     * @var int
+     */
+    private int $filter = \ReflectionProperty::IS_PROTECTED;
+
     public function __construct($cache = null)
     {
         $this->cache = $cache;
@@ -143,7 +150,7 @@ class Annotation
     {
         $className                         = $this->class->getName();
         $properties                        = new Properties($className);
-        $this->classProperties[$className] = $properties->getProperties();
+        $this->classProperties[$className] = $properties->getProperties($this->filter);
         foreach ($properties->getProperties() as $property) {
             $property->namespace = $this->findNamespace($property);
         }
@@ -190,7 +197,7 @@ class Annotation
     {
         $property->isClass = true;
         if (!isset($this->resolvedClass[$namespace])) {
-            $this->queue[] = $namespace;
+            $this->queue[]                   = $namespace;
             $this->resolvedClass[$namespace] = true;
         }
     }
@@ -210,9 +217,30 @@ class Annotation
         return $this->alias;
     }
 
-    public function getProperty(): array
+    public function getProperties(): array
     {
         // 兼容类无 protected 变量问题
         return $this->classProperties;
+    }
+
+    public function getProperty($key): ?Property
+    {
+        return $this->classProperties[$this->class->getName()][$key] ?? null;
+    }
+
+    /**
+     * @return int
+     */
+    public function getFilter(): int
+    {
+        return $this->filter;
+    }
+
+    /**
+     * @param int $filter
+     */
+    public function setFilter(int $filter): void
+    {
+        $this->filter = $filter;
     }
 }

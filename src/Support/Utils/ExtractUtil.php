@@ -22,9 +22,9 @@ class ExtractUtil
 
     /**
      * 数据提取.
-     * @param string|array|object $source 数据源
-     * @param string $key 提取key
-     * @param null $default 默认值
+     * @param string|array|object $source  数据源
+     * @param string              $key     提取key
+     * @param null                $default 默认值
      * @return mixed|null
      * @throws SupportException
      */

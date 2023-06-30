@@ -2,19 +2,18 @@
 
 namespace Lang;
 
-use Rice\Basic\Support\Lang;
 use PHPUnit\Framework\TestCase;
-use Rice\Basic\Components\Enum\BaseEnum;
+use Rice\Basic\Components\Enum\SupportEnum;
+use Rice\Basic\Components\Exception\SupportException;
 
 class LangTest extends TestCase
 {
     public function testLang(): void
     {
-        $this->assertArrayHasKey(
-            BaseEnum::STRING_IS_EMPTY,
-            Lang::getInstance()
-                ->setLocale('en')
-                ->loadFile()
-        );
+        try {
+            throw new SupportException(SupportEnum::CANNOT_DIVIDE_BY_ZERO);
+        } catch (\Throwable $throwable) {
+            $this->assertEquals('不能除以零', $throwable->getMessage());
+        }
     }
 }

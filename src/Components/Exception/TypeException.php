@@ -2,7 +2,7 @@
 
 namespace Rice\Basic\Components\Exception;
 
-use Rice\Basic\Components\Enum\LangEnum;
+use Rice\Basic\Components\Enum\TypeEnum;
 
 /**
  * 数据类型异常
@@ -10,8 +10,8 @@ use Rice\Basic\Components\Enum\LangEnum;
  */
 class TypeException extends BaseException
 {
-    public static function getLangName(): string
+    public static function enumClass(): string
     {
-        return LangEnum::TYPE;
+        return TypeEnum::class;
     }
 }

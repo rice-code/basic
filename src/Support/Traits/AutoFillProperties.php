@@ -50,7 +50,7 @@ trait AutoFillProperties
 
         $this->_params      = $params;
         $annotation         = (new Annotation($cache));
-        $this->_properties  = $annotation->execute($this)->getProperty();
+        $this->_properties  = $annotation->execute($this)->getProperties();
         $this->_alias       = $annotation->getAlias();
         $this->_cache       = $cache;
 

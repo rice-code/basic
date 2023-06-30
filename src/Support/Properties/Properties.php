@@ -2,13 +2,11 @@
 
 namespace Rice\Basic\Support\Properties;
 
-use ReflectionProperty;
 use ReflectionException;
 use Rice\Basic\Components\Entity\FrameEntity;
 
 class Properties
 {
-    private const VAR_PATTERN = '/.*@var\s+(\S+)/';
     protected \ReflectionClass $refectionClass;
 
     /**
@@ -30,44 +28,64 @@ class Properties
             return $this->properties;
         }
 
+        $constants  = $this->refectionClass->getReflectionConstants();
         $properties = $this->refectionClass->getProperties($filter);
 
-        foreach ($properties as $property) {
+        return array_merge(
+            $this->handleConstants($constants),
+            $this->handleProperties($properties)
+        );
+    }
+
+    /**
+     * @param array $constants
+     * @return array|Property[]
+     */
+    public function handleConstants(array $constants): array
+    {
+        foreach ($constants as $constant) {
             // 排除包内部使用变量
-            if (FrameEntity::inFilter($property->name)) {
+            if (FrameEntity::inFilter($constant->name)) {
                 continue;
             }
-            $type                    = $property->getType();
-            $stronglyTyped           = true;
-            // 未指定变量类型，匹配注释类型
-            if (!$type) {
-                $stronglyTyped = false;
-                $type          = $this->matchVarDoc($property);
-            }
-            $newProperty                = new Property(($type instanceof \ReflectionType) ? $type->getName() : $type);
-            $newProperty->name          = $property->getName();
-            $newProperty->docComment    = $property->getDocComment();
-            $newProperty->stronglyTyped = $stronglyTyped;
+            $name        = $constant->getName();
+            $newProperty = new Property(
+                'const',
+                $name,
+                $constant->getValue(),
+                $constant->getDocComment(),
+            );
 
-            $this->properties[$newProperty->name] = $newProperty;
+            $this->properties[$name] = $newProperty;
         }
 
         return $this->properties ?? [];
     }
 
     /**
-     * @param ReflectionProperty $property
-     * @return string|null
+     * @param array $properties
+     * @return array|Property[]
      */
-    public function matchVarDoc(ReflectionProperty $property): ?string
+    public function handleProperties(array $properties): array
     {
-        $matches = [];
-        preg_match(self::VAR_PATTERN, $property->getDocComment(), $matches);
+        foreach ($properties as $property) {
+            // 排除包内部使用变量
+            if (FrameEntity::inFilter($property->name)) {
+                continue;
+            }
+            $property->setAccessible(true);
+            $type        = $property->getType();
+            $name        = $property->getName();
+            $newProperty = new Property(
+                ($type instanceof \ReflectionType) ? $type->getName() : null,
+                $name,
+                '',
+                $property->getDocComment(),
+            );
 
-        if (!empty($matches[1])) {
-            return $matches[1];
+            $this->properties[$name] = $newProperty;
         }
 
-        return null;
+        return $this->properties ?? [];
     }
 }

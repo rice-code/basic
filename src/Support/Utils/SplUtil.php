@@ -5,7 +5,7 @@ namespace Rice\Basic\Support\Utils;
 class SplUtil
 {
     /**
-     * 递归获取所有类中使用过的 trait 类
+     * 递归获取所有类中使用过的 trait 类.
      *
      * @param $class
      * @return array|mixed
@@ -26,7 +26,7 @@ class SplUtil
     }
 
     /**
-     * 递归获取 trait 类中所有的 trait 类
+     * 递归获取 trait 类中所有的 trait 类.
      *
      * @param $trait
      * @return array|false|string[]
