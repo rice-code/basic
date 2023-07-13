@@ -57,28 +57,16 @@ abstract class BaseEnum
 
     public static function getConstants(): array
     {
-        if (is_null(self::$consts)) {
-            return self::$consts = (new \ReflectionClass(static::class))->getConstants();
-        }
-
-        return self::$consts;
+        return self::$consts[static::class] ?? (self::$consts[static::class] = (new \ReflectionClass(static::class))->getConstants());
     }
 
     public static function getParentConstants(): array
     {
-        if (is_null(self::$parentConsts)) {
-            return self::$parentConsts = (new \ReflectionClass(self::class))->getConstants();
-        }
-
-        return self::$parentConsts;
+        return self::$parentConsts[static::class] ?? (self::$parentConsts[static::class] = (new \ReflectionClass(self::class))->getConstants());
     }
 
     public static function getChildConstants(): array
     {
-        if (is_null(self::$childConsts)) {
-            return self::$childConsts = array_diff_key(self::getConstants(), self::getParentConstants());
-        }
-
-        return self::$childConsts;
+        return self::$childConsts[static::class] ?? (self::$childConsts[static::class] = array_diff_key(self::getConstants(), self::getParentConstants()));
     }
 }

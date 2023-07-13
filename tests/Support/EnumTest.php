@@ -3,6 +3,7 @@
 namespace Tests\Support;
 
 use PHPUnit\Framework\TestCase;
+use Rice\Basic\Components\Enum\SupportEnum;
 use Rice\Basic\Components\Enum\ExceptionEnum;
 
 class EnumTest extends TestCase
@@ -17,9 +18,9 @@ class EnumTest extends TestCase
             ExceptionEnum::getParentConstants()['METHOD_NOT_DEFINE'],
         ]);
 
-        $this->assertEquals($arr, [
-            ExceptionEnum::getConstants()['ATTR_NOT_DEFINE'],
-            ExceptionEnum::getConstants()['METHOD_NOT_DEFINE'],
-        ]);
+        $this->assertEquals(
+            SupportEnum::CANNOT_DIVIDE_BY_ZERO,
+            SupportEnum::getConstants()['CANNOT_DIVIDE_BY_ZERO']
+        );
     }
 }
