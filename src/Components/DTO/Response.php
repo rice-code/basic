@@ -87,12 +87,13 @@ class Response extends BaseDTO
         return $resp;
     }
 
-    public static function buildFailure(string $errCode, string $errMessage): self
+    public static function buildFailure(string $errCode, string $errMessage, array $data = []): self
     {
         $resp = new self();
         $resp->setSuccess(false);
         $resp->setErrCode($errCode);
         $resp->setErrMessage($errMessage);
+        $resp->setData($data);
 
         return $resp;
     }
