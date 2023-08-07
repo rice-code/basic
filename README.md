@@ -21,6 +21,7 @@ composer require rice/basic
 1. 提供基础框架组件 [锚点](#框架组件)
 2. 参数自动填充 [锚点](#请求参数自动数据填充)
 3. 请求客户端封装 [锚点](#请求客户端封装)
+4. 场景校验 [锚点](#场景校验)
 
 ### 使用场景
 1. 数组替换为对象进行管理
@@ -417,6 +418,56 @@ class DouYinClient extends LaravelClient
 > tip: 请求的逻辑都要在该client类中实现，比如我有获取token和刷新token的请求，
 > 那么全部逻辑应该集中到该 `DouYinClient` 类中。这样子做业务上更加内聚，影响
 > 范围不会扩散。
+
+#### 场景校验
+
+支持 `Laravel` 自定义 `Request` 使用场景校验规则，只要引入 `Scene` `traits` 类。
+自动使用控制器的方法名称作为场景 `key` 进行注入。未定义相关场景 `key` 则按照 `rules`
+定义执行全部规则校验。
+
+```php
+<?php
+
+namespace App\Http\Requests;
+
+use Illuminate\Foundation\Http\FormRequest;
+use Rice\Basic\Support\Traits\Scene;
+
+class SceneRequest extends FormRequest
+{
+    use Scene;
+    /**
+     * Determine if the user is authorized to make this request.
+     *
+     * @return bool
+     */
+    public function authorize()
+    {
+        return true;
+    }
+
+    /**
+     * Get the validation rules that apply to the request.
+     *
+     * @return array
+     */
+    public function rules()
+    {
+        return [
+            'state' => 'required|max:1',
+            'auth_code' => 'required|max:2'
+        ];
+    }
+
+    public function scenes()
+    {
+        return [
+            'callback' => []
+        ];
+    }
+}
+
+```
 
 ### 配套工具
 
