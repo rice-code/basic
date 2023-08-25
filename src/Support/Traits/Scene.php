@@ -6,7 +6,7 @@ trait Scene
 {
     public function prepareForValidation()
     {
-        if (! $this->passesAuthorization()) {
+        if (!$this->passesAuthorization()) {
             $this->failedAuthorization();
         }
 
@@ -16,25 +16,30 @@ trait Scene
     }
 
     /**
-     *
      * @return array
      */
     public function getSceneRules(): array
     {
-        $rules = $this->rules();
+        $rules        = $this->rules();
         $actionMethod = $this->route()->getActionMethod();
-        if ($scenes = $this->scenes()[$actionMethod] ?? []) {
-            $newRules = [];
-            foreach ($scenes as $k => $v) {
-                if (is_numeric($k)) {
-                    $newRules[$v] = $rules[$v];
-                    continue;
-                }
-                $newRules[$k] = $v;
-            }
-            $rules = $newRules;
+
+        $scenes = $this->scenes()[$actionMethod] ?? [];
+
+        // 未定义默认未不进行规则校验
+        if (empty($scenes)) {
+            return [];
         }
 
-        return $rules;
+        $newRules = [];
+        foreach ($scenes as $k => $v) {
+            if (is_numeric($k)) {
+                $newRules[$v] = $rules[$v];
+
+                continue;
+            }
+            $newRules[$k] = $v;
+        }
+
+        return $newRules;
     }
 }
