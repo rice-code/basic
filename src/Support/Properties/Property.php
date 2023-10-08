@@ -28,6 +28,10 @@ class Property
      * 属性的注释.
      */
     public string $docComment;
+    /**
+     * 注释描述.
+     */
+    public string $docDesc;
 
     /**
      * 注释@相关值
@@ -57,6 +61,7 @@ class Property
         $this->docComment    = $docComment;
 
         $this->matchLabels();
+        $this->docDesc = $this->parseDocDesc();
 
         if (!is_null($type)) {
             $this->stronglyTyped = true;
@@ -70,6 +75,43 @@ class Property
             $this->isArray       = true;
             $this->type          = str_replace('[]', '', $this->type);
         }
+    }
+
+    public function parseDocDesc(): string
+    {
+        $lines   = explode(PHP_EOL, $this->docComment);
+        $descArr = [];
+        foreach ($lines as $line) {
+            $newLine = trim(ltrim(trim($line), '/*'), ' ');
+            $docLine = $this->parseDocLine($newLine);
+            if ($docLine) {
+                $descArr[] = $docLine;
+            }
+        }
+
+        if (empty($descArr)) {
+            return '';
+        }
+
+        return count($descArr) > 1 ? implode(PHP_EOL, $descArr) : $descArr[0];
+    }
+
+    private function parseDocLine(string $line): string
+    {
+        if (empty($line)) {
+            return '';
+        }
+
+        if (0 === strpos($line, '@')) {
+            return '';
+        }
+
+        return $line;
+    }
+
+    public function getDocDesc(): string
+    {
+        return $this->docDesc;
     }
 
     protected function matchLabels(): void

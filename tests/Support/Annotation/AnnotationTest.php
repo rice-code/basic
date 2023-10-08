@@ -7,6 +7,7 @@ use Rice\Basic\Support\Lang;
 use Tests\Support\Entity\Cat;
 use PHPUnit\Framework\TestCase;
 use Rice\Basic\Components\Enum\SupportEnum;
+use Rice\Basic\Support\Properties\Property;
 use Rice\Basic\Support\Annotation\Annotation;
 
 class AnnotationTest extends TestCase
@@ -28,9 +29,14 @@ class AnnotationTest extends TestCase
     {
         $annotation = new Annotation();
 
-        $property = $annotation->execute(Cat::class)->getProperties();
-        $this->assertArrayHasKey(Cat::class, $property);
-        $this->assertEquals('$this', $property[Cat::class]['eyes']->getDocLabels()['return'][0]);
+        $properties = $annotation->execute(Cat::class)->getProperties();
+        $this->assertArrayHasKey(Cat::class, $properties);
+        /**
+         * @var Property $eyes
+         */
+        $eyes = $properties[Cat::class]['eyes'];
+        $this->assertEquals('$this', $eyes->getDocLabels()['return'][0]);
+        $this->assertEquals('眼睛.', $eyes->getDocDesc());
     }
 
     public function testLang()
