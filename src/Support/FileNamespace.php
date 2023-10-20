@@ -9,8 +9,10 @@ class FileNamespace
     use Singleton;
 
     public const NAMESPACE_PATTERN      = '/^namespace\s+(.*);$/';
-    public const CLASS_DEFINE_PATTERN   = '/^class\s*(.*)$/';
+    public const CLASS_DEFINE_PATTERN   = '/^class\s*(\S*).*$/';
     public const USE_PATTERN            = '/^use\s*([\S]+)[\s*;](?:AS|as)?\s*(\w*)[;]?$/';
+
+    protected ?string $className = null;
 
     protected array $uses = [];
 
@@ -36,6 +38,7 @@ class FileNamespace
         }
 
         if (preg_match(self::CLASS_DEFINE_PATTERN, $rowData, $matches)) {
+            $this->className = $matches[1] ?? '';
             return true;
         }
 
@@ -95,5 +98,10 @@ class FileNamespace
     public function getAlias(): array
     {
         return $this->alias;
+    }
+
+    public function getNamespace($alias): string
+    {
+        return $this->uses[$alias]['this'].DIRECTORY_SEPARATOR.$this->className;
     }
 }
