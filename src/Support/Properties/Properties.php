@@ -43,6 +43,9 @@ class Properties
      */
     public function handleConstants(array $constants): array
     {
+        /**
+         * @var \ReflectionClassConstant $constant
+         */
         foreach ($constants as $constant) {
             // 排除包内部使用变量
             if (FrameEntity::inFilter($constant->name)) {
@@ -51,6 +54,8 @@ class Properties
             $name        = $constant->getName();
             $newProperty = new Property(
                 'const',
+                $this->refectionClass->getName(),
+                $this->refectionClass->getNamespaceName(),
                 $name,
                 $constant->getValue(),
                 $constant->getDocComment(),
@@ -78,6 +83,8 @@ class Properties
             $name        = $property->getName();
             $newProperty = new Property(
                 ($type instanceof \ReflectionType) ? $type->getName() : null,
+                $this->refectionClass->getName(),
+                $this->refectionClass->getNamespaceName(),
                 $name,
                 '',
                 $property->getDocComment(),
