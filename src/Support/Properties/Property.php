@@ -39,19 +39,9 @@ class Property
     public array $docLabels = [];
 
     /**
-     * 类名称.
+     * 该属性若是对象的话，必然会存在一个命名空间.
      */
-    public string $className;
-
-    /**
-     * 类命名空间.
-     */
-    public string $classNamespace;
-
-    /**
-     * 该属性若是对象的话，必然会存在一个命名空间
-     */
-    public string $namespace;
+    public ?string $namespace = null;
 
     /**
      * 是否数组.
@@ -63,17 +53,9 @@ class Property
      */
     public bool $isClass = false;
 
-    public function __construct(
-        ?string $type,
-        $className,
-        $classNamespace,
-        $name,
-        $value,
-        $docComment)
+    public function __construct(?string $type, $name, $value, $docComment)
     {
         $this->type           = $type;
-        $this->className      = $className;
-        $this->classNamespace = $classNamespace;
         $this->name           = $name;
         $this->value          = $value;
         $this->docComment     = $docComment;

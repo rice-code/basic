@@ -149,56 +149,13 @@ class Annotation
     public function analysisAttr(): void
     {
         $className                         = $this->class->getName();
-        $properties                        = new Properties($className);
+        $properties                        = new Properties($className, $this->uses[$className], $this->alias[$className]);
         $this->classProperties[$className] = $properties->getProperties($this->filter);
-        foreach ($properties->getProperties() as $property) {
-            $property->namespace = $this->findNamespace($property);
-        }
-    }
-
-    /**
-     * 根据类属性查询命名空间.
-     * @param Property $property
-     * @return string
-     */
-    public function findNamespace(Property $property): string
-    {
-        $className = $this->class->getName();
-        $uses      = $this->uses[$className];
-        $alias     = $this->alias[$className];
-
-        $propertyType = $property->type;
-
-        if (array_key_exists($propertyType, $alias)) {
-            $propertyType = $alias[$propertyType];
-        }
-
-        if (class_exists($namespace = $uses['this'] . '\\' . $propertyType)) {
-            $this->classHandle($property, $namespace);
-
-            return $namespace;
-        }
-
-        if (isset($uses[$propertyType]) && class_exists($namespace = $uses[$propertyType] . '\\' . $propertyType)) {
-            $this->classHandle($property, $namespace);
-
-            return $namespace;
-        }
-
-        return '';
-    }
-
-    /**
-     * @param Property $property
-     * @param string   $namespace
-     * @return void
-     */
-    public function classHandle(Property $property, string $namespace): void
-    {
-        $property->isClass = true;
-        if (!isset($this->resolvedClass[$namespace])) {
-            $this->queue[]                   = $namespace;
-            $this->resolvedClass[$namespace] = true;
+        foreach ($properties->getAllPropertyNamespaceName() as $namespaceName) {
+            if (!isset($this->resolvedClass[$namespaceName])) {
+                $this->queue[]                       = $namespaceName;
+                $this->resolvedClass[$namespaceName] = true;
+            }
         }
     }
 
