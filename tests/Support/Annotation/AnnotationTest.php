@@ -29,7 +29,7 @@ class AnnotationTest extends TestCase
     {
         $annotation = new Annotation();
 
-        $properties = $annotation->execute(Cat::class)->getProperties();
+        $properties = $annotation->execute(Cat::class)->getClassProperties();
         $this->assertArrayHasKey(Cat::class, $properties);
         /**
          * @var Property $eyes
@@ -43,7 +43,7 @@ class AnnotationTest extends TestCase
     {
         $annotation = new Annotation();
         $annotation->setFilter(\ReflectionProperty::IS_PUBLIC);
-        $properties = $annotation->execute(SupportEnum::class)->getProperties();
+        $properties = $annotation->execute(SupportEnum::class)->getClassProperties();
         $locale     = Lang::getInstance()->getLocale();
         $this->assertEquals(
             'cannot divide by zero',

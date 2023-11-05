@@ -27,7 +27,7 @@ abstract class BaseException extends \Exception
     {
         $annotation = new Annotation();
         $enumClass  = $this::enumClass();
-        $properties = $annotation->execute($enumClass)->getProperties();
+        $properties = $annotation->execute($enumClass)->getClassProperties();
 
         if (isset($properties[$enumClass])) {
             /**

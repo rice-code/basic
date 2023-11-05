@@ -174,7 +174,7 @@ class Annotation
         return $this->alias;
     }
 
-    public function getProperties(): array
+    public function getClassProperties(): array
     {
         // 兼容类无 protected 变量问题
         return $this->classProperties;
