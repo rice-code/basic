@@ -17,4 +17,12 @@ class DTOTest extends TestCase
         $this->assertEquals('tests', $dto->getName());
         $dto->toArray();
     }
+
+    public function testPageDTO(): void
+    {
+        $dto = new OrderListDTO(['shop_id' => 1, 'page' => 3, 'per_page' => 10]);
+        $this->assertEquals(1, $dto->getShopId());
+        $this->assertEquals(3, $dto->getPage());
+        $this->assertEquals(10, $dto->getPerPage());
+    }
 }
