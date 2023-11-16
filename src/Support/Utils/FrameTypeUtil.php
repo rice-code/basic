@@ -12,4 +12,10 @@ class FrameTypeUtil
 
         return false;
     }
+
+    public static function isPHP(string $version): bool
+    {
+        [$x] = explode('.', PHP_VERSION);
+        return $x === $version;
+    }
 }
