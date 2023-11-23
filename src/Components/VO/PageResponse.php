@@ -2,98 +2,63 @@
 
 namespace Rice\Basic\Components\VO;
 
-use Rice\Basic\Components\Enum\ReturnCode\ReturnCodeEnum;
-
-class Response extends BaseVO
+class PageResponse extends Response
 {
-    private bool $success = false;
-
-    private string $errCode = ReturnCodeEnum::OK;
-
-    private string $errMessage = '';
-
-    private array $data = [];
+    /**
+     * 页码
+     * @var int
+     */
+    protected int $page;
+    /**
+     * 每页条数.
+     * @var int
+     */
+    protected int $perPage;
 
     /**
-     * @return bool
+     * 总条数.
+     * @var int
      */
-    public function getSuccess(): bool
+    protected int $totalCount;
+
+    public function getPage(): int
     {
-        return $this->success;
+        return $this->page;
     }
 
-    /**
-     * @param bool $success
-     */
-    public function setSuccess(bool $success): void
+    public function setPage(int $page): void
     {
-        $this->success = $success;
+        $this->page = $page;
     }
 
-    /**
-     * @param string $errCode
-     */
-    public function setErrCode(string $errCode): void
+    public function getPerPage(): int
     {
-        $this->errCode = $errCode;
+        return $this->perPage;
     }
 
-    /**
-     * @return string
-     */
-    public function getErrCode(): string
+    public function setPerPage(int $perPage): void
     {
-        return $this->errCode;
+        $this->perPage = $perPage;
     }
 
-    /**
-     * @return string
-     */
-    public function getErrMessage(): string
+    public function getTotalCount(): int
     {
-        return $this->errMessage;
+        return $this->totalCount;
     }
 
-    /**
-     * @param string $errMessage
-     */
-    public function setErrMessage(string $errMessage): void
+    public function setTotalCount(int $totalCount): void
     {
-        $this->errMessage = $errMessage;
+        $this->totalCount = $totalCount;
     }
 
-    /**
-     * @return array
-     */
-    public function getData(): array
-    {
-        return $this->data;
-    }
-
-    /**
-     * @param array $data
-     */
-    public function setData(array $data): void
-    {
-        $this->data = $data;
-    }
-
-    public static function buildSuccess($data = []): self
+    public static function buildSuccess($data = [], $total = 0, $page = 1, $perPage = 20): self
     {
         $resp = new self();
         $resp->setSuccess(true);
         $resp->setData($data);
-
-        return $resp;
-    }
-
-    public static function buildFailure(string $errCode, string $errMessage, array $data = []): self
-    {
-        $resp = new self();
-        $resp->setSuccess(false);
-        $resp->setErrCode($errCode);
-        $resp->setErrMessage($errMessage);
-        $resp->setData($data);
+        $resp->setTotalCount($total);
+        $resp->setPage($page);
+        $resp->setPerPage($perPage);
 
         return $resp;
     }
