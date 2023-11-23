@@ -8,6 +8,7 @@ use Tests\Support\Entity\Cat;
 use PHPUnit\Framework\TestCase;
 use Tests\Support\Entity\GetterCat;
 use Tests\Support\Entity\SetterCat;
+use Rice\Basic\Components\VO\Response;
 use Rice\Basic\Components\Exception\SupportException;
 
 class AccessorTest extends TestCase
@@ -41,5 +42,12 @@ class AccessorTest extends TestCase
         } catch (\Exception $e) {
             $this->assertEquals('method not define', $e->getMessage());
         }
+
+        $success = Response::buildSuccess();
+
+        $this->assertArrayHasKey('success', $success->toArray());
+        $this->assertArrayHasKey('errCode', $success->toArray());
+        $this->assertArrayHasKey('errMessage', $success->toArray());
+        $this->assertArrayHasKey('data', $success->toArray());
     }
 }

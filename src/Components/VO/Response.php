@@ -2,7 +2,6 @@
 
 namespace Rice\Basic\Components\VO;
 
-use Rice\Basic\Components\DTO\BaseDTO;
 use Rice\Basic\Components\Enum\ReturnCode\ReturnCodeEnum;
 
 class Response extends BaseVO
