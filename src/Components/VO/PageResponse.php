@@ -6,13 +6,13 @@ use Rice\Basic\Components\Enum\ReturnCode\ReturnCodeEnum;
 
 class Response extends BaseVO
 {
-    protected bool $success = false;
+    private bool $success = false;
 
-    protected string $errCode = ReturnCodeEnum::OK;
+    private string $errCode = ReturnCodeEnum::OK;
 
-    protected string $errMessage = '';
+    private string $errMessage = '';
 
-    protected array $data = [];
+    private array $data = [];
 
     /**
      * @return bool
