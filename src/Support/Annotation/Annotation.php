@@ -5,10 +5,11 @@ namespace Rice\Basic\Support\Annotation;
 use ReflectionClass;
 use ReflectionException;
 use Rice\Basic\Support\FileNamespace;
+use Rice\Basic\Components\Enum\KeyEnum;
 use Rice\Basic\Contracts\CacheContract;
-use Rice\Basic\Support\Utils\VerifyUtil;
 use Rice\Basic\Support\Properties\Property;
 use Rice\Basic\Support\Properties\Properties;
+use Rice\Basic\Components\Entity\AnnotationEntity;
 
 class Annotation
 {
@@ -31,18 +32,6 @@ class Annotation
     private array $classProperties = [];
 
     /**
-     * 命名空间映射数组.
-     * @var array
-     */
-    private array $uses = [];
-
-    /**
-     * 命名空间别名映射数组.
-     * @var array
-     */
-    private array $alias = [];
-
-    /**
      * 对象属性解析队列.
      * @var array
      */
@@ -54,6 +43,12 @@ class Annotation
     private array $resolvedClass;
 
     /**
+     * 已解析类实体.
+     *
+     * @var AnnotationEntity
+     */
+    private AnnotationEntity $resolvedEntity;
+    /**
      * 获取对应权限属性.
      *
      * @var int
@@ -62,7 +57,8 @@ class Annotation
 
     public function __construct($cache = null)
     {
-        $this->cache = $cache;
+        $this->cache          = $cache;
+        $this->resolvedEntity = AnnotationEntity::build($cache);
     }
 
     /**
@@ -70,6 +66,11 @@ class Annotation
      */
     public function execute($class): self
     {
+        if (! $this->resolvedEntity->hasChangeFile()) {
+            return $this;
+        }
+
+        $this->queue = $this->resolvedEntity->getChangeFiles();
         // 构建命名空间
         $this->queue[] = $class;
         while (!empty($this->queue)) {
@@ -77,6 +78,8 @@ class Annotation
             $this->buildClass($objClass);
             $this->analysisAttr();
         }
+
+        $this->writeCache();
 
         return $this;
     }
@@ -91,17 +94,10 @@ class Annotation
     {
         $this->class     = new ReflectionClass($class);
         $classNamespace  = $this->class->getName();
-        $modifyTimestamp = $classNamespace . '_timestamp';
-        $aliasNamespace  = $classNamespace . '_alias';
         $classFileName   = $this->class->getFileName();
 
-        if ($this->readCache($classFileName, $modifyTimestamp, $classNamespace, $aliasNamespace)) {
-            return $this;
-        }
-
+        $this->resolvedEntity->setMtime($classFileName, filemtime($classFileName));
         $this->parseFileForNamespace($classNamespace, $classFileName);
-
-        $this->writeCache($classFileName, $modifyTimestamp, $classNamespace, $aliasNamespace);
 
         return $this;
     }
@@ -113,33 +109,18 @@ class Annotation
      */
     private function parseFileForNamespace(string $classNamespace, $classFileName): void
     {
-        $this->uses  = FileNamespace::getInstance()->execute($classNamespace, $classFileName)->getUses();
-        $this->alias = FileNamespace::getInstance()->getAlias();
+        $parse = FileNamespace::getInstance()->execute($classNamespace, $classFileName);
+        $this->resolvedEntity->setUses($classNamespace, $parse->getUses()[$classNamespace]);
+        $this->resolvedEntity->setAlias($classNamespace, $parse->getAlias()[$classNamespace]);
     }
 
-    public function readCache($classFileName, $modifyTimestamp, $classNamespace, $aliasNamespace): bool
+    public function writeCache(): void
     {
-        if (VerifyUtil::notNull($this->cache)) {
-            $modifyTime = $this->cache->get($modifyTimestamp);
-            $content    = json_decode($this->cache->get($classNamespace), true);
-            $alias      = json_decode($this->cache->get($aliasNamespace), true);
-            if (VerifyUtil::notNullAndNotEmpty($content) && $modifyTime == filemtime($classFileName)) {
-                $this->uses  = $content;
-                $this->alias = $alias;
-
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    public function writeCache($classFileName, $modifyTimestamp, $classNamespace, $aliasNamespace): void
-    {
-        if (VerifyUtil::notNull($this->cache)) {
-            $this->cache->set($modifyTimestamp, filemtime($classFileName));
-            $this->cache->set($classNamespace, json_encode($this->uses, JSON_UNESCAPED_UNICODE));
-            $this->cache->set($aliasNamespace, json_encode($this->alias, JSON_UNESCAPED_UNICODE));
+        if ($this->cache) {
+            $this->cache->set(
+                KeyEnum::ANNOTATION_KEY,
+                json_encode($this->resolvedEntity->toArray(), JSON_UNESCAPED_UNICODE)
+            );
         }
     }
 
@@ -149,7 +130,11 @@ class Annotation
     public function analysisAttr(): void
     {
         $className                         = $this->class->getName();
-        $properties                        = new Properties($className, $this->uses[$className], $this->alias[$className]);
+        $properties                        = new Properties(
+            $className,
+            $this->resolvedEntity->getUses($className),
+            $this->resolvedEntity->getAlias($className)
+        );
         $this->classProperties[$className] = $properties->getProperties($this->filter);
         foreach ($properties->getAllPropertyNamespaceName() as $namespaceName) {
             if (!isset($this->resolvedClass[$namespaceName])) {
@@ -166,12 +151,12 @@ class Annotation
 
     public function getUses(): array
     {
-        return $this->uses;
+        return $this->resolvedEntity->getUses();
     }
 
     public function getAlias(): array
     {
-        return $this->alias;
+        return $this->resolvedEntity->getAlias();
     }
 
     public function getClassProperties(): array
