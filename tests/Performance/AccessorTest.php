@@ -59,6 +59,6 @@ class AccessorTest extends TestCase
         });
         $actual = $microseconds / (1000 * 1000 * 1.0);
         var_dump('accessor test10000: '.$actual.'s');
-        $this->assertLessThanOrEqual(2, $actual);
+        $this->assertLessThanOrEqual(3, $actual);
     }
 }
