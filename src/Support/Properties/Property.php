@@ -80,7 +80,14 @@ class Property
     public function parseDocDesc(): string
     {
         $lines   = explode(PHP_EOL, $this->docComment);
+
+        if (count($lines) === 1) {
+            // windows下兼容\n换行
+            $lines = explode("\n", $this->docComment);
+        }
+
         $descArr = [];
+
         foreach ($lines as $line) {
             $newLine = trim(ltrim(trim($line), '/*'), ' ');
             $docLine = $this->parseDocLine($newLine);
@@ -92,7 +99,6 @@ class Property
         if (empty($descArr)) {
             return '';
         }
-
         return count($descArr) > 1 ? implode(PHP_EOL, $descArr) : $descArr[0];
     }
 

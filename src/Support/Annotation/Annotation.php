@@ -7,14 +7,12 @@ use ReflectionException;
 use Rice\Basic\Support\FileNamespace;
 use Rice\Basic\Components\Enum\KeyEnum;
 use Rice\Basic\Contracts\CacheContract;
-use Rice\Basic\Support\Traits\Singleton;
 use Rice\Basic\Support\Properties\Property;
 use Rice\Basic\Support\Properties\Properties;
 use Rice\Basic\Components\Entity\AnnotationEntity;
 
 class Annotation
 {
-    use Singleton;
     /**
      * 缓存实体.
      * @var CacheContract
@@ -51,16 +49,7 @@ class Annotation
      */
     private int $filter = \ReflectionProperty::IS_PROTECTED;
 
-    public static function getInstance($cache = null): self
-    {
-        if (is_null(self::$instance)) {
-            self::$instance = new self($cache);
-        }
-
-        return self::$instance;
-    }
-
-    private function __construct($cache = null)
+    public function __construct($cache = null)
     {
         $this->cache          = $cache;
         $this->resolvedEntity = AnnotationEntity::build($cache);

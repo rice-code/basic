@@ -49,7 +49,7 @@ trait AutoFillProperties
         }
 
         $this->_params      = $params;
-        $annotation         = Annotation::getInstance($cache);
+        $annotation         = new Annotation($cache);
         $this->_properties  = $annotation->execute(get_class($this))->getClassProperties();
         $this->_alias       = $annotation->getAlias();
         $this->_cache       = $cache;

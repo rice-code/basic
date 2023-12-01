@@ -26,7 +26,7 @@ abstract class BaseException extends \Exception
     public function __construct($message = '', $code = 0, Throwable $previous = null)
     {
         $enumClass  = $this::enumClass();
-        $properties = Annotation::getInstance()->execute($enumClass)->getClassProperties();
+        $properties = (new Annotation())->execute($enumClass)->getClassProperties();
 
         if (isset($properties[$enumClass])) {
             /**
