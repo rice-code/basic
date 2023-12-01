@@ -29,7 +29,7 @@ class Cat
      *
      * @throws \Exception
      *
-     * @var []Eye
+     * @var Eye[]
      * @Param
      */
     protected $eyes;

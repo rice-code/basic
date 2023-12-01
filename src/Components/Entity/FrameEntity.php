@@ -5,14 +5,14 @@ namespace Rice\Basic\Components\Entity;
 class FrameEntity extends BaseEntity
 {
     private static array $_filter = [
-        '_setter',
-        '_getter',
-        '_readOnly',
-        '_params',
-        '_properties',
-        '_alias',
-        '_cache',
-        '_idx',
+        '_setter'      => '_setter',
+        '_getter'      => '_getter',
+        '_readOnly'    => '_readOnly',
+        '_params'      => '_params',
+        '_properties'  => '_properties',
+        '_alias'       => '_alias',
+        '_cache'       => '_cache',
+        '_idx'         => '_idx',
     ];
 
     public static function getFilter(): array
@@ -22,6 +22,6 @@ class FrameEntity extends BaseEntity
 
     public static function inFilter($needle): bool
     {
-        return in_array($needle, self::getFilter(), true);
+        return isset(self::$_filter[$needle]);
     }
 }

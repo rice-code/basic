@@ -49,8 +49,8 @@ trait AutoFillProperties
         }
 
         $this->_params      = $params;
-        $annotation         = (new Annotation($cache));
-        $this->_properties  = $annotation->execute($this)->getClassProperties();
+        $annotation         = Annotation::getInstance($cache);
+        $this->_properties  = $annotation->execute(get_class($this))->getClassProperties();
         $this->_alias       = $annotation->getAlias();
         $this->_cache       = $cache;
 
@@ -62,11 +62,7 @@ trait AutoFillProperties
      */
     protected function handle(): void
     {
-        $this->beforeFillHook($params);
-
         $this->fill();
-
-        $this->afterFillHook($params);
     }
 
     /**
@@ -74,6 +70,10 @@ trait AutoFillProperties
      */
     public function fill(): void
     {
+        if (empty($this->_properties)) {
+            return;
+        }
+
         $propertyArr = ExtractUtil::getCamelCase($this->_properties, get_class($this));
 
         /**
@@ -94,7 +94,6 @@ trait AutoFillProperties
 
                 continue;
             }
-
             if ($property->isClass) {
                 $this->fillClass($property, $name, $value);
 
@@ -114,14 +113,6 @@ trait AutoFillProperties
 
             $this->{$name} = $value;
         }
-    }
-
-    public function beforeFillHook(&$params): void
-    {
-    }
-
-    public function afterFillHook(&$params): void
-    {
     }
 
     /**

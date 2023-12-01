@@ -25,7 +25,7 @@ class SetterCat
     use Setter;
 
     /**
-     * @var string
+     * @var Eye[]
      * @Param $class
      */
     public $eyes;

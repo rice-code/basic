@@ -23,19 +23,19 @@ class OrderListDTO extends PageDTO
     use AutoFillProperties;
 
     /**
-     * 订单id
+     * 订单id.
      *
      * @var int
      */
     protected int $id;
     /**
-     * 店铺id
+     * 店铺id.
      *
-     * @var int $shopId
+     * @var int
      */
     protected int $shopId;
     /**
-     * 外部展示订单号
+     * 外部展示订单号.
      *
      * @var string
      */
@@ -47,7 +47,7 @@ class OrderListDTO extends PageDTO
      */
     protected string $price;
     /**
-     * 数量
+     * 数量.
      *
      * @var string
      */

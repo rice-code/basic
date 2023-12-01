@@ -2,38 +2,39 @@
 
 namespace Rice\Basic\Components\Entity;
 
-use App\Contract\CacheContract;
 use Rice\Basic\Components\Enum\KeyEnum;
+use Rice\Basic\Contracts\CacheContract;
+use Rice\Basic\Support\Traits\Singleton;
 
 class AnnotationEntity extends BaseEntity
 {
-    public $fileMtimes = [];
+    use Singleton;
+    private static array $caches = [
+        KeyEnum::FILE_MTIME_KEY => [],
+        KeyEnum::FILE_USE_KEY   => [],
+        KeyEnum::FILE_ALIAS_KEY => [],
+    ];
 
-    public $fileUses = [];
+    private static array $classProperties = [];
 
-    public $fileAlias = [];
-
-    public static function build(?CacheContract $cache)
+    public static function build(?CacheContract $cache): self
     {
-        $entity = new self();
+        $entity = self::getInstance();
 
-        $content = json_decode($cache ? $cache->get(KeyEnum::ANNOTATION_KEY) : '', true);
-
-        $entity->fileMtimes = $content['mtimes'] ?? [];
-        $entity->fileUses   = $content['uses']   ?? [];
-        $entity->fileAlias  = $content['alias']  ?? [];
+        if (empty(self::$caches[KeyEnum::FILE_USE_KEY])) {
+            self::$caches = $cache ? json_decode($cache->get(KeyEnum::ANNOTATION_KEY), true) : self::$caches;
+        }
 
         return $entity;
     }
 
-    public function hasChangeFile(): bool
+    public function hasChangeFile(string $namespace): bool
     {
         // 当文件修改为空时，说明未进行缓存过任何文件
-        if (! $this->fileMtimes) {
+        if (empty(self::$classProperties[$namespace])) {
             return true;
         }
-
-        foreach ($this->fileMtimes as $path => $time) {
+        foreach (self::$caches[KeyEnum::FILE_MTIME_KEY] ?? [] as $path => $time) {
             if (filemtime($path) !== (int) $time) {
                 return true;
             }
@@ -45,7 +46,7 @@ class AnnotationEntity extends BaseEntity
     public function getChangeFiles(): array
     {
         $changeFiles = [];
-        foreach ($this->fileMtimes as $path => $time) {
+        foreach (self::$caches[KeyEnum::FILE_MTIME_KEY] as $path => $time) {
             if (filemtime($path) !== (int) $time) {
                 $changeFiles[] = $path;
             }
@@ -54,54 +55,77 @@ class AnnotationEntity extends BaseEntity
         return $changeFiles;
     }
 
+    public static function setClassProperties(string $namespace, array $classProperties): void
+    {
+        self::$classProperties[$namespace] = $classProperties;
+    }
+
+    public static function getClassProperties($namespace = null, $key = null)
+    {
+        if ($namespace && $key) {
+            return self::$classProperties[$namespace][$key] ?? null;
+        }
+
+        if ($namespace) {
+            return self::$classProperties[$namespace] ?? null;
+        }
+
+        return self::$classProperties;
+    }
+
+    public static function getCaches(): array
+    {
+        return self::$caches;
+    }
+
     public function setMtime($key, $value): self
     {
-        $this->fileMtimes[$key] = $value;
+        self::$caches[KeyEnum::FILE_MTIME_KEY][$key] = $value;
 
         return $this;
     }
 
     public function delMtime($key): self
     {
-        unset($this->fileMtimes[$key]);
+        unset(self::$caches[KeyEnum::FILE_MTIME_KEY][$key]);
 
         return $this;
     }
 
     public function setUses($key, $value): self
     {
-        $this->fileUses[$key] = $value;
+        self::$caches[KeyEnum::FILE_USE_KEY][$key] = $value;
 
         return $this;
     }
 
     public function getUses(string $className = null)
     {
-        return $className ? $this->fileUses[$className] : $this->fileUses;
+        return $className ? self::$caches[KeyEnum::FILE_USE_KEY][$className] : self::$caches[KeyEnum::FILE_USE_KEY];
     }
 
     public function delUses($key): self
     {
-        unset($this->fileUses[$key]);
+        unset(self::$caches[KeyEnum::FILE_USE_KEY][$key]);
 
         return $this;
     }
 
     public function setAlias($key, $value): self
     {
-        $this->fileAlias[$key] = $value;
+        self::$caches[KeyEnum::FILE_ALIAS_KEY][$key] = $value;
 
         return $this;
     }
 
     public function getAlias(string $className = null)
     {
-        return $className ? $this->fileAlias[$className] : $this->fileAlias;
+        return $className ? self::$caches[KeyEnum::FILE_ALIAS_KEY][$className] : self::$caches[KeyEnum::FILE_ALIAS_KEY];
     }
 
     public function delAlias($key): self
     {
-        unset($this->fileAlias[$key]);
+        unset(self::$caches[KeyEnum::FILE_ALIAS_KEY][$key]);
 
         return $this;
     }

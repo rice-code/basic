@@ -39,6 +39,7 @@ class FileNamespace
 
         if (preg_match(self::CLASS_DEFINE_PATTERN, $rowData, $matches)) {
             $this->className = $matches[1] ?? '';
+
             return true;
         }
 
@@ -102,6 +103,6 @@ class FileNamespace
 
     public function getNamespace($alias): string
     {
-        return $this->uses[$alias]['this'].DIRECTORY_SEPARATOR.$this->className;
+        return $this->uses[$alias]['this'] . DIRECTORY_SEPARATOR . $this->className;
     }
 }

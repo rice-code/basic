@@ -13,3 +13,4 @@ vendor/
 .phpunit*
 *.cache
 tests/generate
+tests/Storage

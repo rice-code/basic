@@ -7,12 +7,14 @@ use ReflectionException;
 use Rice\Basic\Support\FileNamespace;
 use Rice\Basic\Components\Enum\KeyEnum;
 use Rice\Basic\Contracts\CacheContract;
+use Rice\Basic\Support\Traits\Singleton;
 use Rice\Basic\Support\Properties\Property;
 use Rice\Basic\Support\Properties\Properties;
 use Rice\Basic\Components\Entity\AnnotationEntity;
 
 class Annotation
 {
+    use Singleton;
     /**
      * 缓存实体.
      * @var CacheContract
@@ -24,12 +26,6 @@ class Annotation
      * @var ReflectionClass
      */
     private ReflectionClass $class;
-
-    /**
-     * 属性映射数组.
-     * @var array
-     */
-    private array $classProperties = [];
 
     /**
      * 对象属性解析队列.
@@ -55,7 +51,16 @@ class Annotation
      */
     private int $filter = \ReflectionProperty::IS_PROTECTED;
 
-    public function __construct($cache = null)
+    public static function getInstance($cache = null): self
+    {
+        if (is_null(self::$instance)) {
+            self::$instance = new self($cache);
+        }
+
+        return self::$instance;
+    }
+
+    private function __construct($cache = null)
     {
         $this->cache          = $cache;
         $this->resolvedEntity = AnnotationEntity::build($cache);
@@ -64,9 +69,9 @@ class Annotation
     /**
      * @throws ReflectionException
      */
-    public function execute($class): self
+    public function execute(string $class): self
     {
-        if (! $this->resolvedEntity->hasChangeFile()) {
+        if (!$this->resolvedEntity->hasChangeFile($class)) {
             return $this;
         }
 
@@ -119,7 +124,7 @@ class Annotation
         if ($this->cache) {
             $this->cache->set(
                 KeyEnum::ANNOTATION_KEY,
-                json_encode($this->resolvedEntity->toArray(), JSON_UNESCAPED_UNICODE)
+                json_encode($this->resolvedEntity::getCaches(), JSON_UNESCAPED_UNICODE)
             );
         }
     }
@@ -135,7 +140,7 @@ class Annotation
             $this->resolvedEntity->getUses($className),
             $this->resolvedEntity->getAlias($className)
         );
-        $this->classProperties[$className] = $properties->getProperties($this->filter);
+        $this->resolvedEntity::setClassProperties($className, $properties->getProperties($this->filter));
         foreach ($properties->getAllPropertyNamespaceName() as $namespaceName) {
             if (!isset($this->resolvedClass[$namespaceName])) {
                 $this->queue[]                       = $namespaceName;
@@ -162,12 +167,12 @@ class Annotation
     public function getClassProperties(): array
     {
         // 兼容类无 protected 变量问题
-        return $this->classProperties;
+        return $this->resolvedEntity::getClassProperties();
     }
 
     public function getProperty($key): ?Property
     {
-        return $this->classProperties[$this->class->getName()][$key] ?? null;
+        return $this->resolvedEntity::getClassProperties($this->class->getName(), $key);
     }
 
     /**

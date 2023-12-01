@@ -17,7 +17,7 @@ class AnnotationTest extends TestCase
      */
     public function testAnnotation(): void
     {
-        $annotation = new Annotation();
+        $annotation = Annotation::getInstance();
 
         $this->assertIsArray($annotation->execute(Cat::class)->getUses());
     }
@@ -27,7 +27,7 @@ class AnnotationTest extends TestCase
      */
     public function testProperty(): void
     {
-        $annotation = new Annotation();
+        $annotation = Annotation::getInstance();
 
         $properties = $annotation->execute(Cat::class)->getClassProperties();
         $this->assertArrayHasKey(Cat::class, $properties);
@@ -41,7 +41,7 @@ class AnnotationTest extends TestCase
 
     public function testLang()
     {
-        $annotation = new Annotation();
+        $annotation = Annotation::getInstance();
         $annotation->setFilter(\ReflectionProperty::IS_PUBLIC);
         $properties = $annotation->execute(SupportEnum::class)->getClassProperties();
         $locale     = Lang::getInstance()->getLocale();

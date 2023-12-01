@@ -31,7 +31,7 @@ class GetterCat
      *
      * @throws \Exception
      *
-     * @var []Eye
+     * @var Eye[]
      * @Param $class
      */
     protected $eyes;
