@@ -16,6 +16,7 @@ class AnnotationEntity extends BaseEntity
     ];
 
     private static array $classProperties = [];
+    private static bool $checks           = false;
 
     public static function build(?CacheContract $cache): self
     {
@@ -34,6 +35,12 @@ class AnnotationEntity extends BaseEntity
         if (empty(self::$classProperties[$namespace])) {
             return true;
         }
+
+        // 已检查过，无需重复检查
+        if (self::$caches) {
+            return false;
+        }
+
         foreach (self::$caches[KeyEnum::FILE_MTIME_KEY] ?? [] as $path => $time) {
             if (filemtime($path) !== (int) $time) {
                 return true;
@@ -51,6 +58,9 @@ class AnnotationEntity extends BaseEntity
                 $changeFiles[] = $path;
             }
         }
+
+        // 标识为全部数据检查过
+        self::$checks = true;
 
         return $changeFiles;
     }
