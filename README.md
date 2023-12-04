@@ -501,3 +501,4 @@ composer require rice/ctl
 
 ![](https://resources.jetbrains.com/storage/products/company/brand/logos/jb_beam.svg)
 
+[免费许可证计划](https://www.jetbrains.com.cn/community/opensource/#support)
