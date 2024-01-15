@@ -21,9 +21,8 @@ class AnnotationEntity extends BaseEntity
     public static function build(?CacheContract $cache): self
     {
         $entity = self::getInstance();
-
         if (empty(self::$caches[KeyEnum::FILE_USE_KEY])) {
-            self::$caches = $cache ? json_decode($cache->get(KeyEnum::ANNOTATION_KEY), true) : self::$caches;
+            self::$caches = $cache ? $cache->get(KeyEnum::ANNOTATION_KEY, self::$caches) : self::$caches;
         }
 
         return $entity;

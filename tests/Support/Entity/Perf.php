@@ -9,7 +9,7 @@ use Rice\Basic\Components\Entity\BaseEntity;
 
 class Perf extends BaseEntity
 {
-    public static function run(int $loop): void
+    public static function runAccessor(int $loop): void
     {
         $microseconds = PerfUtil::microseconds($loop, static function () {
             $dto = new OrderListDTO([]);
@@ -29,8 +29,11 @@ class Perf extends BaseEntity
             $dto->getPerPage();
         });
         $actual = $microseconds / (1000 * 1000 * 1.0);
-        var_dump('accessor test' . $loop . ': ' . $actual . 's');
+        echo '| accessor          |  '.$loop.'  |  '.$actual.'s |'.PHP_EOL;
+    }
 
+    public static function runAutoFill(int $loop): void
+    {
         $microseconds = PerfUtil::microseconds($loop, static function () {
             new OrderListDTO([
                 'id'       => 1,
@@ -43,10 +46,13 @@ class Perf extends BaseEntity
             ]);
         });
         $actual = $microseconds / (1000 * 1000 * 1.0);
-        var_dump('auto fill test' . $loop . ': ' . $actual . 's');
+        echo '| auto fill         |  '.$loop.'  |  '.$actual.'s |'.PHP_EOL;
+    }
 
-        $cache        = new Cache();
-        $microseconds = PerfUtil::microseconds($loop, static function () use ($cache) {
+    public static function runAutoFillCache(int $loop): void
+    {
+        $microseconds = PerfUtil::microseconds($loop, static function () {
+            $cache        = new Cache();
             new OrderListDTO([
                 'id'       => 1,
                 'order_no' => 'abc',
@@ -58,6 +64,6 @@ class Perf extends BaseEntity
             ], $cache);
         });
         $actual = $microseconds / (1000 * 1000 * 1.0);
-        var_dump('auto fill (cache) test' . $loop . ': ' . $actual . 's');
+        echo '| auto fill         |  '.$loop.'  |  '.$actual.'s |'.PHP_EOL;
     }
 }
