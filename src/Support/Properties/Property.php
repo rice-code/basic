@@ -25,14 +25,9 @@ class Property
      */
     public $value;
     /**
-     * 属性的注释.
-     */
-    public string $docComment;
-    /**
      * 注释描述.
      */
     public string $docDesc;
-
     /**
      * 注释@相关值
      */
@@ -53,23 +48,14 @@ class Property
      */
     public bool $isClass = false;
 
-    public function __construct(?string $type, $name, $value, $docComment)
+    public function __construct(?string $type, $name = '', $value = null, $comment = '', $stronglyTyped = false, $docLabels = [])
     {
         $this->type           = $type;
         $this->name           = $name;
         $this->value          = $value;
-        $this->docComment     = $docComment;
-
-        $this->matchLabels();
-        $this->docDesc = $this->parseDocDesc();
-
-        if (!is_null($type)) {
-            $this->stronglyTyped = true;
-        }
-
-        if (!$this->stronglyTyped && isset($this->docLabels['var'])) {
-            $this->type = $this->docLabels['var'][0];
-        }
+        $this->docDesc        = $comment;
+        $this->stronglyTyped  = $stronglyTyped;
+        $this->docLabels      = $docLabels;
 
         if (false !== strpos($this->type, '[]')) {
             $this->isArray       = true;
@@ -77,56 +63,9 @@ class Property
         }
     }
 
-    public function parseDocDesc(): string
-    {
-        $lines   = explode(PHP_EOL, $this->docComment);
-
-        if (count($lines) === 1) {
-            // windows下兼容\n换行
-            $lines = explode("\n", $this->docComment);
-        }
-
-        $descArr = [];
-
-        foreach ($lines as $line) {
-            $newLine = trim(ltrim(trim($line), '/*'), ' ');
-            $docLine = $this->parseDocLine($newLine);
-            if ($docLine) {
-                $descArr[] = $docLine;
-            }
-        }
-
-        if (empty($descArr)) {
-            return '';
-        }
-        return count($descArr) > 1 ? implode(PHP_EOL, $descArr) : $descArr[0];
-    }
-
-    private function parseDocLine(string $line): string
-    {
-        if (empty($line)) {
-            return '';
-        }
-
-        if (0 === strpos($line, '@')) {
-            return '';
-        }
-
-        return $line;
-    }
-
     public function getDocDesc(): string
     {
         return $this->docDesc;
-    }
-
-    protected function matchLabels(): void
-    {
-        preg_match_all(self::LABEL_PATTERN, $this->docComment, $matches);
-        $cnt = count($matches[0]);
-        for ($i = 0; $i < $cnt; ++$i) {
-            $this->docLabels[$matches[1][$i]][] = $matches[2][$i];
-        }
     }
 
     public function getDocLabels(): array

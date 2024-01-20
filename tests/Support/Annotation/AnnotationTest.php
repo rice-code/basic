@@ -5,6 +5,7 @@ namespace Tests\Support\Annotation;
 use ReflectionException;
 use Rice\Basic\Support\Lang;
 use Tests\Support\Entity\Cat;
+use Tests\Support\Entity\Cat8;
 use PHPUnit\Framework\TestCase;
 use Rice\Basic\Components\Enum\SupportEnum;
 use Rice\Basic\Support\Properties\Property;
@@ -39,12 +40,28 @@ class AnnotationTest extends TestCase
         $this->assertEquals('眼睛.', $eyes->getDocDesc());
     }
 
+    /**
+     * @throws ReflectionException
+     */
+    public function testProperty8(): void
+    {
+        $annotation = new Annotation();
+
+        $properties = $annotation->execute(Cat8::class)->getClassProperties();
+        $this->assertArrayHasKey(Cat8::class, $properties);
+        /**
+         * @var Property $eyes
+         */
+        $eyes = $properties[Cat8::class]['eyes'];
+        $this->assertEquals('眼睛', $eyes->getDocDesc());
+    }
+
     public function testLang()
     {
         $annotation = new Annotation();
         $annotation->setFilter(\ReflectionProperty::IS_PUBLIC);
         $properties = $annotation->execute(SupportEnum::class)->getClassProperties();
-        $locale     = Lang::getInstance()->getLocale();
+        $locale     = Lang::getInstance()->setLocale('en')->getLocale();
         $this->assertEquals(
             'cannot divide by zero',
             $properties[SupportEnum::class]['CANNOT_DIVIDE_BY_ZERO']->getDocLabel($locale)[0]

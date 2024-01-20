@@ -61,12 +61,14 @@ class Properties
             if (FrameEntity::inFilter($constant->name)) {
                 continue;
             }
-            $name        = $constant->getName();
-            $newProperty = new Property(
+            [$name, $value, $comment, $labels] = DocComment::getConstantInfo($constant);
+            $newProperty                       = new Property(
                 'const',
                 $name,
-                $constant->getValue(),
-                $constant->getDocComment(),
+                $value,
+                $comment,
+                false,
+                $labels
             );
 
             $newProperty->namespace  = null;
@@ -116,14 +118,19 @@ class Properties
             if (FrameEntity::inFilter($property->name)) {
                 continue;
             }
+            /*
+             * @var \ReflectionProperty $property
+             */
+
             $property->setAccessible(true);
-            $type        = $property->getType();
-            $name        = $property->getName();
-            $newProperty = new Property(
-                ($type instanceof \ReflectionType) ? $type->getName() : null,
+            [$type, $name, $comment, $stronglyTyped, $labels] = DocComment::getPropertyInfo($property);
+            $newProperty                                      = new Property(
+                $type,
                 $name,
                 '',
-                $property->getDocComment(),
+                $comment,
+                $stronglyTyped,
+                $labels
             );
             $newProperty->namespace  = $this->findNamespace($newProperty);
             $this->properties[$name] = $newProperty;

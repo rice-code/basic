@@ -29,7 +29,7 @@ class Perf extends BaseEntity
             $dto->getPerPage();
         });
         $actual = $microseconds / (1000 * 1000 * 1.0);
-        echo '| accessor          |  '.$loop.'  |  '.$actual.'s |'.PHP_EOL;
+        echo '| accessor          |  ' . $loop . '  |  ' . $actual . 's |' . PHP_EOL;
     }
 
     public static function runAutoFill(int $loop): void
@@ -46,7 +46,7 @@ class Perf extends BaseEntity
             ]);
         });
         $actual = $microseconds / (1000 * 1000 * 1.0);
-        echo '| auto fill         |  '.$loop.'  |  '.$actual.'s |'.PHP_EOL;
+        echo '| auto fill         |  ' . $loop . '  |  ' . $actual . 's |' . PHP_EOL;
     }
 
     public static function runAutoFillCache(int $loop): void
@@ -64,6 +64,6 @@ class Perf extends BaseEntity
             ], $cache);
         });
         $actual = $microseconds / (1000 * 1000 * 1.0);
-        echo '| auto fill         |  '.$loop.'  |  '.$actual.'s |'.PHP_EOL;
+        echo '| auto fill         |  ' . $loop . '  |  ' . $actual . 's |' . PHP_EOL;
     }
 }

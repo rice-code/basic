@@ -9,8 +9,8 @@ class AccessorTest extends TestCase
 {
     public function test100(): void
     {
-        echo '| 功能                |  次数   |      耗时(秒) |'.PHP_EOL;
-        echo '|:------------------|:-----:|-----------:|'.PHP_EOL;
+        echo '| 功能                |  次数   |      耗时(秒) |' . PHP_EOL;
+        echo '|:------------------|:-----:|-----------:|' . PHP_EOL;
         Perf::runAccessor(100);
         Perf::runAutoFill(100);
         $this->assertTrue(true);
