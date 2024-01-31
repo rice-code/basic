@@ -181,6 +181,28 @@ class Cat
 }
 ```
 
+##### php8 支持使用内置注解
+
+```php
+class Cat
+{
+    use AutoFillProperties;
+
+    #[Doc(var: 'Eye[]', text: '眼睛')]
+    public $eyes;
+
+    #[Doc(var: 'Eat')]
+    public $eat;
+
+    #[Doc(var: 'Speak')]
+    public $speak;
+
+    #[Doc(var: 'string[]')]
+    public $hair;
+}
+```
+
+
 引入 `AutoFillProperties` 类,然后使用 `@var` 进行编写注解，第一个参数是变量类型，第二个就是注释。这里面
 实现原理是使用类反射获取到相关注释的内容，正则进行匹配相关的值。最后判断这个类型是系统类型还是自定义类，是类的
 话就需要读取文件的命名空间，获取到相关对象的命名空间，从而实例化对象。这里面提供了缓存，因为类的改动只会在编写
