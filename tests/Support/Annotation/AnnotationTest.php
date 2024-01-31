@@ -4,6 +4,9 @@ namespace Tests\Support\Annotation;
 
 use ReflectionException;
 use Rice\Basic\Support\Lang;
+use Rice\Basic\Support\Utils\FrameTypeUtil;
+use Rice\Basic\Support\Utils\SplUtil;
+use Rice\Basic\Support\Utils\VerifyUtil;
 use Tests\Support\Entity\Cat;
 use Tests\Support\Entity\Cat8;
 use PHPUnit\Framework\TestCase;
@@ -45,6 +48,11 @@ class AnnotationTest extends TestCase
      */
     public function testProperty8(): void
     {
+        // 只对 php8 进行测试
+        if (FrameTypeUtil::isPHP(7)) {
+            $this->assertTrue(true);
+            return;
+        }
         $annotation = new Annotation();
 
         $properties = $annotation->execute(Cat8::class)->getClassProperties();
