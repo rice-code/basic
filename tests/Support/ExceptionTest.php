@@ -28,5 +28,13 @@ class ExceptionTest extends TestCase
         } catch (BizException $e) {
             $this->assertEquals('Business Error', $e->getMessage());
         }
+
+        try {
+            Lang::getInstance()->setLocale('en');
+
+            BizException::default();
+        } catch (BizException $e) {
+            $this->assertEquals('Business Error', $e->getMessage());
+        }
     }
 }

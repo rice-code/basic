@@ -10,4 +10,12 @@ class BizException extends BaseException
     {
         return BizEnum::class;
     }
+
+    /**
+     * @throws BizException
+     */
+    public static function default(): void
+    {
+        throw new self(BizEnum::DEFAULT);
+    }
 }

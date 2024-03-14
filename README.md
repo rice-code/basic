@@ -124,6 +124,26 @@ class ReturnCodeEnum extends BaseEnum
 异常类目录, 与 `Enum` 类配合使用。按照功能模块等进行类的细化，做到单一责任。这样
 可以更好的在异常抛出后做出不同的兜底措施。
 
+推荐将所有异常相关的抛出都封装到该类进行抛出使用，方便统一管理异常。
+```php
+class BizException extends BaseException
+{
+    public static function enumClass(): string
+    {
+        return BizEnum::class;
+    }
+
+    /**
+     * @throws BizException
+     */
+    public static function default(): void
+    {
+        throw new self(BizEnum::DEFAULT);
+    }
+}
+```
+
+
 #### phpunit 配置
 添加测试用例，保证源代码流程跑通，修改后的代码主流程不会报错。
 
