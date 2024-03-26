@@ -109,4 +109,19 @@ class StrUtil
 
         return false;
     }
+
+
+    /**
+     * 获取类名类且 \\ 转为 /
+     *
+     * @param  string|object  $class
+     * @return string
+     */
+    public static function classBaseName($class): string
+    {
+        $class = is_object($class) ? get_class($class) : $class;
+
+        return basename(str_replace('\\', '/', $class));
+    }
+
 }
