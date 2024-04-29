@@ -4,7 +4,7 @@ namespace Rice\Basic\Support;
 
 use Rice\Basic\Support\Traits\Singleton;
 
-class FileNamespace
+class FileParser
 {
     use Singleton;
 

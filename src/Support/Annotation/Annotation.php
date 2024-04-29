@@ -4,7 +4,7 @@ namespace Rice\Basic\Support\Annotation;
 
 use ReflectionClass;
 use ReflectionException;
-use Rice\Basic\Support\FileNamespace;
+use Rice\Basic\Support\FileParser;
 use Rice\Basic\Components\Enum\KeyEnum;
 use Rice\Basic\Contracts\CacheContract;
 use Rice\Basic\Support\Properties\Property;
@@ -103,7 +103,7 @@ class Annotation
      */
     private function parseFileForNamespace(string $classNamespace, $classFileName): void
     {
-        $parse = FileNamespace::getInstance()->execute($classNamespace, $classFileName);
+        $parse = FileParser::getInstance()->execute($classNamespace, $classFileName);
         $this->resolvedEntity->setUses($classNamespace, $parse->getUses()[$classNamespace]);
         $this->resolvedEntity->setAlias($classNamespace, $parse->getAlias()[$classNamespace]);
     }
