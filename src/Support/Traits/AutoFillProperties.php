@@ -10,18 +10,35 @@ use Rice\Basic\Support\Utils\ExtractUtil;
 use Rice\Basic\Support\Properties\Property;
 use Rice\Basic\Support\Converts\TypeConvert;
 use Rice\Basic\Components\Entity\FrameEntity;
-use Rice\Basic\Support\Annotation\Annotation;
+use Rice\Basic\Support\Annotation\ClassReflector;
 use Rice\Basic\Components\Exception\TypeException;
 use Rice\Basic\Components\Exception\SupportException;
 
 trait AutoFillProperties
 {
+    /**
+     * @internal
+     * @var array|mixed
+     */
     private array $_params;
+    /**
+     * @internal
+     * @var array
+     */
     private array $_properties;
+    /**
+     * @internal
+     * @var array
+     */
     private array $_alias;
+    /**
+     * @internal
+     * @var CacheContract|null
+     */
     private ?CacheContract $_cache;
 
     /**
+     * @internal
      * @throws ReflectionException
      * @throws SupportException
      */
@@ -49,7 +66,7 @@ trait AutoFillProperties
         }
 
         $this->_params      = $params;
-        $annotation         = new Annotation($cache);
+        $annotation         = new ClassReflector($cache);
         $this->_properties  = $annotation->execute(get_class($this))->getClassProperties();
         $this->_alias       = $annotation->getAlias();
         $this->_cache       = $cache;
@@ -58,6 +75,7 @@ trait AutoFillProperties
     }
 
     /**
+     * @internal
      * @throws SupportException
      */
     protected function handle(): void
@@ -66,6 +84,7 @@ trait AutoFillProperties
     }
 
     /**
+     * @internal
      * @throws SupportException
      */
     public function fill(): void
@@ -118,6 +137,7 @@ trait AutoFillProperties
     /**
      * 填充类属性值为类的值
      *
+     * @internal
      * @param Property $property
      * @param $name
      * @param $values
@@ -145,6 +165,7 @@ trait AutoFillProperties
     /**
      * 填充类属性为数组的值
      *
+     * @internal
      * @param $name
      * @param array $values
      * @return void

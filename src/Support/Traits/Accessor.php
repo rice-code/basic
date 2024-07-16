@@ -13,22 +13,29 @@ trait Accessor
 {
     /**
      * 默认开启 setter.
+     *
+     * @internal
      * @var bool
      */
     protected bool $_setter = true;
 
     /**
      * 默认开启 getter.
+     *
+     * @internal
      */
     protected bool $_getter = true;
 
     /**
      * 默认属性对象只读.
+     *
+     * @internal
      * @var bool
      */
     protected bool $_readOnly = true;
 
     /**
+     * @internal
      * @throws SupportException
      * @throws BaseException
      */
@@ -69,6 +76,7 @@ trait Accessor
     }
 
     /**
+     * @internal
      * @return string
      */
     public function getAuth(): string
@@ -86,11 +94,22 @@ trait Accessor
         return $pattern;
     }
 
+    /**
+     * @internal
+     * @param $attrName
+     * @param $args
+     * @return void
+     */
     private function setValue($attrName, $args): void
     {
         $this->{$attrName} = $args[0];
     }
 
+    /**
+     * @internal
+     * @param $attrName
+     * @return mixed
+     */
     private function getValue($attrName)
     {
         // 只读，因为对象 return 出去可以修改内部值，破坏封装性
@@ -102,6 +121,7 @@ trait Accessor
     }
 
     /**
+     * @internal
      * @param object $obj
      * @param array  $fields
      * @param int    $nameType
@@ -155,16 +175,31 @@ trait Accessor
         return $result ?? [];
     }
 
+    /**
+     * @internal
+     * @param $fields
+     * @return array
+     */
     public function toArray($fields = []): array
     {
         return $this->assignElement($this, $fields, NameTypeEnum::UNLIMITED);
     }
 
+    /**
+     * @internal
+     * @param $fields
+     * @return array
+     */
     public function toSnakeCaseArray($fields = []): array
     {
         return $this->assignElement($this, $fields, NameTypeEnum::SNAKE_CASE);
     }
 
+    /**
+     * @internal
+     * @param $fields
+     * @return array
+     */
     public function toCamelCaseArray($fields = []): array
     {
         return $this->assignElement($this, $fields, NameTypeEnum::CAMEL_CASE);
