@@ -7,11 +7,12 @@ use ReflectionException;
 use Rice\Basic\Support\FileParser;
 use Rice\Basic\Components\Enum\KeyEnum;
 use Rice\Basic\Contracts\CacheContract;
+use Rice\Basic\Support\Properties\Methods;
 use Rice\Basic\Support\Properties\Property;
 use Rice\Basic\Support\Properties\Properties;
 use Rice\Basic\Components\Entity\AnnotationEntity;
 
-class Annotation
+class ClassReflector
 {
     /**
      * 缓存实体.
@@ -48,6 +49,22 @@ class Annotation
      * @var int
      */
     private int $filter = \ReflectionProperty::IS_PROTECTED;
+    /**
+     * 是否开启函数分析
+     *
+     * @var bool
+     */
+    private bool $enableMethods = false;
+
+    public function isEnableMethods(): bool
+    {
+        return $this->enableMethods;
+    }
+
+    public function setEnableMethods(bool $enableMethods): void
+    {
+        $this->enableMethods = $enableMethods;
+    }
 
     public function __construct($cache = null)
     {
@@ -71,6 +88,9 @@ class Annotation
             $objClass = array_shift($this->queue);
             $this->buildClass($objClass);
             $this->analysisAttr();
+            if ($this->enableMethods) {
+                $this->analysisMethod();
+            }
         }
 
         $this->writeCache();
@@ -138,6 +158,16 @@ class Annotation
         }
     }
 
+    /**
+     * @throws ReflectionException
+     */
+    public function analysisMethod(): void
+    {
+        $className  = $this->class->getName();
+        $methods = new Methods($className);
+        $this->resolvedEntity::setClassMethods($className, $methods->getMethods());
+    }
+
     public function getFileName(): string
     {
         return $this->class->getFileName();
@@ -162,6 +192,12 @@ class Annotation
     public function getProperty($key): ?Property
     {
         return $this->resolvedEntity::getClassProperties($this->class->getName(), $key);
+    }
+
+    public function getClassMethods($namespace = null, $key = null): array
+    {
+        // 兼容类无 protected 变量问题
+        return $this->resolvedEntity::getClassMethods($namespace, $key);
     }
 
     /**

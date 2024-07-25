@@ -5,7 +5,7 @@ namespace Rice\Basic\Components\Exception;
 use Throwable;
 use Rice\Basic\Support\Lang;
 use Rice\Basic\Support\Properties\Property;
-use Rice\Basic\Support\Annotation\Annotation;
+use Rice\Basic\Support\Annotation\ClassReflector;
 
 abstract class BaseException extends \Exception
 {
@@ -26,7 +26,7 @@ abstract class BaseException extends \Exception
     public function __construct($message = '', $code = 0, Throwable $previous = null)
     {
         $enumClass  = $this::enumClass();
-        $properties = (new Annotation())->execute($enumClass)->getClassProperties();
+        $properties = (new ClassReflector())->execute($enumClass)->getClassProperties();
 
         if (isset($properties[$enumClass])) {
             /**

@@ -16,6 +16,7 @@ class AnnotationEntity extends BaseEntity
     ];
 
     private static array $classProperties = [];
+    private static array $classMethods = [];
     private static bool $checks           = false;
 
     public static function build(?CacheContract $cache): self
@@ -80,6 +81,24 @@ class AnnotationEntity extends BaseEntity
         }
 
         return self::$classProperties;
+    }
+
+    public static function setClassMethods(string $namespace, array $classMethods): void
+    {
+        self::$classMethods[$namespace] = $classMethods;
+    }
+
+    public static function getClassMethods($namespace = null, $key = null)
+    {
+        if ($namespace && $key) {
+            return self::$classMethods[$namespace][$key] ?? null;
+        }
+
+        if ($namespace) {
+            return self::$classMethods[$namespace] ?? null;
+        }
+
+        return self::$classMethods;
     }
 
     public static function getCaches(): array

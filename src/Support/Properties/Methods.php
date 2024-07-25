@@ -5,14 +5,14 @@ namespace Rice\Basic\Support\Properties;
 use ReflectionException;
 use Rice\Basic\Components\Entity\FrameEntity;
 
-class Properties
+class Methods
 {
     protected \ReflectionClass $refectionClass;
 
     /**
-     * @var Property[]
+     * @var Method[]
      */
-    protected array $properties;
+    protected array $methods;
     /**
      * @var array
      */
@@ -32,112 +32,28 @@ class Properties
         $this->alias          = $alias;
     }
 
-    public function getProperties($filter = \ReflectionProperty::IS_PROTECTED): array
+    /**
+     * @throws ReflectionException
+     */
+    public function getMethods($filter = \ReflectionMethod::IS_PUBLIC): array
     {
-        if (isset($this->properties)) {
-            return $this->properties;
+        if (isset($this->methods)) {
+            return $this->methods;
         }
 
-        $constants  = $this->refectionClass->getReflectionConstants();
-        $properties = $this->refectionClass->getProperties($filter);
-
-        return array_merge(
-            $this->handleConstants($constants),
-            $this->handleProperties($properties)
-        );
-    }
-
-    /**
-     * @param array $constants
-     * @return array|Property[]
-     */
-    public function handleConstants(array $constants): array
-    {
-        /**
-         * @var \ReflectionClassConstant $constant
-         */
-        foreach ($constants as $constant) {
-            // 排除包内部使用变量
-            if (FrameEntity::inFilter($constant->name)) {
+        $methods = $this->refectionClass->getMethods();
+        foreach ($methods as $method) {
+            $newMethod = new Method($method, $this->uses, $this->alias);
+            $newMethod->getMethod($filter);
+            if (array_key_exists('internal', $newMethod->docLabels)) {
                 continue;
             }
-            [$name, $value, $comment, $labels] = DocComment::getConstantInfo($constant);
-            $newProperty                       = new Property(
-                'const',
-                $name,
-                $value,
-                $comment,
-                false,
-                $labels
-            );
-
-            $newProperty->namespace  = null;
-            $this->properties[$name] = $newProperty;
+            $this->methods[$this->refectionClass->getName().'@'.$method->getName()] = $newMethod;
         }
 
-        return $this->properties ?? [];
+        return $this->methods ?? [];
     }
 
-    /**
-     * 根据类属性查询命名空间.
-     *
-     * @param Property $property
-     * @return string
-     */
-    protected function findNamespace(Property $property): ?string
-    {
-        $propertyType = $property->type;
-
-        if (array_key_exists($propertyType, $this->alias)) {
-            $propertyType = $this->alias[$propertyType];
-        }
-
-        if (class_exists($namespace = $this->uses['this'] . '\\' . $propertyType)) {
-            $property->isClass = true;
-
-            return $namespace;
-        }
-
-        if (isset($this->uses[$propertyType]) && class_exists($namespace = $this->uses[$propertyType] . '\\' . $propertyType)) {
-            $property->isClass = true;
-
-            return $namespace;
-        }
-
-        return null;
-    }
-
-    /**
-     * @param array $properties
-     * @return array|Property[]
-     */
-    public function handleProperties(array $properties): array
-    {
-        foreach ($properties as $property) {
-            // 排除包内部使用变量
-            if (FrameEntity::inFilter($property->name)) {
-                continue;
-            }
-            /*
-             * @var \ReflectionProperty $property
-             */
-
-            $property->setAccessible(true);
-            [$type, $name, $comment, $stronglyTyped, $labels] = DocComment::getPropertyInfo($property);
-            $newProperty                                      = new Property(
-                $type,
-                $name,
-                '',
-                $comment,
-                $stronglyTyped,
-                $labels
-            );
-            $newProperty->namespace  = $this->findNamespace($newProperty);
-            $this->properties[$name] = $newProperty;
-        }
-
-        return $this->properties ?? [];
-    }
 
     /**
      * 获取类名

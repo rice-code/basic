@@ -2,17 +2,10 @@
 
 namespace Rice\Basic\Support\Properties;
 
-use ReflectionException;
-use Rice\Basic\Components\Entity\FrameEntity;
-
-class Methods
+class Method
 {
-    protected \ReflectionClass $refectionClass;
+    protected \ReflectionMethod $reflectionMethod;
 
-    /**
-     * @var Property[]
-     */
-    protected array $properties;
     /**
      * @var array
      */
@@ -21,61 +14,35 @@ class Methods
      * @var array
      */
     protected array $alias;
-
     /**
-     * @throws ReflectionException
+     * 函数名.
      */
-    public function __construct(string $namespace, $uses = [], $alias = [])
+    public string $name;
+    /**
+     * 注释描述.
+     */
+    public string $docDesc;
+    /**
+     * 注释@相关值
+     */
+    public array $docLabels = [];
+
+    public function __construct(\ReflectionMethod $reflectionMethod, $uses = [], $alias = [])
     {
-        $this->refectionClass = new \ReflectionClass($namespace);
-        $this->uses           = $uses;
-        $this->alias          = $alias;
+        $this->reflectionMethod = $reflectionMethod;
+        $this->uses             = $uses;
+        $this->alias            = $alias;
     }
 
-    public function getProperties($filter = \ReflectionProperty::IS_PROTECTED): array
+    public function getMethod($filter = \ReflectionProperty::IS_PROTECTED): self
     {
-        if (isset($this->properties)) {
-            return $this->properties;
+        if (isset($this->name)) {
+            return $this;
         }
 
-        $constants  = $this->refectionClass->getReflectionConstants();
-        $properties = $this->refectionClass->getProperties($filter);
+        $this->handleMethod();
 
-        return array_merge(
-            $this->handleConstants($constants),
-            $this->handleProperties($properties)
-        );
-    }
-
-    /**
-     * @param array $constants
-     * @return array|Property[]
-     */
-    public function handleConstants(array $constants): array
-    {
-        /**
-         * @var \ReflectionClassConstant $constant
-         */
-        foreach ($constants as $constant) {
-            // 排除包内部使用变量
-            if (FrameEntity::inFilter($constant->name)) {
-                continue;
-            }
-            [$name, $value, $comment, $labels] = DocComment::getConstantInfo($constant);
-            $newProperty                       = new Property(
-                'const',
-                $name,
-                $value,
-                $comment,
-                false,
-                $labels
-            );
-
-            $newProperty->namespace  = null;
-            $this->properties[$name] = $newProperty;
-        }
-
-        return $this->properties ?? [];
+        return $this;
     }
 
     /**
@@ -108,86 +75,13 @@ class Methods
     }
 
     /**
-     * @param array $properties
-     * @return array|Property[]
+     * @return void
      */
-    public function handleProperties(array $properties): array
+    public function handleMethod(): void
     {
-        foreach ($properties as $property) {
-            // 排除包内部使用变量
-            if (FrameEntity::inFilter($property->name)) {
-                continue;
-            }
-            /*
-             * @var \ReflectionProperty $property
-             */
-
-            $property->setAccessible(true);
-            [$type, $name, $comment, $stronglyTyped, $labels] = DocComment::getPropertyInfo($property);
-            $newProperty                                      = new Property(
-                $type,
-                $name,
-                '',
-                $comment,
-                $stronglyTyped,
-                $labels
-            );
-            $newProperty->namespace  = $this->findNamespace($newProperty);
-            $this->properties[$name] = $newProperty;
-        }
-
-        return $this->properties ?? [];
-    }
-
-    /**
-     * 获取类名
-     * example: A\B\Foo.
-     *
-     * @return string
-     */
-    public function getName(): string
-    {
-        return $this->refectionClass->getName();
-    }
-
-    /**
-     * 获取类短名
-     * example: Foo.
-     *
-     * @return string
-     */
-    public function getShortName(): string
-    {
-        return $this->refectionClass->getShortName();
-    }
-
-    /**
-     * 获取命名空间名称
-     * example: A\B.
-     *
-     * @return string
-     */
-    public function getNamespaceName(): string
-    {
-        return $this->refectionClass->getNamespaceName();
-    }
-
-    /**
-     * 获取所有属性的命名空间.
-     *
-     * @return array
-     */
-    public function getAllPropertyNamespaceName(): array
-    {
-        $namespaces = [];
-
-        foreach ($this->getProperties() as $property) {
-            if (empty($property->namespace)) {
-                continue;
-            }
-            $namespaces[] = $property->namespace;
-        }
-
-        return array_unique($namespaces);
+        [$name, $comment, $labels] = DocComment::getMethodInfo($this->reflectionMethod);
+        $this->name                = $name;
+        $this->docLabels           = $labels;
+        $this->docDesc             = $comment;
     }
 }

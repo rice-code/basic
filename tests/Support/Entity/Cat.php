@@ -48,4 +48,14 @@ class Cat
      * @var string[]
      */
     protected $hair;
+
+    /**
+     * 判断是否是猫
+     *
+     * @return bool
+     */
+    public function isCat(): bool
+    {
+        return true;
+    }
 }

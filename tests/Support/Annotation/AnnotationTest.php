@@ -4,15 +4,14 @@ namespace Tests\Support\Annotation;
 
 use ReflectionException;
 use Rice\Basic\Support\Lang;
-use Rice\Basic\Support\Utils\FrameTypeUtil;
-use Rice\Basic\Support\Utils\SplUtil;
-use Rice\Basic\Support\Utils\VerifyUtil;
 use Tests\Support\Entity\Cat;
 use Tests\Support\Entity\Cat8;
 use PHPUnit\Framework\TestCase;
+use Rice\Basic\Support\Properties\Methods;
 use Rice\Basic\Components\Enum\SupportEnum;
 use Rice\Basic\Support\Properties\Property;
-use Rice\Basic\Support\Annotation\Annotation;
+use Rice\Basic\Support\Utils\FrameTypeUtil;
+use Rice\Basic\Support\Annotation\ClassReflector;
 
 class AnnotationTest extends TestCase
 {
@@ -21,7 +20,7 @@ class AnnotationTest extends TestCase
      */
     public function testAnnotation(): void
     {
-        $annotation = new Annotation();
+        $annotation = new ClassReflector();
 
         $this->assertIsArray($annotation->execute(Cat::class)->getUses());
     }
@@ -31,7 +30,7 @@ class AnnotationTest extends TestCase
      */
     public function testProperty(): void
     {
-        $annotation = new Annotation();
+        $annotation = new ClassReflector();
 
         $properties = $annotation->execute(Cat::class)->getClassProperties();
         $this->assertArrayHasKey(Cat::class, $properties);
@@ -43,6 +42,12 @@ class AnnotationTest extends TestCase
         $this->assertEquals('眼睛.', $eyes->getDocDesc());
     }
 
+    public function testMethod(): void
+    {
+        $methods = new Methods(Cat::class);
+        $this->assertEquals('isCat', $methods->getMethods()[Cat::class . '@' . 'isCat']->name);
+    }
+
     /**
      * @throws ReflectionException
      */
@@ -51,9 +56,10 @@ class AnnotationTest extends TestCase
         // 只对 php8 进行测试
         if (FrameTypeUtil::isPHP(7)) {
             $this->assertTrue(true);
+
             return;
         }
-        $annotation = new Annotation();
+        $annotation = new ClassReflector();
 
         $properties = $annotation->execute(Cat8::class)->getClassProperties();
         $this->assertArrayHasKey(Cat8::class, $properties);
@@ -66,7 +72,7 @@ class AnnotationTest extends TestCase
 
     public function testLang()
     {
-        $annotation = new Annotation();
+        $annotation = new ClassReflector();
         $annotation->setFilter(\ReflectionProperty::IS_PUBLIC);
         $properties = $annotation->execute(SupportEnum::class)->getClassProperties();
         $locale     = Lang::getInstance()->setLocale('en')->getLocale();

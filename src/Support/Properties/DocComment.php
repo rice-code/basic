@@ -7,7 +7,7 @@ use Rice\Basic\Support\Utils\FrameTypeUtil;
 
 class DocComment
 {
-    public const LABEL_PATTERN = '/.*@(\S+)[ ]+([^\t\n\r]+)/';
+    public const LABEL_PATTERN = '/.*@(\S+)(?:[ ]+([^\t\n\r]+))?/';
 
     public static function getConstantInfo(\ReflectionClassConstant $constant): array
     {
@@ -51,6 +51,29 @@ class DocComment
         }
 
         return [$type, $name, $comment, $stronglyTyped, $labels];
+    }
+
+    public static function getMethodInfo(\ReflectionMethod $method): array
+    {
+        $name = $method->getName();
+
+        $comment = '';
+
+        // 若是 php8 版本，默认查询是否定义 Doc 注解标签
+        if (FrameTypeUtil::isPHP(8) && $docs = $method->getAttributes(Doc::class)) {
+            $type    = $docs[0]->getArguments()['var'];
+            $comment = $docs[0]->getArguments()['text'];
+        }
+
+        $docComment = $method->getDocComment() ?: '';
+        $labels     = self::matchLabels($docComment);
+
+        // php8 版本注解未找到属性描述，尝试注释中找
+        if (!$comment) {
+            $comment = self::parseDocDesc($docComment);
+        }
+
+        return [$name, $comment, $labels];
     }
 
     protected static function matchLabels(string $docComment): array

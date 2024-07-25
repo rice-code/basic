@@ -114,17 +114,18 @@ class Properties
     public function handleProperties(array $properties): array
     {
         foreach ($properties as $property) {
-            // 排除包内部使用变量
-            if (FrameEntity::inFilter($property->name)) {
-                continue;
-            }
             /*
              * @var \ReflectionProperty $property
              */
-
             $property->setAccessible(true);
             [$type, $name, $comment, $stronglyTyped, $labels] = DocComment::getPropertyInfo($property);
-            $newProperty                                      = new Property(
+
+            // 存在内部注释标记的属性，不需要处理
+            if (array_key_exists('internal', $labels)) {
+                continue;
+            }
+
+            $newProperty  = new Property(
                 $type,
                 $name,
                 '',
