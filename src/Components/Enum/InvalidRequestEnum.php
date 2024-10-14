@@ -2,7 +2,7 @@
 
 namespace Rice\Basic\Components\Enum;
 
-class BizEnum extends BaseEnum
+class InvalidRequestEnum extends BaseEnum
 {
     /**
      * @en Business Error

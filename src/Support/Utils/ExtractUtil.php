@@ -2,7 +2,7 @@
 
 namespace Rice\Basic\Support\Utils;
 
-use Rice\Basic\Components\Exception\SupportException;
+use Rice\Basic\Components\Exception\InternalServerErrorException;
 
 /**
  * 数据提取
@@ -26,7 +26,7 @@ class ExtractUtil
      * @param string              $key     提取key
      * @param null                $default 默认值
      * @return mixed|null
-     * @throws SupportException
+     * @throws InternalServerErrorException
      */
     public static function get($source, string $key, $default = null)
     {
@@ -58,7 +58,7 @@ class ExtractUtil
     }
 
     /**
-     * @throws SupportException
+     * @throws InternalServerErrorException
      */
     public static function getCamelCase($source, $key, $default = null)
     {
@@ -70,7 +70,7 @@ class ExtractUtil
     }
 
     /**
-     * @throws SupportException
+     * @throws InternalServerErrorException
      */
     public static function getSnakeCase($source, $key, $default = null)
     {
@@ -83,7 +83,7 @@ class ExtractUtil
 
     /**
      * 按照 原键值 -> 驼峰 -> 蛇形 依次获取值
-     * @throws SupportException
+     * @throws InternalServerErrorException
      */
     public static function getValue($params, $key)
     {

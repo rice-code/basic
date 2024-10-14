@@ -10,12 +10,12 @@ use Tests\Support\Entity\GetterCat;
 use Tests\Support\Entity\SetterCat;
 use Rice\Basic\Components\VO\Response;
 use Rice\Basic\Components\VO\PageResponse;
-use Rice\Basic\Components\Exception\SupportException;
+use Rice\Basic\Components\Exception\InternalServerErrorException;
 
 class AccessorTest extends TestCase
 {
     /**
-     * @throws SupportException
+     * @throws InternalServerErrorException
      * @throws ReflectionException
      */
     public function testAccessor(): void

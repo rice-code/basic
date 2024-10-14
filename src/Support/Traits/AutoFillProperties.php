@@ -11,8 +11,7 @@ use Rice\Basic\Support\Properties\Property;
 use Rice\Basic\Support\Converts\TypeConvert;
 use Rice\Basic\Components\Entity\FrameEntity;
 use Rice\Basic\Support\Annotation\ClassReflector;
-use Rice\Basic\Components\Exception\TypeException;
-use Rice\Basic\Components\Exception\SupportException;
+use Rice\Basic\Components\Exception\InternalServerErrorException;
 
 trait AutoFillProperties
 {
@@ -38,9 +37,9 @@ trait AutoFillProperties
     private ?CacheContract $_cache;
 
     /**
-     * @internal
      * @throws ReflectionException
-     * @throws SupportException
+     * @throws InternalServerErrorException
+     * @internal
      */
     public function __construct($params, CacheContract $cache = null)
     {
@@ -58,7 +57,7 @@ trait AutoFillProperties
         }
 
         if (!is_object($params) && !is_array($params)) {
-            new TypeException(TypeEnum::INVALID_TYPE);
+            new InternalServerErrorException(TypeEnum::INVALID_TYPE);
         }
 
         if (is_object($params)) {
@@ -75,8 +74,8 @@ trait AutoFillProperties
     }
 
     /**
+     * @throws InternalServerErrorException
      * @internal
-     * @throws SupportException
      */
     protected function handle(): void
     {
@@ -84,8 +83,8 @@ trait AutoFillProperties
     }
 
     /**
+     * @throws InternalServerErrorException
      * @internal
-     * @throws SupportException
      */
     public function fill(): void
     {

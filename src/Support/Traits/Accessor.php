@@ -7,7 +7,7 @@ use Rice\Basic\Components\Enum\BaseEnum;
 use Rice\Basic\Components\Enum\NameTypeEnum;
 use Rice\Basic\Components\Entity\FrameEntity;
 use Rice\Basic\Components\Exception\BaseException;
-use Rice\Basic\Components\Exception\SupportException;
+use Rice\Basic\Components\Exception\InternalServerErrorException;
 
 trait Accessor
 {
@@ -35,9 +35,9 @@ trait Accessor
     protected bool $_readOnly = true;
 
     /**
-     * @internal
-     * @throws SupportException
+     * @throws InternalServerErrorException
      * @throws BaseException
+     *@internal
      */
     public function __call($name, $args)
     {
@@ -54,13 +54,13 @@ trait Accessor
         $attrName = $matches[2] ?? null;
 
         if (is_null($style) && is_null($attrName)) {
-            throw new SupportException(BaseEnum::METHOD_NOT_DEFINE);
+            throw new InternalServerErrorException(BaseEnum::METHOD_NOT_DEFINE);
         }
 
         $attrName = lcfirst($attrName);
 
         if (!property_exists($this, $attrName)) {
-            throw new SupportException(BaseEnum::ATTR_NOT_DEFINE);
+            throw new InternalServerErrorException(BaseEnum::ATTR_NOT_DEFINE);
         }
 
         switch ($style) {
@@ -72,7 +72,7 @@ trait Accessor
                 return $this->getValue($attrName);
         }
 
-        throw new SupportException(BaseEnum::METHOD_NOT_DEFINE);
+        throw new InternalServerErrorException(BaseEnum::METHOD_NOT_DEFINE);
     }
 
     /**

@@ -17,6 +17,13 @@ abstract class BaseException extends \Exception
     protected static array $languages = [];
 
     /**
+     * 获取 http 状态码.
+     *
+     * @return int
+     */
+    abstract public static function httpStatusCode(): int;
+
+    /**
      * 获取语言包文件名称.
      *
      * @return string

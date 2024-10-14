@@ -3,7 +3,7 @@
 namespace Rice\Basic\Support\Traits;
 
 use Closure;
-use Rice\Basic\Components\Exception\SupportException;
+use Rice\Basic\Components\Exception\InternalServerErrorException;
 
 trait Macroable
 {
@@ -35,12 +35,12 @@ trait Macroable
      * @param string $method
      * @param array  $parameters
      * @return mixed
-     * @throws SupportException
+     * @throws InternalServerErrorException
      */
     public static function __callStatic(string $method, array $parameters)
     {
         if (!static::hasMacro($method)) {
-            throw new SupportException("Method {$method} does not exist.");
+            throw new InternalServerErrorException("Method {$method} does not exist.");
         }
 
         if (static::$macros[$method] instanceof Closure) {
@@ -54,12 +54,12 @@ trait Macroable
      * @param string $method
      * @param array  $parameters
      * @return mixed
-     * @throws SupportException
+     * @throws InternalServerErrorException
      */
     public function __call(string $method, array $parameters)
     {
         if (!static::hasMacro($method)) {
-            throw new SupportException("Method {$method} does not exist.");
+            throw new InternalServerErrorException("Method {$method} does not exist.");
         }
 
         if (static::$macros[$method] instanceof Closure) {

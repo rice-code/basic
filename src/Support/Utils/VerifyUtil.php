@@ -3,7 +3,7 @@
 namespace Rice\Basic\Support\Utils;
 
 use Rice\Basic\Components\Enum\TypeEnum;
-use Rice\Basic\Components\Exception\TypeException;
+use Rice\Basic\Components\Exception\InternalServerErrorException;
 
 class VerifyUtil
 {
@@ -54,12 +54,12 @@ class VerifyUtil
      * 强类型异常抛出.
      * @param $type
      * @param $value
-     * @throws TypeException
+     * @throws InternalServerErrorException
      */
     public static function throwStrongType($type, $value): void
     {
         if (self::$strongTypeIsEnable && !self::strongType($type, $value)) {
-            throw new TypeException(TypeEnum::INVALID_TYPE);
+            throw new InternalServerErrorException(TypeEnum::INVALID_TYPE);
         }
     }
 }

@@ -4,7 +4,7 @@ namespace Rice\Basic\Support\Converts;
 
 use Rice\Basic\Components\Enum\BaseEnum;
 use Rice\Basic\Components\Enum\SupportEnum;
-use Rice\Basic\Components\Exception\SupportException;
+use Rice\Basic\Components\Exception\InternalServerErrorException;
 
 abstract class BaseMeter
 {
@@ -33,12 +33,12 @@ abstract class BaseMeter
     protected string $unit;
 
     /**
-     * @throws SupportException
+     * @throws InternalServerErrorException
      */
     public function __construct(string $num, string $unit, $scale = 4)
     {
         if (is_null($this->anchorPointUnit)) {
-            throw new SupportException(BaseEnum::CLASS_PROPERTY_IS_NOT_OVERRIDDEN);
+            throw new InternalServerErrorException(BaseEnum::CLASS_PROPERTY_IS_NOT_OVERRIDDEN);
         }
 
         $this->num  = $num;
@@ -89,12 +89,12 @@ abstract class BaseMeter
      * @param string $num
      * @param int    $scale
      * @return $this
-     * @throws SupportException
+     * @throws InternalServerErrorException
      */
     public function div(string $num, int $scale = 0): self
     {
         if ('' === $num || '0' === $num) {
-            throw new SupportException(SupportEnum::CANNOT_DIVIDE_BY_ZERO);
+            throw new InternalServerErrorException(SupportEnum::CANNOT_DIVIDE_BY_ZERO);
         }
 
         $this->num = bcdiv($this->num, $num, $scale);

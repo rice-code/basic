@@ -4,12 +4,12 @@ namespace Tests\Support;
 
 use Tests\Support\Entity\Cat;
 use PHPUnit\Framework\TestCase;
-use Rice\Basic\Components\Exception\SupportException;
+use Rice\Basic\Components\Exception\InternalServerErrorException;
 
 class FillTest extends TestCase
 {
     /**
-     * @throws SupportException
+     * @throws InternalServerErrorException
      * @throws \ReflectionException
      */
     public function testAutoFill()

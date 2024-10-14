@@ -3,12 +3,12 @@
 namespace Tests\DTO;
 
 use PHPUnit\Framework\TestCase;
-use Rice\Basic\Components\Exception\SupportException;
+use Rice\Basic\Components\Exception\InternalServerErrorException;
 
 class DTOTest extends TestCase
 {
     /**
-     * @throws SupportException
+     * @throws InternalServerErrorException
      */
     public function testSetElement(): void
     {
