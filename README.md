@@ -126,19 +126,43 @@ class ReturnCodeEnum extends BaseEnum
 
 推荐将所有异常相关的抛出都封装到该类进行抛出使用，方便统一管理异常。
 ```php
-class BizException extends BaseException
+<?php
+
+namespace Rice\Basic\Components\Exception;
+
+use Rice\Basic\Components\Enum\BaseEnum;
+use Rice\Basic\Components\Enum\HttpStatusCodeEnum;
+use Rice\Basic\Components\Enum\InvalidRequestEnum;
+
+class InvalidRequestException extends BaseException
 {
+    public static function httpStatusCode(): int
+    {
+        return HttpStatusCodeEnum::INVALID_REQUEST;
+    }
+
     public static function enumClass(): string
     {
-        return BizEnum::class;
+        return InvalidRequestEnum::class;
     }
 
     /**
-     * @throws BizException
+     * @throws InvalidRequestException
      */
     public static function default(): void
     {
-        throw new self(BizEnum::DEFAULT);
+        throw new self(InvalidRequestEnum::DEFAULT);
+    }
+
+    /**
+     * 如果这里是控制器的话，我们只要维护好 `phpstorm` 自带注释，那在做注解自动获取异常返回时
+     * 我们就能为 openApi 生成一个异常返回
+     *
+     * @throws InvalidRequestException
+     */
+    public static function InvalidParam(): void
+    {
+        throw new self(BaseEnum::INVALID_PARAM);
     }
 }
 ```
