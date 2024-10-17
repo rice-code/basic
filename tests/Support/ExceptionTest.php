@@ -4,8 +4,9 @@ namespace Tests\Support;
 
 use Rice\Basic\Support\Lang;
 use PHPUnit\Framework\TestCase;
-use Rice\Basic\Components\Enum\InvalidRequestEnum;
 use Rice\Basic\Components\Enum\SupportEnum;
+use Rice\Basic\Components\Enum\HttpStatusCodeEnum;
+use Rice\Basic\Components\Enum\InvalidRequestEnum;
 use Rice\Basic\Components\Exception\InvalidRequestException;
 use Rice\Basic\Components\Exception\InternalServerErrorException;
 
@@ -34,6 +35,7 @@ class ExceptionTest extends TestCase
 
             InvalidRequestException::default();
         } catch (InvalidRequestException $e) {
+            $this->assertEquals(HttpStatusCodeEnum::INVALID_REQUEST, $e::httpStatusCode());
             $this->assertEquals('Business Error', $e->getMessage());
         }
     }

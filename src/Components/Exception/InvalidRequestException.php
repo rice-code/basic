@@ -3,8 +3,8 @@
 namespace Rice\Basic\Components\Exception;
 
 use Rice\Basic\Components\Enum\BaseEnum;
-use Rice\Basic\Components\Enum\InvalidRequestEnum;
 use Rice\Basic\Components\Enum\HttpStatusCodeEnum;
+use Rice\Basic\Components\Enum\InvalidRequestEnum;
 
 class InvalidRequestException extends BaseException
 {

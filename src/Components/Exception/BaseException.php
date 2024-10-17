@@ -30,6 +30,13 @@ abstract class BaseException extends \Exception
      */
     abstract public static function enumClass(): string;
 
+    /**
+     * 枚举类字段名称.
+     *
+     * @var string
+     */
+    protected string $fieldName;
+
     public function __construct($message = '', $code = 0, Throwable $previous = null)
     {
         $enumClass  = $this::enumClass();
@@ -41,7 +48,8 @@ abstract class BaseException extends \Exception
              */
             foreach ($properties[$enumClass] as $property) {
                 if ($message === $property->getValue()) {
-                    $message = $property->getDocLabel(Lang::getInstance()->getLocale())[0];
+                    $this->fieldName = $message;
+                    $message         = $property->getDocLabel(Lang::getInstance()->getLocale())[0];
                 }
             }
         }
