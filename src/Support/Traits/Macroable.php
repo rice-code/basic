@@ -4,9 +4,12 @@ namespace Rice\Basic\Support\Traits;
 
 use Closure;
 use Rice\Basic\Components\Exception\InternalServerErrorException;
+use Rice\Basic\Support\Traits\MagicMethodManager;
 
 trait Macroable
 {
+    use MagicMethodManager;
+
     /**
      * @var array
      */
@@ -31,41 +34,5 @@ trait Macroable
         return isset(static::$macros[$name]);
     }
 
-    /**
-     * @param string $method
-     * @param array  $parameters
-     * @return mixed
-     * @throws InternalServerErrorException
-     */
-    public static function __callStatic(string $method, array $parameters)
-    {
-        if (!static::hasMacro($method)) {
-            throw new InternalServerErrorException("Method {$method} does not exist.");
-        }
 
-        if (static::$macros[$method] instanceof Closure) {
-            return call_user_func_array(Closure::bind(static::$macros[$method], null, static::class), $parameters);
-        }
-
-        return call_user_func_array(static::$macros[$method], $parameters);
-    }
-
-    /**
-     * @param string $method
-     * @param array  $parameters
-     * @return mixed
-     * @throws InternalServerErrorException
-     */
-    public function __call(string $method, array $parameters)
-    {
-        if (!static::hasMacro($method)) {
-            throw new InternalServerErrorException("Method {$method} does not exist.");
-        }
-
-        if (static::$macros[$method] instanceof Closure) {
-            return call_user_func_array(static::$macros[$method]->bindTo($this, static::class), $parameters);
-        }
-
-        return call_user_func_array(static::$macros[$method], $parameters);
-    }
 }

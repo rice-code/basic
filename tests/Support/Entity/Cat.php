@@ -21,7 +21,7 @@ class Cat
 {
     use AutoFillProperties;
     use Accessor;
-
+    
     /**
      * 眼睛.
      *

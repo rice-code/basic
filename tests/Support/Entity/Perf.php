@@ -12,7 +12,7 @@ class Perf extends BaseEntity
     public static function runAccessor(int $loop): void
     {
         $microseconds = PerfUtil::microseconds($loop, static function () {
-            $dto = new OrderListDTO([]);
+            $dto = new OrderListDTO();
             $dto->setId(1);
             $dto->getId();
             $dto->setShopId(1);

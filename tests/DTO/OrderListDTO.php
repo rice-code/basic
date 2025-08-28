@@ -4,6 +4,7 @@ namespace Tests\DTO;
 
 use Rice\Basic\Components\DTO\PageDTO;
 use Rice\Basic\Support\Traits\AutoFillProperties;
+use Rice\Basic\Contracts\CacheContract;
 
 /**
  * Class ObjDTOBase.
@@ -21,6 +22,17 @@ use Rice\Basic\Support\Traits\AutoFillProperties;
 class OrderListDTO extends PageDTO
 {
     use AutoFillProperties;
+
+    /**
+     * 构造函数
+     * 
+     * @param array|null $params 参数数组
+     * @param CacheContract|null $cache 缓存实例
+     */
+    public function __construct(array $params = null, CacheContract $cache = null)
+    {
+        $this->autoFillInitialize($params, $cache);
+    }
 
     /**
      * 订单id.

@@ -7,7 +7,7 @@ use Rice\Basic\Components\Entity\FrameEntity;
 
 class Properties
 {
-    protected \ReflectionClass $refectionClass;
+    protected \ReflectionClass $reflectionClass;
 
     /**
      * @var Property[]
@@ -27,40 +27,56 @@ class Properties
      */
     public function __construct(string $namespace, $uses = [], $alias = [])
     {
-        $this->refectionClass = new \ReflectionClass($namespace);
+        $this->reflectionClass = new \ReflectionClass($namespace);
         $this->uses           = $uses;
         $this->alias          = $alias;
     }
 
-    public function getProperties($filter = \ReflectionProperty::IS_PROTECTED): array
+    public function getProperties($filter = \ReflectionProperty::IS_PROTECTED, bool $onlyCurrentClass = false): array
     {
         if (isset($this->properties)) {
             return $this->properties;
         }
 
-        $constants  = $this->refectionClass->getReflectionConstants();
-        $properties = $this->refectionClass->getProperties($filter);
+        $constants  = $this->reflectionClass->getReflectionConstants();
+        $properties = $this->reflectionClass->getProperties($filter);
 
+        // 确保这两个方法返回数组，避免array_merge参数为null
+        $constantsResult = $this->handleConstants($constants, $onlyCurrentClass) ?? [];
+        $propertiesResult = $this->handleProperties($properties, $onlyCurrentClass) ?? [];
+        
         return array_merge(
-            $this->handleConstants($constants),
-            $this->handleProperties($properties)
+            $constantsResult,
+            $propertiesResult
         );
     }
 
     /**
      * @param array $constants
+     * @param bool $onlyCurrentClass 是否只获取当前类的常量
      * @return array|Property[]
      */
-    public function handleConstants(array $constants): array
+    public function handleConstants(array $constants, bool $onlyCurrentClass = false): array
     {
         /**
          * @var \ReflectionClassConstant $constant
          */
         foreach ($constants as $constant) {
+            // 如果设置了只获取当前类的常量，检查常量是否定义在当前类中
+            if ($onlyCurrentClass) {
+                // 获取声明该常量的类
+                $declaringClass = $constant->getDeclaringClass();
+                // 如果常量不是定义在当前类中，则跳过
+                if ($declaringClass->getName() !== $this->reflectionClass->getName()) {
+                    continue;
+                }
+            }
+            
             // 排除包内部使用变量
             if (FrameEntity::inFilter($constant->name)) {
                 continue;
             }
+            
             [$name, $value, $comment, $labels] = DocComment::getConstantInfo($constant);
             $newProperty                       = new Property(
                 'const',
@@ -109,15 +125,26 @@ class Properties
 
     /**
      * @param array $properties
+     * @param bool $onlyCurrentClass 是否只获取当前类的属性
      * @return array|Property[]
      */
-    public function handleProperties(array $properties): array
+    public function handleProperties(array $properties, bool $onlyCurrentClass = false): array
     {
         foreach ($properties as $property) {
             /*
              * @var \ReflectionProperty $property
              */
             $property->setAccessible(true);
+            
+            // 如果设置了只获取当前类的属性，检查属性是否定义在当前类中
+            if ($onlyCurrentClass) {
+                $declaringClass = $property->getDeclaringClass();
+                // 如果属性不是定义在当前类中，则跳过
+                if ($declaringClass->getName() !== $this->reflectionClass->getName()) {
+                    continue;
+                }
+            }
+            
             [$type, $name, $comment, $stronglyTyped, $labels] = DocComment::getPropertyInfo($property);
 
             // 存在内部注释标记的属性，不需要处理
@@ -148,7 +175,7 @@ class Properties
      */
     public function getName(): string
     {
-        return $this->refectionClass->getName();
+        return $this->reflectionClass->getName();
     }
 
     /**
@@ -159,7 +186,7 @@ class Properties
      */
     public function getShortName(): string
     {
-        return $this->refectionClass->getShortName();
+        return $this->reflectionClass->getShortName();
     }
 
     /**
@@ -170,7 +197,7 @@ class Properties
      */
     public function getNamespaceName(): string
     {
-        return $this->refectionClass->getNamespaceName();
+        return $this->reflectionClass->getNamespaceName();
     }
 
     /**

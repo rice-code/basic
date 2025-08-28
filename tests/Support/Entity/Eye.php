@@ -8,6 +8,7 @@ use Rice\Basic\Support\Traits\AutoFillProperties;
 class Eye extends BaseEntity
 {
     use AutoFillProperties;
+
     /**
      * @var string
      */
