@@ -22,6 +22,7 @@ composer require rice/basic
 2. 参数自动填充 [锚点](#请求参数自动数据填充)
 3. 请求客户端封装 [锚点](#请求客户端封装)
 4. 场景校验 [锚点](#场景校验)
+5. 魔术方法管理 [锚点](#魔术方法管理)
 
 ### 使用场景
 1. 数组替换为对象进行管理
@@ -173,6 +174,31 @@ class InvalidRequestException extends BaseException
 
 ### 样例
 
+### 魔术方法管理
+`MagicMethodManager` 是一个用于统一管理魔术方法的特性类，提供了对PHP魔术方法的统一处理机制，包括 `__call`、`__callStatic`、`__get` 和 `__set` 等。
+
+该类的主要功能包括：
+
+1. **统一的魔术方法处理机制**：通过 `handleMagicMethod` 方法集中处理各种魔术方法调用
+2. **处理器优先级排序**：支持为不同的魔术方法注册多个处理器，并按照优先级顺序调用
+3. **父类魔术方法兼容**：当所有处理器都无法处理时，自动尝试调用父类的对应魔术方法
+4. **框架兼容性优化**：特别对Laravel等框架提供了更好的集成支持
+5. **高度兼容性设计**：移除了严格的参数类型声明，确保在不同PHP版本和框架环境中都能正常工作
+
+#### 使用方式
+
+```php
+class MyClass {
+    use MagicMethodManager;
+    
+    // 可选：注册自定义处理器
+    public function initializeMagicMethodManager()
+    {
+        // 注意：这个方法仅为了保持向后兼容性，实际处理逻辑应在registerDefaultHandlers中实现
+    }
+}
+```
+
 #### 字段封装
 在类里面使用 `use Accessor` 对类的字段属性进行封装，之前设置为
 `public` 权限的全部改为 `protected` 或 `private`。
@@ -257,10 +283,32 @@ class Cat
  包的 `AutoFillProperties` 类就能实现参数自动填充到 `Request` 对象的类属性中去了。
 
 `trait` `AutoFillProperties` 已使用类属性,使用该类必须避免重写问题。
+> 最新版本的 `AutoFillProperties` 不再依赖构造函数，而是通过 `autoFillInitialize` 方法进行参数填充，使用更加灵活方便。
 
-`src/Entity/FrameEntity.php`: 
+#### 创建基类统一参数填充
+
+为了在业务中统一管理参数填充行为，推荐创建一个自定义的基础类并让所有业务类继承它，这样可以将参数填充逻辑集中处理，减少重复代码。
+
+下面是一个不依赖于框架内部类的基础类实现示例：
 
 ```php
+<?php
+
+namespace App\Common;
+
+use Rice\Basic\Support\Traits\Accessor;
+use Rice\Basic\Support\Traits\AutoFillProperties;
+
+/**
+ * 业务基础类，用于统一处理参数填充
+ */
+abstract class BaseBusiness
+{
+    use Accessor, AutoFillProperties;
+    
+    /**
+     * 过滤掉不需要填充的字段
+     */
     private static array $_filter = [
         '_setter',
         '_getter',
@@ -271,7 +319,111 @@ class Cat
         '_cache',
         '_idx',
     ];
+    
+    /**
+     * 初始化参数填充
+     *
+     * @param array $params
+     */
+    public function __construct(array $params = [])
+    {
+        $this->autoFillInitialize($params);
+    }
+    
+    /**
+     * 获取过滤字段列表
+     *
+     * @return array
+     */
+    protected static function getFilter(): array
+    {
+        return static::$_filter;
+    }
+}
 ```
+
+#### 业务实体类示例
+
+下面是一个继承`BaseBusiness`的业务实体类示例：
+
+```php
+<?php
+
+namespace App\Entity;
+
+use App\Common\BaseBusiness;
+
+/**
+ * 用户实体类
+ */
+class User extends BaseBusiness
+{
+    /**
+     * 用户ID
+     */
+    protected int $id = 0;
+    
+    /**
+     * 用户名
+     */
+    protected string $username = '';
+    
+    /**
+     * 用户邮箱
+     */
+    protected string $email = '';
+    
+    /**
+     * 创建时间
+     */
+    protected string $createdAt = '';
+    
+    /**
+     * 自定义getter方法 - 格式化创建时间
+     */
+    public function getFormattedCreatedAt(): string
+    {
+        return date('Y-m-d H:i:s', strtotime($this->createdAt));
+    }
+}
+```
+
+#### 使用示例
+
+```php
+<?php
+
+use App\Entity\User;
+
+// 创建用户实体并自动填充参数
+$userData = [
+    'id' => 1,
+    'username' => 'admin',
+    'email' => 'admin@example.com',
+    'created_at' => '2023-01-01 10:00:00',
+    'extra_field' => '这会被过滤掉，因为不是类属性'
+];
+
+// 方法一：通过构造函数填充
+$user = new User($userData);
+
+// 方法二：先实例化，然后填充数据
+$user = new User();
+$user->autoFillInitialize($userData);
+
+// 访问属性
+echo $user->id; // 输出: 1
+echo $user->username; // 输出: admin
+
+// 访问自定义getter
+echo $user->formattedCreatedAt; // 输出: 2023-01-01 10:00:00
+```
+
+这种方式的优势：
+1. 所有业务实体类共享统一的参数填充逻辑
+2. 减少重复代码，提高代码复用性
+3. 更容易维护和扩展参数填充功能
+4. 可以在基类中添加全局的参数验证和转换逻辑
 
 `Laravel` 例子：
 
@@ -347,7 +499,10 @@ class TestController extends BaseController
 {
     public function test(Request $request): \Illuminate\Http\JsonResponse
     {
-        $testRequest = new TestRequest($request->all());
+        // 新版不再需要通过构造函数传递参数
+        $testRequest = new TestRequest();
+        // 可以直接调用autoFillInitialize方法进行参数填充
+        $testRequest->autoFillInitialize($request->all());
         $testRequest->check();
         $testLogic = (new TestLogic());
         
@@ -359,7 +514,7 @@ class TestController extends BaseController
 }
 ```
 
-这里面实例化 `TestRequest` 需要将全部参数作为参数，然后请求的参数命名默认采用需要采用蛇形，因为前端大部分是
+这里面实例化 `TestRequest` 默认不再需要通过构造函数传递参数，而是通过 `autoFillInitialize()` 方法进行参数填充，使用更加灵活。请求的参数命名默认采用需要采用蛇形，因为前端大部分是
 蛇形命名规范。这里面默认会转为驼峰进行匹配 `TestRequest` 变量进行赋值。
 
 > Request 对象相当于是一个防腐层一样，一个业务中会存在展示，修改，删除等功能。每一部分参数都有些许不一致，但
@@ -561,10 +716,3 @@ composer require rice/ctl
 ## Star History
 
 [![Star History Chart](https://api.star-history.com/svg?repos=dmf-code/basic&type=Date)](https://star-history.com/#dmf-code/basic&Date)
-
-
-### 感谢 JetBrains 赞助
-
-![](https://resources.jetbrains.com/storage/products/company/brand/logos/jb_beam.svg)
-
-[免费许可证计划](https://www.jetbrains.com.cn/community/opensource/#support)
