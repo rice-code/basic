@@ -77,7 +77,8 @@ class AnnotationEntity extends BaseEntity
         }
 
         if ($namespace) {
-            return self::$classProperties[$namespace] ?? null;
+            // 确保返回数组而不是null
+            return self::$classProperties[$namespace] ?? [];
         }
 
         return self::$classProperties;

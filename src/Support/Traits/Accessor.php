@@ -8,9 +8,12 @@ use Rice\Basic\Components\Enum\NameTypeEnum;
 use Rice\Basic\Components\Entity\FrameEntity;
 use Rice\Basic\Components\Exception\BaseException;
 use Rice\Basic\Components\Exception\InternalServerErrorException;
+use Rice\Basic\Support\Traits\MagicMethodManager;
 
 trait Accessor
 {
+    use MagicMethodManager;
+
     /**
      * 默认开启 setter.
      *
@@ -35,44 +38,12 @@ trait Accessor
     protected bool $_readOnly = true;
 
     /**
-     * @throws InternalServerErrorException
-     * @throws BaseException
-     *@internal
+     * 重置Accessor设置（内部方法，用于其他trait覆盖）
+     * 注：其他trait可以覆盖此方法来自定义Accessor的行为
      */
-    public function __call($name, $args)
+    protected function resetAccessor(): void
     {
-        if (method_exists($this, 'resetAccessor')) {
-            $this->resetAccessor();
-        }
-
-        $pattern = $this->getAuth();
-
-        $matches = [];
-        preg_match($pattern, $name, $matches);
-
-        $style    = $matches[1] ?? null;
-        $attrName = $matches[2] ?? null;
-
-        if (is_null($style) && is_null($attrName)) {
-            throw new InternalServerErrorException(BaseEnum::METHOD_NOT_DEFINE);
-        }
-
-        $attrName = lcfirst($attrName);
-
-        if (!property_exists($this, $attrName)) {
-            throw new InternalServerErrorException(BaseEnum::ATTR_NOT_DEFINE);
-        }
-
-        switch ($style) {
-            case 'set':
-                $this->setValue($attrName, $args);
-
-                return $this;
-            case 'get':
-                return $this->getValue($attrName);
-        }
-
-        throw new InternalServerErrorException(BaseEnum::METHOD_NOT_DEFINE);
+        // 默认实现为空，其他trait可以覆盖此方法
     }
 
     /**
@@ -100,7 +71,7 @@ trait Accessor
      * @param $args
      * @return void
      */
-    private function setValue($attrName, $args): void
+    protected function setValue($attrName, $args): void
     {
         $this->{$attrName} = $args[0];
     }
@@ -110,14 +81,20 @@ trait Accessor
      * @param $attrName
      * @return mixed
      */
-    private function getValue($attrName)
+    protected function getValue($attrName)
     {
+        // 检查属性是否存在
+        if (!property_exists($this, $attrName)) {
+            throw new InternalServerErrorException(BaseEnum::METHOD_NOT_DEFINE);
+        }
+        
         // 只读，因为对象 return 出去可以修改内部值，破坏封装性
-        if ($this->_readOnly && is_object($this->{$attrName})) {
+        if ($this->_readOnly && isset($this->{$attrName}) && is_object($this->{$attrName})) {
             return clone $this->{$attrName};
         }
 
-        return $this->{$attrName};
+        // 安全返回属性值，如果未设置则返回null
+        return $this->{$attrName} ?? null;
     }
 
     /**
@@ -127,8 +104,14 @@ trait Accessor
      * @param int    $nameType
      * @return array
      */
-    private function assignElement(object $obj, array $fields, int $nameType): array
+    private function assignElement(object $obj, array $fields, int $nameType, array &$processed = []): array
     {
+        // 检测循环引用
+        $objId = spl_object_id($obj);
+        if (isset($processed[$objId])) {
+            return $processed[$objId];
+        }
+
         $oReflectionClass = new \ReflectionClass($obj);
         foreach ($oReflectionClass->getProperties() as $property) {
             $key = $property->getName();
@@ -154,13 +137,15 @@ trait Accessor
             $val = $property->getValue($obj);
 
             if (is_object($val)) {
-                $val = $this->assignElement($val, $fields, $nameType);
+                // 标记当前对象为正在处理
+                $processed[$objId] = []; // 临时占位符
+                $val = $this->assignElement($val, $fields, $nameType, $processed);
             }
 
             if (is_array($val) && isset($val[0]) && is_object($val[0])) {
                 $tempVal = [];
                 foreach ($val as $item) {
-                    $tempVal[] = $this->assignElement($item, $fields, $nameType);
+                    $tempVal[] = $this->assignElement($item, $fields, $nameType, $processed);
                 }
                 $val = $tempVal;
             }
@@ -172,7 +157,9 @@ trait Accessor
             }
         }
 
-        return $result ?? [];
+        // 缓存结果并返回
+        $processed[$objId] = $result ?? [];
+        return $processed[$objId];
     }
 
     /**

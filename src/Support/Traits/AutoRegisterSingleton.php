@@ -3,9 +3,12 @@
 namespace Rice\Basic\Support\Traits;
 
 use Rice\Basic\Support\Utils\FrameTypeUtil;
+use Rice\Basic\Support\Traits\MagicMethodManager;
 
 trait AutoRegisterSingleton
 {
+    use MagicMethodManager;
+
     public function registerSingleton(): void
     {
         if (FrameTypeUtil::isLaravel()) {
@@ -15,10 +18,5 @@ trait AutoRegisterSingleton
         }
     }
 
-    public static function __callStatic($method, $params = [])
-    {
-        if (FrameTypeUtil::isLaravel()) {
-            return app(static::class)->$method(...$params);
-        }
-    }
+
 }

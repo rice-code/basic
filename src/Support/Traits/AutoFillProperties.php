@@ -3,74 +3,55 @@
 namespace Rice\Basic\Support\Traits;
 
 use ReflectionException;
-use Rice\Basic\Support\Utils\StrUtil;
 use Rice\Basic\Contracts\CacheContract;
-use Rice\Basic\Components\Enum\TypeEnum;
-use Rice\Basic\Support\Utils\ExtractUtil;
-use Rice\Basic\Support\Properties\Property;
-use Rice\Basic\Support\Converts\TypeConvert;
-use Rice\Basic\Components\Entity\FrameEntity;
-use Rice\Basic\Support\Annotation\ClassReflector;
+use Rice\Basic\Support\Properties\AutoFillPropertyHandler;
 use Rice\Basic\Components\Exception\InternalServerErrorException;
+use Rice\Basic\Support\Utils\FrameTypeUtil;
 
-trait AutoFillProperties
+/**
+ * 自动填充属性Trait
+ * 使用组合模式，通过AutoFillPropertyHandler实现功能，避免修改目标类的构造函数
+ */
+ trait AutoFillProperties
 {
     /**
      * @internal
-     * @var array|mixed
+     * @var AutoFillPropertyHandler|null
      */
-    private array $_params;
+    private ?AutoFillPropertyHandler $_autoFillHandler = null;
     /**
-     * @internal
-     * @var array
-     */
-    private array $_properties;
-    /**
-     * @internal
-     * @var array
-     */
-    private array $_alias;
-    /**
-     * @internal
-     * @var CacheContract|null
-     */
-    private ?CacheContract $_cache;
-
-    /**
-     * @throws ReflectionException
+     * 自动填充初始化方法 - 使用AutoFillPropertyHandler处理
+     * 
+     * @param mixed $params 参数数据
+     * @param CacheContract|null $cache 缓存实例
      * @throws InternalServerErrorException
-     * @internal
+     * @throws ReflectionException
      */
-    public function __construct($params, CacheContract $cache = null)
+    public function autoFillInitialize($params = null, CacheContract $cache = null)
     {
-        // 父类注册到容器中（若不符合条件不注册）
-        if (method_exists($this, 'registerSingleton')) {
-            $this->registerSingleton();
+        // 延迟创建处理器实例
+        if (is_null($this->_autoFillHandler)) {
+            $this->_autoFillHandler = new AutoFillPropertyHandler($this);
         }
+        
+        // 委托给处理器执行初始化，使用已设置的onlyCurrentClass值
+        $this->_autoFillHandler->initialize($params, $cache, $this->isOnlyCurrentClass());
 
-        if (empty($params)) {
-            return;
+        return $this;
+    }
+
+    /**
+     * 获取自动填充处理器实例
+     * 
+     * @return AutoFillPropertyHandler
+     */
+    public function getAutoFillHandler(): AutoFillPropertyHandler
+    {
+        if (is_null($this->_autoFillHandler)) {
+            $this->_autoFillHandler = new AutoFillPropertyHandler($this);
         }
-
-        if (is_string($params)) {
-            $params = json_decode($params, true);
-        }
-
-        if (!is_object($params) && !is_array($params)) {
-            new InternalServerErrorException(TypeEnum::INVALID_TYPE);
-        }
-
-        if (is_object($params)) {
-            $params = TypeConvert::objToArr($params);
-        }
-
-        $this->_params      = $params;
-        $annotation         = new ClassReflector($cache);
-        $this->_properties  = $annotation->execute(get_class($this))->getClassProperties();
-        $this->_alias       = $annotation->getAlias();
-        $this->_cache       = $cache;
-
-        $this->handle();
+        
+        return $this->_autoFillHandler;
     }
 
     /**
@@ -79,7 +60,9 @@ trait AutoFillProperties
      */
     protected function handle(): void
     {
-        $this->fill();
+        if (!is_null($this->_autoFillHandler)) {
+            $this->_autoFillHandler->handle();
+        }
     }
 
     /**
@@ -88,48 +71,8 @@ trait AutoFillProperties
      */
     public function fill(): void
     {
-        if (empty($this->_properties)) {
-            return;
-        }
-
-        $propertyArr = ExtractUtil::getCamelCase($this->_properties, get_class($this));
-
-        /**
-         * @var Property $property
-         */
-        foreach ($propertyArr as $name => $property) {
-            $loopIdx = StrUtil::snakeCaseToCamelCase($name);
-
-            if (FrameEntity::inFilter($name)) {
-                continue;
-            }
-
-            // 提取变量值
-            $value = ExtractUtil::getValue($this->_params, $loopIdx);
-
-            if (is_null($property)) {
-                $this->{$name} = $value;
-
-                continue;
-            }
-            if ($property->isClass) {
-                $this->fillClass($property, $name, $value);
-
-                continue;
-            }
-
-            if ($property->isArray) {
-                $this->fillArray($name, $value ?? []);
-
-                continue;
-            }
-
-            // 强类型未设置值时，设置为null会报错
-            if ($property->stronglyTyped && is_null($value)) {
-                continue;
-            }
-
-            $this->{$name} = $value;
+        if (!is_null($this->_autoFillHandler)) {
+            $this->_autoFillHandler->fill();
         }
     }
 
@@ -137,40 +80,48 @@ trait AutoFillProperties
      * 填充类属性值为类的值
      *
      * @internal
-     * @param Property $property
-     * @param $name
-     * @param $values
+     * @param mixed $property
+     * @param mixed $name
+     * @param mixed $values
      * @return void
      */
-    public function fillClass(Property $property, $name, $values): void
+    public function fillClass($property, $name, $values): void
     {
-        if (!isset($this->_properties[$property->namespace]) || is_null($values)) {
-            $this->{$name} = null;
-
-            return;
+        if (!is_null($this->_autoFillHandler)) {
+            $this->_autoFillHandler->fillClass($property, $name, $values);
         }
-
-        if ($property->isArray) {
-            foreach ($values as $value) {
-                $this->{$name}[] = new $property->namespace($value, $this->_cache);
-            }
-
-            return;
-        }
-
-        $this->{$name} = new $property->namespace($values, $this->_cache);
     }
 
     /**
      * 填充类属性为数组的值
      *
      * @internal
-     * @param $name
+     * @param mixed $name
      * @param array $values
      * @return void
      */
     public function fillArray($name, array $values): void
     {
-        $this->{$name} = $values;
+        if (!is_null($this->_autoFillHandler)) {
+            $this->_autoFillHandler->fillArray($name, $values);
+        }
+    }
+    
+    /**
+    /**
+     * 设置是否只填充当前类的属性（过滤父类属性）
+     */
+    public function setOnlyCurrentClass(bool $onlyCurrentClass): self
+    {
+        $this->getAutoFillHandler()->setOnlyCurrentClass($onlyCurrentClass);
+        return $this;
+    }
+    
+    /**
+     * 获取是否只填充当前类的属性的设置
+     */
+    public function isOnlyCurrentClass(): bool
+    {
+        return $this->getAutoFillHandler()->isOnlyCurrentClass();
     }
 }

@@ -56,6 +56,13 @@ class ClassReflector
      */
     private bool $enableMethods = false;
 
+    /**
+     * 是否只获取当前类的属性（过滤父类属性）
+     *
+     * @var bool
+     */
+    private bool $onlyCurrentClass = false;
+
     public function isEnableMethods(): bool
     {
         return $this->enableMethods;
@@ -64,6 +71,26 @@ class ClassReflector
     public function setEnableMethods(bool $enableMethods): void
     {
         $this->enableMethods = $enableMethods;
+    }
+
+    /**
+     * 获取是否只获取当前类的属性
+     *
+     * @return bool
+     */
+    public function isOnlyCurrentClass(): bool
+    {
+        return $this->onlyCurrentClass;
+    }
+
+    /**
+     * 设置是否只获取当前类的属性
+     *
+     * @param bool $onlyCurrentClass
+     */
+    public function setOnlyCurrentClass(bool $onlyCurrentClass): void
+    {
+        $this->onlyCurrentClass = $onlyCurrentClass;
     }
 
     public function __construct($cache = null)
@@ -149,7 +176,7 @@ class ClassReflector
             $this->resolvedEntity->getUses($className),
             $this->resolvedEntity->getAlias($className)
         );
-        $this->resolvedEntity::setClassProperties($className, $properties->getProperties($this->filter));
+        $this->resolvedEntity::setClassProperties($className, $properties->getProperties($this->filter, $this->onlyCurrentClass));
         foreach ($properties->getAllPropertyNamespaceName() as $namespaceName) {
             if (!isset($this->resolvedClass[$namespaceName])) {
                 $this->queue[]                       = $namespaceName;
