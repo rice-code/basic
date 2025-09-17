@@ -23,14 +23,15 @@ class SetterCat
     use AutoFillProperties;
     use Accessor;
     use Setter;
-    
+
     /**
-     * 解决trait方法冲突，明确使用Setter的resetAccessor实现
+     * 解决trait方法冲突，明确使用Setter的resetAccessor实现.
      */
     public function resetAccessor(): void
     {
-        // 使用Setter trait的实现
-        Setter::resetAccessor();
+        // 调用Setter trait中的实现
+        $this->_setter = true;
+        $this->_getter = false;
     }
 
     /**

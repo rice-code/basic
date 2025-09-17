@@ -1,0 +1,20 @@
+parameters:
+    level: 2
+    paths:
+        - src
+        - tests
+    excludePaths:
+        - */vendor/*
+    treatPhpDocTypesAsCertain: true
+    ignoreErrors:
+        - '#PHPDoc tag @var for property.*has invalid type#'
+        - '#Unsafe access to private property.*through static::#'
+        - '#Unsafe usage of new static\(\)#'
+        - identifier: missingType.iterableValue
+        - identifier: missingType.generics
+        - identifier: parentNotFound
+        - identifier: undefinedFunction
+        - identifier: deadCatch
+        - identifier: undefinedStaticMethod
+        - identifier: undefinedStaticProperty
+    reportUnmatchedIgnoredErrors: false

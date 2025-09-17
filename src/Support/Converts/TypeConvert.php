@@ -4,7 +4,7 @@ namespace Rice\Basic\Support\Converts;
 
 class TypeConvert
 {
-    public static function objToArr($obj)
+    public static function objToArr(object $obj)
     {
         return json_decode(json_encode($obj, JSON_UNESCAPED_UNICODE), true);
     }

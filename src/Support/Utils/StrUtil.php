@@ -110,11 +110,10 @@ class StrUtil
         return false;
     }
 
-
     /**
-     * 获取类名类且 \\ 转为 /
+     * 获取类名类且 \\ 转为 /.
      *
-     * @param  string|object  $class
+     * @param string|object $class
      * @return string
      */
     public static function classBaseName($class): string
@@ -123,5 +122,4 @@ class StrUtil
 
         return basename(str_replace('\\', '/', $class));
     }
-
 }

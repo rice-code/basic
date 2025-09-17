@@ -157,30 +157,30 @@ abstract class GuzzleClient
         );
 
         return [
-            //是否请求成功
+            // 是否请求成功
             'succeed'      => $this->success,
-            //请求相关数据
+            // 请求相关数据
             'request'      => [
                 'uri'     => (string) $this->request->getUri(),
                 'method'  => $this->request->getMethod(),
                 'headers' => $this->request->getHeaders(),
                 'body'    => (string) $this->request->getBody(),
             ],
-            //响应相关数据
+            // 响应相关数据
             'response'     => [
                 'statusCode'   => $this->response ? $this->response->getStatusCode() : -1,
                 'reasonPhrase' => $this->response ? $this->response->getReasonPhrase() : '',
                 'body'         => $this->response ? (string) $this->response->getBody() : '',
             ],
-            //请求耗时等详细数据
+            // 请求耗时等详细数据
             'handlerStats' => $stats->getHandlerStats(),
-            //请求总耗时
+            // 请求总耗时
             'transferTime' => $stats->getTransferTime(),
-            //请求开始时间
+            // 请求开始时间
             'startAt'      => $this->startAt->format(CarbonInterface::MOCK_DATETIME_FORMAT),
-            //请求结束时间
+            // 请求结束时间
             'endAt'        => Carbon::now()->format(CarbonInterface::MOCK_DATETIME_FORMAT),
-            //发送请求时相关的上下文变量
+            // 发送请求时相关的上下文变量
             'extraContext' => $this->getContent(),
         ];
     }

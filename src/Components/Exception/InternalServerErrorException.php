@@ -2,8 +2,8 @@
 
 namespace Rice\Basic\Components\Exception;
 
-use Rice\Basic\Components\Enum\HttpStatusCodeEnum;
 use Rice\Basic\Components\Enum\SupportEnum;
+use Rice\Basic\Components\Enum\HttpStatusCodeEnum;
 
 class InternalServerErrorException extends BaseException
 {

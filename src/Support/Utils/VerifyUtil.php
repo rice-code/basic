@@ -52,8 +52,8 @@ class VerifyUtil
 
     /**
      * 强类型异常抛出.
-     * @param $type
-     * @param $value
+     * @param                               $type
+     * @param                               $value
      * @throws InternalServerErrorException
      */
     public static function throwStrongType($type, $value): void

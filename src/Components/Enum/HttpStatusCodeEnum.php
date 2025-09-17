@@ -5,44 +5,44 @@ namespace Rice\Basic\Components\Enum;
 class HttpStatusCodeEnum
 {
     /**
-     * Bad Request
+     * Bad Request.
      */
     public const INVALID_REQUEST = 400;
     /**
-     * Not Found
+     * Not Found.
      */
     public const RESOURCE_NOT_FOUND = 404;
     /**
-     * Method Not Allowed
+     * Method Not Allowed.
      */
     public const METHOD_NOT_SUPPORTED = 405;
     /**
-     * Not Acceptable
+     * Not Acceptable.
      */
     public const MEDIA_TYPE_NOT_ACCEPTABLE = 406;
     /**
-     * Conflict
+     * Conflict.
      */
     public const RESOURCE_CONFLICT = 409;
     /**
-     * Unsupported Media Type
+     * Unsupported Media Type.
      */
     public const UNSUPPORTED_MEDIA_TYPE = 415;
     /**
-     * Unprocessable Entity
+     * Unprocessable Entity.
      */
     public const UNPROCESSABLE_ENTITY = 422;
     /**
-     * Too Many Requests
+     * Too Many Requests.
      */
     public const RATE_LIMIT_REACHED = 429;
 
     /**
-     * Internal Server Error
+     * Internal Server Error.
      */
     public const INTERNAL_SERVER_ERROR = 500;
     /**
-     * Service Unavailable
+     * Service Unavailable.
      */
     public const SERVICE_UNAVAILABLE = 503;
 }

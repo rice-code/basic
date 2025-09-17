@@ -2,7 +2,6 @@
 
 namespace Tests\Support\Annotation;
 
-use ReflectionException;
 use Rice\Basic\Support\Lang;
 use Tests\Support\Entity\Cat;
 use Tests\Support\Entity\Cat8;
@@ -16,7 +15,7 @@ use Rice\Basic\Support\Annotation\ClassReflector;
 class AnnotationTest extends TestCase
 {
     /**
-     * @throws ReflectionException
+     * @throws \ReflectionException
      */
     public function testAnnotation(): void
     {
@@ -26,7 +25,7 @@ class AnnotationTest extends TestCase
     }
 
     /**
-     * @throws ReflectionException
+     * @throws \ReflectionException
      */
     public function testProperty(): void
     {
@@ -45,16 +44,16 @@ class AnnotationTest extends TestCase
     public function testMethod(): void
     {
         $methods = new Methods(Cat::class);
-        $this->assertEquals('isCat', $methods->getMethods()[Cat::class . '@' . 'isCat']->name);
+        $this->assertEquals('isCat', $methods->getMethods()[Cat::class . '@isCat']->name);
     }
 
     /**
-     * @throws ReflectionException
+     * @throws \ReflectionException
      */
     public function testProperty8(): void
     {
         // 只对 php8 进行测试
-        if (FrameTypeUtil::isPHP(7)) {
+        if (FrameTypeUtil::isPHP('7')) {
             $this->assertTrue(true);
 
             return;
@@ -70,7 +69,7 @@ class AnnotationTest extends TestCase
         $this->assertEquals('眼睛', $eyes->getDocDesc());
     }
 
-    public function testLang()
+    public function testLang(): void
     {
         $annotation = new ClassReflector();
         $annotation->setFilter(\ReflectionProperty::IS_PUBLIC);

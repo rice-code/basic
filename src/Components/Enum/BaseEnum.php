@@ -53,7 +53,7 @@ abstract class BaseEnum
     public static ?array $parentConsts = null;
 
     // 子级常量
-    public static $childConsts = null;
+    public static $childConsts;
 
     public static function getConstants(): array
     {

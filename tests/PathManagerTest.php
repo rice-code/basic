@@ -2,29 +2,29 @@
 
 namespace Tests;
 
-use PHPUnit\Framework\TestCase;
 use Rice\Basic\PathManager;
+use PHPUnit\Framework\TestCase;
 
 class PathManagerTest extends TestCase
 {
     /**
-     * 测试PathManager的单例模式
+     * 测试PathManager的单例模式.
      */
-    public function testSingletonInstance()
+    public function testSingletonInstance(): void
     {
         $instance1 = PathManager::getInstance();
         $instance2 = PathManager::getInstance();
-        
+
         $this->assertSame($instance1, $instance2, 'PathManager应该是单例模式，返回相同实例');
     }
 
     /**
-     * 测试PathManager的所有路径属性是否正确初始化
+     * 测试PathManager的所有路径属性是否正确初始化.
      */
-    public function testPathPropertiesInitialization()
+    public function testPathPropertiesInitialization(): void
     {
         $pathManager = PathManager::getInstance();
-        
+
         // 测试主要路径属性是否存在且不为空
         $this->assertTrue(property_exists($pathManager, 'project'), 'PathManager应该有project属性');
         $this->assertTrue(property_exists($pathManager, 'cache'), 'PathManager应该有cache属性');
@@ -32,7 +32,7 @@ class PathManagerTest extends TestCase
         $this->assertTrue(property_exists($pathManager, 'test'), 'PathManager应该有test属性');
         $this->assertTrue(property_exists($pathManager, 'components'), 'PathManager应该有components属性');
         $this->assertTrue(property_exists($pathManager, 'support'), 'PathManager应该有support属性');
-        
+
         // 测试路径属性值是否不为空
         $this->assertNotEmpty($pathManager->project, 'project路径不应为空');
         $this->assertNotEmpty($pathManager->cache, 'cache路径不应为空');
@@ -43,12 +43,12 @@ class PathManagerTest extends TestCase
     }
 
     /**
-     * 测试PathManager的路径格式是否正确（以DIRECTORY_SEPARATOR结尾）
+     * 测试PathManager的路径格式是否正确（以DIRECTORY_SEPARATOR结尾）.
      */
-    public function testPathFormat()
+    public function testPathFormat(): void
     {
         $pathManager = PathManager::getInstance();
-        
+
         // 所有路径属性都应该以DIRECTORY_SEPARATOR结尾
         $this->assertStringEndsWith(DIRECTORY_SEPARATOR, $pathManager->project, 'project路径应以目录分隔符结尾');
         $this->assertStringEndsWith(DIRECTORY_SEPARATOR, $pathManager->cache, 'cache路径应以目录分隔符结尾');
@@ -59,36 +59,36 @@ class PathManagerTest extends TestCase
     }
 
     /**
-     * 测试PathManager的路径层次关系是否正确
+     * 测试PathManager的路径层次关系是否正确.
      */
-    public function testPathHierarchy()
+    public function testPathHierarchy(): void
     {
         $pathManager = PathManager::getInstance();
-        
+
         // 测试src目录是否是project目录的子目录
         $expectedSrcPath = $pathManager->project . 'src' . DIRECTORY_SEPARATOR;
         $this->assertEquals($expectedSrcPath, $pathManager->src, 'src目录应该是project目录的子目录');
-        
+
         // 测试test目录是否是project目录的子目录
         $expectedTestPath = $pathManager->project . 'tests' . DIRECTORY_SEPARATOR;
         $this->assertEquals($expectedTestPath, $pathManager->test, 'test目录应该是project目录的子目录');
-        
+
         // 测试components目录是否是src目录的子目录
         $expectedComponentsPath = $pathManager->src . 'Components' . DIRECTORY_SEPARATOR;
         $this->assertEquals($expectedComponentsPath, $pathManager->components, 'components目录应该是src目录的子目录');
-        
+
         // 测试support目录是否是src目录的子目录
         $expectedSupportPath = $pathManager->src . 'Support' . DIRECTORY_SEPARATOR;
         $this->assertEquals($expectedSupportPath, $pathManager->support, 'support目录应该是src目录的子目录');
     }
 
     /**
-     * 测试PathManager的所有路径属性是否都是字符串类型
+     * 测试PathManager的所有路径属性是否都是字符串类型.
      */
-    public function testPathPropertiesType()
+    public function testPathPropertiesType(): void
     {
         $pathManager = PathManager::getInstance();
-        
+
         $this->assertIsString($pathManager->project, 'project属性应该是字符串类型');
         $this->assertIsString($pathManager->cache, 'cache属性应该是字符串类型');
         $this->assertIsString($pathManager->src, 'src属性应该是字符串类型');

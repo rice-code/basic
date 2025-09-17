@@ -2,8 +2,6 @@
 
 namespace Rice\Basic\Support\Annotation;
 
-use ReflectionClass;
-use ReflectionException;
 use Rice\Basic\Support\FileParser;
 use Rice\Basic\Components\Enum\KeyEnum;
 use Rice\Basic\Contracts\CacheContract;
@@ -22,9 +20,9 @@ class ClassReflector
 
     /**
      * 反射类.
-     * @var ReflectionClass
+     * @var \ReflectionClass
      */
-    private ReflectionClass $class;
+    private \ReflectionClass $class;
 
     /**
      * 对象属性解析队列.
@@ -50,14 +48,14 @@ class ClassReflector
      */
     private int $filter = \ReflectionProperty::IS_PROTECTED;
     /**
-     * 是否开启函数分析
+     * 是否开启函数分析.
      *
      * @var bool
      */
     private bool $enableMethods = false;
 
     /**
-     * 是否只获取当前类的属性（过滤父类属性）
+     * 是否只获取当前类的属性（过滤父类属性）.
      *
      * @var bool
      */
@@ -74,7 +72,7 @@ class ClassReflector
     }
 
     /**
-     * 获取是否只获取当前类的属性
+     * 获取是否只获取当前类的属性.
      *
      * @return bool
      */
@@ -84,7 +82,7 @@ class ClassReflector
     }
 
     /**
-     * 设置是否只获取当前类的属性
+     * 设置是否只获取当前类的属性.
      *
      * @param bool $onlyCurrentClass
      */
@@ -100,7 +98,7 @@ class ClassReflector
     }
 
     /**
-     * @throws ReflectionException
+     * @throws \ReflectionException
      */
     public function execute(string $class): self
     {
@@ -129,11 +127,11 @@ class ClassReflector
      * 构建反射类.
      * @param $class
      * @return $this
-     * @throws ReflectionException
+     * @throws \ReflectionException
      */
     public function buildClass($class): self
     {
-        $this->class     = new ReflectionClass($class);
+        $this->class     = new \ReflectionClass($class);
         $classNamespace  = $this->class->getName();
         $classFileName   = $this->class->getFileName();
 
@@ -144,8 +142,9 @@ class ClassReflector
     }
 
     /**
-     * @param string $classNamespace
-     * @param $classFileName
+     * @param string       $classNamespace
+     * @param false|string $classFileName
+     *
      * @return void
      */
     private function parseFileForNamespace(string $classNamespace, $classFileName): void
@@ -166,7 +165,7 @@ class ClassReflector
     }
 
     /**
-     * @throws ReflectionException
+     * @throws \ReflectionException
      */
     public function analysisAttr(): void
     {
@@ -186,12 +185,12 @@ class ClassReflector
     }
 
     /**
-     * @throws ReflectionException
+     * @throws \ReflectionException
      */
     public function analysisMethod(): void
     {
         $className  = $this->class->getName();
-        $methods = new Methods($className);
+        $methods    = new Methods($className);
         $this->resolvedEntity::setClassMethods($className, $methods->getMethods());
     }
 

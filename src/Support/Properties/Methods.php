@@ -2,9 +2,6 @@
 
 namespace Rice\Basic\Support\Properties;
 
-use ReflectionException;
-use Rice\Basic\Components\Entity\FrameEntity;
-
 class Methods
 {
     protected \ReflectionClass $refectionClass;
@@ -23,7 +20,7 @@ class Methods
     protected array $alias;
 
     /**
-     * @throws ReflectionException
+     * @throws \ReflectionException
      */
     public function __construct(string $namespace, $uses = [], $alias = [])
     {
@@ -33,7 +30,7 @@ class Methods
     }
 
     /**
-     * @throws ReflectionException
+     * @throws \ReflectionException
      */
     public function getMethods($filter = \ReflectionMethod::IS_PUBLIC): array
     {
@@ -48,12 +45,11 @@ class Methods
             if (array_key_exists('internal', $newMethod->docLabels)) {
                 continue;
             }
-            $this->methods[$this->refectionClass->getName().'@'.$method->getName()] = $newMethod;
+            $this->methods[$this->refectionClass->getName() . '@' . $method->getName()] = $newMethod;
         }
 
         return $this->methods ?? [];
     }
-
 
     /**
      * 获取类名
@@ -86,24 +82,5 @@ class Methods
     public function getNamespaceName(): string
     {
         return $this->refectionClass->getNamespaceName();
-    }
-
-    /**
-     * 获取所有属性的命名空间.
-     *
-     * @return array
-     */
-    public function getAllPropertyNamespaceName(): array
-    {
-        $namespaces = [];
-
-        foreach ($this->getProperties() as $property) {
-            if (empty($property->namespace)) {
-                continue;
-            }
-            $namespaces[] = $property->namespace;
-        }
-
-        return array_unique($namespaces);
     }
 }

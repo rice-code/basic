@@ -223,11 +223,11 @@ abstract class BaseMeter
 
     /**
      * 转为设置单位.
-     * @param $unit
+     * @param     $unit
      * @param int $scale
      * @return string
      */
-    public function to($unit, int $scale = 4): string
+    public function to(string $unit, int $scale = 4): string
     {
         $handle = $this->calculates[$unit];
         if (is_callable($handle)) {
@@ -239,11 +239,11 @@ abstract class BaseMeter
 
     /**
      * 转为锚点单位.
-     * @param $unit
+     * @param     $unit
      * @param int $scale
      * @return $this
      */
-    protected function from($unit, int $scale = 4): self
+    protected function from(string $unit, int $scale = 4): self
     {
         $handle = $this->calculates[$unit];
         if (is_callable($handle)) {

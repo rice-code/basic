@@ -21,7 +21,7 @@ class Cat
 {
     use AutoFillProperties;
     use Accessor;
-    
+
     /**
      * 眼睛.
      *
@@ -50,7 +50,7 @@ class Cat
     protected $hair;
 
     /**
-     * 判断是否是猫
+     * 判断是否是猫.
      *
      * @return bool
      */

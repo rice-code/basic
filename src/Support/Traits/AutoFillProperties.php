@@ -2,30 +2,30 @@
 
 namespace Rice\Basic\Support\Traits;
 
-use ReflectionException;
 use Rice\Basic\Contracts\CacheContract;
 use Rice\Basic\Support\Properties\AutoFillPropertyHandler;
 use Rice\Basic\Components\Exception\InternalServerErrorException;
-use Rice\Basic\Support\Utils\FrameTypeUtil;
 
 /**
  * 自动填充属性Trait
- * 使用组合模式，通过AutoFillPropertyHandler实现功能，避免修改目标类的构造函数
+ * 使用组合模式，通过AutoFillPropertyHandler实现功能，避免修改目标类的构造函数.
  */
- trait AutoFillProperties
+trait AutoFillProperties
 {
     /**
      * @internal
      * @var AutoFillPropertyHandler|null
      */
     private ?AutoFillPropertyHandler $_autoFillHandler = null;
+
     /**
-     * 自动填充初始化方法 - 使用AutoFillPropertyHandler处理
-     * 
-     * @param mixed $params 参数数据
-     * @param CacheContract|null $cache 缓存实例
+     * 自动填充初始化方法 - 使用AutoFillPropertyHandler处理.
+     *
+     * @param mixed              $params 参数数据
+     * @param CacheContract|null $cache  缓存实例
+     *
      * @throws InternalServerErrorException
-     * @throws ReflectionException
+     * @throws \ReflectionException
      */
     public function autoFillInitialize($params = null, CacheContract $cache = null)
     {
@@ -33,7 +33,7 @@ use Rice\Basic\Support\Utils\FrameTypeUtil;
         if (is_null($this->_autoFillHandler)) {
             $this->_autoFillHandler = new AutoFillPropertyHandler($this);
         }
-        
+
         // 委托给处理器执行初始化，使用已设置的onlyCurrentClass值
         $this->_autoFillHandler->initialize($params, $cache, $this->isOnlyCurrentClass());
 
@@ -41,8 +41,8 @@ use Rice\Basic\Support\Utils\FrameTypeUtil;
     }
 
     /**
-     * 获取自动填充处理器实例
-     * 
+     * 获取自动填充处理器实例.
+     *
      * @return AutoFillPropertyHandler
      */
     public function getAutoFillHandler(): AutoFillPropertyHandler
@@ -50,7 +50,7 @@ use Rice\Basic\Support\Utils\FrameTypeUtil;
         if (is_null($this->_autoFillHandler)) {
             $this->_autoFillHandler = new AutoFillPropertyHandler($this);
         }
-        
+
         return $this->_autoFillHandler;
     }
 
@@ -61,6 +61,7 @@ use Rice\Basic\Support\Utils\FrameTypeUtil;
     protected function handle(): void
     {
         if (!is_null($this->_autoFillHandler)) {
+            // @phpstan-ignore-next-line
             $this->_autoFillHandler->handle();
         }
     }
@@ -106,19 +107,20 @@ use Rice\Basic\Support\Utils\FrameTypeUtil;
             $this->_autoFillHandler->fillArray($name, $values);
         }
     }
-    
+
     /**
-    /**
-     * 设置是否只填充当前类的属性（过滤父类属性）
+     * /**
+     * 设置是否只填充当前类的属性（过滤父类属性）.
      */
     public function setOnlyCurrentClass(bool $onlyCurrentClass): self
     {
         $this->getAutoFillHandler()->setOnlyCurrentClass($onlyCurrentClass);
+
         return $this;
     }
-    
+
     /**
-     * 获取是否只填充当前类的属性的设置
+     * 获取是否只填充当前类的属性的设置.
      */
     public function isOnlyCurrentClass(): bool
     {

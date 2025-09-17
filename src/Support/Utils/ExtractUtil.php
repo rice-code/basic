@@ -58,9 +58,10 @@ class ExtractUtil
     }
 
     /**
+     * @param  array|null                   $default
      * @throws InternalServerErrorException
      */
-    public static function getCamelCase($source, $key, $default = null)
+    public static function getCamelCase(array $source, string $key, array $default = null)
     {
         self::$camelCase = true;
         $val             = self::get($source, $key, $default);
@@ -70,9 +71,12 @@ class ExtractUtil
     }
 
     /**
+     * @param  int[][][]                    $source
      * @throws InternalServerErrorException
+     *
+     * @psalm-param array{data: list{array{my_number: 1}}} $source
      */
-    public static function getSnakeCase($source, $key, $default = null)
+    public static function getSnakeCase(array $source, string $key, $default = null)
     {
         self::$snakeCase = true;
         $val             = self::get($source, $key, $default);
@@ -83,9 +87,13 @@ class ExtractUtil
 
     /**
      * 按照 原键值 -> 驼峰 -> 蛇形 依次获取值
+     *
+     * @param  int[][][]                    $params
      * @throws InternalServerErrorException
+     *
+     * @psalm-param array{data: list{array{myNumber?: 1, my_number?: 1}}} $params
      */
-    public static function getValue($params, $key)
+    public static function getValue(array $params, string $key)
     {
         $value = self::get($params, $key);
 

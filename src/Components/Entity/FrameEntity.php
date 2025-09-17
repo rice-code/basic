@@ -20,7 +20,7 @@ class FrameEntity extends BaseEntity
         return self::$_filter;
     }
 
-    public static function inFilter($needle): bool
+    public static function inFilter(string $needle): bool
     {
         return isset(self::$_filter[$needle]);
     }
