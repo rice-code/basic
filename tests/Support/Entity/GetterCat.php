@@ -23,16 +23,17 @@ class GetterCat
     use AutoFillProperties;
     use Accessor;
     use Getter;
-    
+
     /**
-     * 解决trait方法冲突，明确使用Getter的resetAccessor实现
+     * 解决trait方法冲突，明确使用Getter的resetAccessor实现.
      */
     public function resetAccessor(): void
     {
-        // 使用Getter trait的实现
-        Getter::resetAccessor();
+        // 调用Getter trait中的实现
+        $this->_setter = false;
+        $this->_getter = true;
     }
-    
+
     /**
      * 眼睛.
      *

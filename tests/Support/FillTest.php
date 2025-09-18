@@ -12,7 +12,7 @@ class FillTest extends TestCase
      * @throws InternalServerErrorException
      * @throws \ReflectionException
      */
-    public function testAutoFill()
+    public function testAutoFill(): void
     {
         $params = [
             'eyes'  => [['size' => 'big']],

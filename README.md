@@ -6,167 +6,360 @@
 [![github fork](https://img.shields.io/github/forks/dmf-code/basic.svg)]('https://github.com/dmf-code/basic/members')
 [![Tests](https://github.com/rice-code/basic/actions/workflows/tests.yml/badge.svg)](https://github.com/rice-code/basic/actions/workflows/tests.yml)
 
-## php工具包 （php basic tool）
+# Rice Basic
 
+一个功能完善、结构清晰的 PHP 基础工具包，提供了丰富的组件和工具类，帮助开发者快速构建高质量的 PHP 应用。
 
-[中文文档](https://rice-code.github.io/zh/)
+## 特性
 
-### 安装
+- **基础框架组件**：提供 DTO、Entity、Enum、Exception 等核心组件
+- **参数自动填充**：简化对象属性赋值，提高开发效率
+- **数据访问与转换**：提供强大的类型转换和数据提取工具
+- **日志系统**：支持带追踪ID的日志记录和多环境适配
+- **异常处理**：完善的异常体系和观察者模式实现
+- **国际化支持**：内置多语言处理能力
+- **单例模式**：线程安全的单例实现
+- **性能优化**：包含性能监控和优化工具
+- **契约式编程**：定义清晰的接口规范
+
+## 安装
 
 ```shell script
 composer require rice/basic
 ```
 
-### 功能点
-1. 提供基础框架组件 [锚点](#框架组件)
-2. 参数自动填充 [锚点](#请求参数自动数据填充)
-3. 请求客户端封装 [锚点](#请求客户端封装)
-4. 场景校验 [锚点](#场景校验)
-5. 魔术方法管理 [锚点](#魔术方法管理)
+## 目录结构
 
-### 使用场景
-1. 数组替换为对象进行管理
-2. 转换为对象后需要填充属性，可以使用参数自动填充功能
-3. 封装字段
-
-### 框架组件
 ```text
-BaseAssembler
-BaseDTO
-BaseEntity
-BaseEnum
-BaseException
+├── src/
+│   ├── Components/       # 核心组件
+│   │   ├── Assembler/    # 数据装配器
+│   │   ├── DTO/          # 数据传输对象
+│   │   ├── Entity/       # 业务实体
+│   │   ├── Enum/         # 枚举类
+│   │   ├── Exception/    # 异常类
+│   │   └── VO/           # 值对象
+│   ├── Contracts/        # 接口定义
+│   └── Support/          # 支持工具类
+│       ├── Abstracts/    # 抽象类
+│       ├── Annotation/   # 注解处理
+│       ├── Converts/     # 转换器
+│       ├── Loggers/      # 日志实现
+│       ├── Observers/    # 观察者
+│       ├── Properties/   # 属性处理
+│       ├── Traits/       # 特性集合
+│       └── Utils/        # 工具函数
+├── tests/                # 测试代码
+├── doc/                  # 文档
+└── storage/              # 存储目录
+    └── logs/             # 日志文件
 ```
+
+## 核心组件
+
+### 框架组件关系
 
 ![继承对象关系图解](./doc/imgs/base_relation.png)
 
-#### Assembler
-数据装配器，主要继承 `BaseAssembler` 类。该层主要是统一将 `DTO` 和 `Entity` 相互转换，如果缺少了
-装配这一层，大部分代码可能就会落在 `Service` 层里面，而且参数这些会比较多，就会造成函数膨胀起来。代码
-整洁的原理就是尽量细分，归类，所以提供装配器接口（面向接口编程而非实现）。
+### DTO (数据传输对象)
 
-> 可选，代码重构时可做优化，提高代码可读性
+数据传输层对象，主要继承 `BaseDTO` 类。用于聚合业务层中的多个参数变量，使代码更加整洁，参数变量更加直观。
+
+**特点**：
+- 采用失血模型，主要用于数据传输
+- 提供属性访问器和修改器
+- 支持参数自动填充
+
+**示例**：
+
+```php
+<?php
+
+namespace App\DTO;
+
+use Rice\Basic\Components\DTO\BaseDTO;
+
+class UserDTO extends BaseDTO
+{
+    /**
+     * @var int
+     */
+    private $id;
+    
+    /**
+     * @var string
+     */
+    private $name;
+    
+    /**
+     * @var string
+     */
+    private $email;
+}
+
+// 使用示例
+$userDTO = new UserDTO();
+$userDTO->setId(1)
+       ->setName('John Doe')
+       ->setEmail('john@example.com');
+```
+
+### Entity (实体对象)
+
+业务实体对象，主要继承 `BaseEntity` 类。用于构建业务逻辑中的具体实体模型。
+
+**特点**：
+- 采用充血模型，包含业务行为
+- 提供属性访问器和修改器
+- 支持参数自动填充
+
+**示例**：
+
+```php
+<?php
+
+namespace App\Entity;
+
+use Rice\Basic\Components\Entity\BaseEntity;
+
+class UserEntity extends BaseEntity
+{
+    /**
+     * @var int
+     */
+    private $id;
+    
+    /**
+     * @var string
+     */
+    private $name;
+    
+    // 业务方法
+    public function changeName(string $newName): void
+  
+        $this->name = $newName;
+        // 触发相关业务逻辑
+    }
+}
+```
+
+### Assembler (数据装配器)
+
+数据装配器，主要继承 `BaseAssembler` 类。用于统一将 `DTO` 和 `Entity` 相互转换。
+
+**特点**：
+- 分离数据转换逻辑
+- 减少服务层代码复杂度
+- 提高代码可读性和可维护性
+
+**示例**：
 
 ```php
 <?php
 
 namespace App\Assembler;
 
-use App\DTO\TestDTO;
+use App\DTO\UserDTO;
+use App\Entity\UserEntity;
+use Rice\Basic\Components\Assembler\BaseAssembler;
 use Illuminate\Http\Request;
 
-class TestAssembler implements BaseAssembler
+class UserAssembler implements BaseAssembler
 {
-    public function toDTO(Request $request)
+    public function toDTO(Request $request): UserDTO
     {
-        return (new TestDTO())
-            ->setName($request->name)
-            ->setPassword($request->password);
+        return (new UserDTO())
+            ->setName($request->input('name'))
+            ->setEmail($request->input('email'));
+    }
+    
+    public function toEntity(UserDTO $dto): UserEntity
+    {
+        return (new UserEntity())
+            ->setName($dto->getName())
+            ->setEmail($dto->getEmail());
     }
 }
-
 ```
 
-#### DTO
-数据传输层对象，主要继承 `BaseDTO` 类。该层主要是聚合业务层中的多个参数变量，保证编写的代码更加整洁，
-并且参数变量更加直观。
+### Enum (枚举类)
 
-> 采用失血模型，基本上只做数据传输，不存在业务行为
+枚举类，主要继承 `BaseEnum` 类。按照阿里巴巴Java手册（泰山版）进行设计。
 
-![dto](./doc/imgs/dto.png)
+**特点**：
+- 集中管理常量定义
+- 提高代码可读性
+- 支持国际化消息配合使用
 
-#### Entity
-实体对象目录，主要继承 `BaseEntity` 类，业务逻辑中构建的具体实体模型。继承该抽象类的主体是业务中的
-实体对象，主要考验个人对于建模的能力。这里和数据库的模型区别在于，模型是基于数据表进行建模的，实体是
-基于业务进行建模的。
+**示例**：
 
-> 采用充血模型，提高实体的内聚性
-
-#### Enum
-枚举类目录，通常存放 `const` 变量, `ReturnCodeEnum` 类，按照阿里巴巴Java手册（泰山版）进行设计。
-
-```php
-class ReturnCodeEnum extends BaseEnum
-    implements ClientErrorCode, SystemErrorCode, ServiceErrorCode
-{
-    /**
-     * @default OK
-     */
-    public const OK = '00000';
-}
-```
-使用该包，默认强制要求使用枚举类进行定义返回码和异常码。这样子做可以使代码更可读，并且国际化的信息也能够
-与枚举类配合使用。例如：
-```php
-    /**
-     * @level 一级宏观错误码
-     * @zh-CN 用户端错误
-     */
-    public const CLIENT_ERROR = 'A0001';
-```
-`@zh-CN` 就是中文的描述,具体的标识可以参考国际化地区码。之前有使用过文件配置的方式进行配置结果发现，
-使用起来不方便。需要新建不同地区码文件，而且 `Enum` 类对应相关国际化文件过于分散，导致不直观。现在
-使用注解的形式进行捆绑在一起，变量与国际化信息更加聚合。
-
-而且使用自动生成国际化文件可以直接使用 `json` 文件, 相对来说不需要可读性，比使用 `php` 更小。
-
-
-##### 使用场景
-对接第三方接口会存在请求 `uri` ，大多数时候我们可能会直接写在了 `service`
-类中。这样子写其实就把该变量耦合到该类中了，会导致如果我要做一个并发请求的
-`service` 类的话，那么我要么定义多次 `uri` 路由。要么就直接用 `service::const`
-直接从 `service2` 调用 `service1` 的代码。
-为了更好的解耦代码，我们就需要使用到 `Enum` 类，因为枚举类只保存数据，而没有
-业务行为，所以可以给多个 `service` 进行调用。
-
-> 为变量调用，提供解耦
-
-#### Exception
-异常类目录, 与 `Enum` 类配合使用。按照功能模块等进行类的细化，做到单一责任。这样
-可以更好的在异常抛出后做出不同的兜底措施。
-
-推荐将所有异常相关的抛出都封装到该类进行抛出使用，方便统一管理异常。
 ```php
 <?php
 
-namespace Rice\Basic\Components\Exception;
+namespace App\Enum;
 
 use Rice\Basic\Components\Enum\BaseEnum;
-use Rice\Basic\Components\Enum\HttpStatusCodeEnum;
-use Rice\Basic\Components\Enum\InvalidRequestEnum;
 
-class InvalidRequestException extends BaseException
+class UserStatusEnum extends BaseEnum
 {
-    public static function httpStatusCode(): int
-    {
-        return HttpStatusCodeEnum::INVALID_REQUEST;
-    }
-
-    public static function enumClass(): string
-    {
-        return InvalidRequestEnum::class;
-    }
-
     /**
-     * @throws InvalidRequestException
+     * @var int 活跃状态
      */
-    public static function default(): void
-    {
-        throw new self(InvalidRequestEnum::DEFAULT);
-    }
-
+    public const ACTIVE = 1;
+    
     /**
-     * 如果这里是控制器的话，我们只要维护好 `phpstorm` 自带注释，那在做注解自动获取异常返回时
-     * 我们就能为 openApi 生成一个异常返回
-     *
-     * @throws InvalidRequestException
+     * @var int 禁用状态
      */
-    public static function InvalidParam(): void
+    public const DISABLED = 0;
+    
+    /**
+     * 获取状态描述
+     */
+    public static function getDescription($value): string
     {
-        throw new self(BaseEnum::INVALID_PARAM);
+        $descriptions = [
+            self::ACTIVE => '活跃',
+            self::DISABLED => '禁用'
+        ];
+        
+        return $descriptions[$value] ?? '未知';
     }
 }
 ```
+
+## 高级功能
+
+### 参数自动填充
+
+通过 `AutoFillProperties` 特性实现对象属性的自动填充，简化对象初始化过程。
+
+**示例**：
+
+```php
+<?php
+
+use Rice\Basic\Support\Traits\AutoFillProperties;
+
+class User {
+    use AutoFillProperties;
+    
+    private $name;
+    private $email;
+}
+
+// 自动填充属性
+$user = new User();
+$user->fill([
+    'name' => 'John Doe',
+    'email' => 'john@example.com'
+]);
+```
+
+### 单例模式
+
+通过 `Singleton` 特性实现线程安全的单例模式。
+
+**示例**：
+
+```php
+<?php
+
+use Rice\Basic\Support\Traits\Singleton;
+
+class Config {
+    use Singleton;
+    
+    private $settings = [];
+    
+    public function set($key, $value): void
+    {
+        $this->settings[$key] = $value;
+    }
+    
+    public function get($key, $default = null)
+    {
+        return $this->settings[$key] ?? $default;
+    }
+}
+
+// 获取单例实例
+$config = Config::getInstance();
+$config->set('app_name', 'My Application');
+```
+
+### 日志系统
+
+通过 `LogTraceFacade` 实现带追踪ID的日志记录功能。
+
+**示例**：
+
+```php
+<?php
+
+use Rice\Basic\Support\LogTraceFacade;
+
+// 记录不同级别的日志
+LogTraceFacade::info('User logged in', ['user_id' => 1]);
+LogTraceFacade::warning('Failed login attempt', ['ip' => '192.168.1.1']);
+LogTraceFacade::error('Database connection failed', ['error' => $e->getMessage()]);
+```
+
+### 异常处理
+
+完善的异常体系和观察者模式实现，支持异常的统一处理和日志记录。
+
+**示例**：
+
+```php
+<?php
+
+use Rice\Basic\Components\Exception\InvalidRequestException;
+
+// 抛出异常
+if (empty($data)) {
+    throw new InvalidRequestException('数据不能为空');
+}
+
+// 异常观察者会自动记录异常信息
+```
+
+## 工具类
+
+### 字符串工具 (StrUtil)
+
+提供字符串处理的常用方法。
+
+### 数组工具 (ArrUtil)
+
+提供数组处理的常用方法。
+
+### 类型转换 (TypeConvert)
+
+提供各种数据类型之间的转换功能。
+
+### 性能监控 (PerfUtil)
+
+提供代码执行性能监控功能。
+
+## 兼容性
+
+- PHP 7.4+ 兼容
+- Laravel 框架兼容
+- 独立使用兼容
+
+## 测试
+
+```shell script
+composer test
+```
+
+## 贡献
+
+欢迎提交 Issue 和 Pull Request 来改进这个项目。
+
+## 许可证
+
+本项目使用 Apache 2.0 许可证 - 详见 [LICENSE](LICENSE) 文件。
 
 
 #### phpunit 配置
@@ -283,32 +476,10 @@ class Cat
  包的 `AutoFillProperties` 类就能实现参数自动填充到 `Request` 对象的类属性中去了。
 
 `trait` `AutoFillProperties` 已使用类属性,使用该类必须避免重写问题。
-> 最新版本的 `AutoFillProperties` 不再依赖构造函数，而是通过 `autoFillInitialize` 方法进行参数填充，使用更加灵活方便。
 
-#### 创建基类统一参数填充
-
-为了在业务中统一管理参数填充行为，推荐创建一个自定义的基础类并让所有业务类继承它，这样可以将参数填充逻辑集中处理，减少重复代码。
-
-下面是一个不依赖于框架内部类的基础类实现示例：
+`src/Entity/FrameEntity.php`: 
 
 ```php
-<?php
-
-namespace App\Common;
-
-use Rice\Basic\Support\Traits\Accessor;
-use Rice\Basic\Support\Traits\AutoFillProperties;
-
-/**
- * 业务基础类，用于统一处理参数填充
- */
-abstract class BaseBusiness
-{
-    use Accessor, AutoFillProperties;
-    
-    /**
-     * 过滤掉不需要填充的字段
-     */
     private static array $_filter = [
         '_setter',
         '_getter',
@@ -319,111 +490,7 @@ abstract class BaseBusiness
         '_cache',
         '_idx',
     ];
-    
-    /**
-     * 初始化参数填充
-     *
-     * @param array $params
-     */
-    public function __construct(array $params = [])
-    {
-        $this->autoFillInitialize($params);
-    }
-    
-    /**
-     * 获取过滤字段列表
-     *
-     * @return array
-     */
-    protected static function getFilter(): array
-    {
-        return static::$_filter;
-    }
-}
 ```
-
-#### 业务实体类示例
-
-下面是一个继承`BaseBusiness`的业务实体类示例：
-
-```php
-<?php
-
-namespace App\Entity;
-
-use App\Common\BaseBusiness;
-
-/**
- * 用户实体类
- */
-class User extends BaseBusiness
-{
-    /**
-     * 用户ID
-     */
-    protected int $id = 0;
-    
-    /**
-     * 用户名
-     */
-    protected string $username = '';
-    
-    /**
-     * 用户邮箱
-     */
-    protected string $email = '';
-    
-    /**
-     * 创建时间
-     */
-    protected string $createdAt = '';
-    
-    /**
-     * 自定义getter方法 - 格式化创建时间
-     */
-    public function getFormattedCreatedAt(): string
-    {
-        return date('Y-m-d H:i:s', strtotime($this->createdAt));
-    }
-}
-```
-
-#### 使用示例
-
-```php
-<?php
-
-use App\Entity\User;
-
-// 创建用户实体并自动填充参数
-$userData = [
-    'id' => 1,
-    'username' => 'admin',
-    'email' => 'admin@example.com',
-    'created_at' => '2023-01-01 10:00:00',
-    'extra_field' => '这会被过滤掉，因为不是类属性'
-];
-
-// 方法一：通过构造函数填充
-$user = new User($userData);
-
-// 方法二：先实例化，然后填充数据
-$user = new User();
-$user->autoFillInitialize($userData);
-
-// 访问属性
-echo $user->id; // 输出: 1
-echo $user->username; // 输出: admin
-
-// 访问自定义getter
-echo $user->formattedCreatedAt; // 输出: 2023-01-01 10:00:00
-```
-
-这种方式的优势：
-1. 所有业务实体类共享统一的参数填充逻辑
-2. 减少重复代码，提高代码复用性
-3. 更容易维护和扩展参数填充功能
-4. 可以在基类中添加全局的参数验证和转换逻辑
 
 `Laravel` 例子：
 
@@ -499,10 +566,7 @@ class TestController extends BaseController
 {
     public function test(Request $request): \Illuminate\Http\JsonResponse
     {
-        // 新版不再需要通过构造函数传递参数
-        $testRequest = new TestRequest();
-        // 可以直接调用autoFillInitialize方法进行参数填充
-        $testRequest->autoFillInitialize($request->all());
+        $testRequest = new TestRequest($request->all());
         $testRequest->check();
         $testLogic = (new TestLogic());
         
@@ -514,7 +578,7 @@ class TestController extends BaseController
 }
 ```
 
-这里面实例化 `TestRequest` 默认不再需要通过构造函数传递参数，而是通过 `autoFillInitialize()` 方法进行参数填充，使用更加灵活。请求的参数命名默认采用需要采用蛇形，因为前端大部分是
+这里面实例化 `TestRequest` 需要将全部参数作为参数，然后请求的参数命名默认采用需要采用蛇形，因为前端大部分是
 蛇形命名规范。这里面默认会转为驼峰进行匹配 `TestRequest` 变量进行赋值。
 
 > Request 对象相当于是一个防腐层一样，一个业务中会存在展示，修改，删除等功能。每一部分参数都有些许不一致，但

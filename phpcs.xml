@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ruleset name="Rice Basic">
+    <description>PHP CodeSniffer configuration for Rice Basic</description>
+    
+    <!-- Use PSR-12 as the base standard -->
+    <rule ref="PSR12"/>
+    
+    <!-- Set the extensions to check -->
+    <arg name="extensions" value="php"/>
+    
+    <!-- Include directories to check -->
+    <file>src</file>
+    <file>tests</file>
+    
+    <!-- Exclude vendor directory -->
+    <exclude-pattern>*/vendor/*</exclude-pattern>
+    
+    <!-- Customize some rules -->
+    <rule ref="Generic.Files.LineLength">
+        <properties>
+            <property name="lineLimit" value="180"/>
+        </properties>
+    </rule>
+</ruleset>

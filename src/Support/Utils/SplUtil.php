@@ -28,10 +28,11 @@ class SplUtil
     /**
      * 递归获取 trait 类中所有的 trait 类.
      *
-     * @param $trait
+     * @param trait-string $trait
+     *
      * @return array|false|string[]
      */
-    public static function traitUsesRecursive($trait)
+    public static function traitUsesRecursive(string $trait)
     {
         $traits = class_uses($trait) ?: [];
 

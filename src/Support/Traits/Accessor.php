@@ -6,13 +6,20 @@ use Rice\Basic\Support\Utils\StrUtil;
 use Rice\Basic\Components\Enum\BaseEnum;
 use Rice\Basic\Components\Enum\NameTypeEnum;
 use Rice\Basic\Components\Entity\FrameEntity;
-use Rice\Basic\Components\Exception\BaseException;
 use Rice\Basic\Components\Exception\InternalServerErrorException;
-use Rice\Basic\Support\Traits\MagicMethodManager;
 
 trait Accessor
 {
     use MagicMethodManager;
+
+    /**
+     * Accessor特性标识
+     * 用于标记类使用了Accessor特性，以便在MagicMethodManager中识别.
+     *
+     * @internal
+     * @var bool
+     */
+    protected bool $_hasAccessor = true;
 
     /**
      * 默认开启 setter.
@@ -39,7 +46,7 @@ trait Accessor
 
     /**
      * 重置Accessor设置（内部方法，用于其他trait覆盖）
-     * 注：其他trait可以覆盖此方法来自定义Accessor的行为
+     * 注：其他trait可以覆盖此方法来自定义Accessor的行为.
      */
     protected function resetAccessor(): void
     {
@@ -87,7 +94,7 @@ trait Accessor
         if (!property_exists($this, $attrName)) {
             throw new InternalServerErrorException(BaseEnum::METHOD_NOT_DEFINE);
         }
-        
+
         // 只读，因为对象 return 出去可以修改内部值，破坏封装性
         if ($this->_readOnly && isset($this->{$attrName}) && is_object($this->{$attrName})) {
             return clone $this->{$attrName};
@@ -111,6 +118,9 @@ trait Accessor
         if (isset($processed[$objId])) {
             return $processed[$objId];
         }
+
+        // 初始化结果数组，避免在null上访问数组偏移量
+        $result = [];
 
         $oReflectionClass = new \ReflectionClass($obj);
         foreach ($oReflectionClass->getProperties() as $property) {
@@ -139,7 +149,7 @@ trait Accessor
             if (is_object($val)) {
                 // 标记当前对象为正在处理
                 $processed[$objId] = []; // 临时占位符
-                $val = $this->assignElement($val, $fields, $nameType, $processed);
+                $val               = $this->assignElement($val, $fields, $nameType, $processed);
             }
 
             if (is_array($val) && isset($val[0]) && is_object($val[0])) {
@@ -158,7 +168,8 @@ trait Accessor
         }
 
         // 缓存结果并返回
-        $processed[$objId] = $result ?? [];
+        $processed[$objId] = $result;
+
         return $processed[$objId];
     }
 

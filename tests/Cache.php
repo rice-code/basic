@@ -2,12 +2,14 @@
 
 namespace Tests;
 
-use JsonException;
 use Rice\Basic\PathManager;
 use Rice\Basic\Contracts\CacheContract;
 
 class Cache implements CacheContract
 {
+    /**
+     * @return void
+     */
     public function set($key, $value)
     {
         $storage = PathManager::getInstance()->test . 'Storage' . DIRECTORY_SEPARATOR . $key;
@@ -15,7 +17,7 @@ class Cache implements CacheContract
     }
 
     /**
-     * @throws JsonException
+     * @throws \JsonException
      */
     public function get($key, $default = null)
     {

@@ -2,7 +2,6 @@
 
 namespace Tests\Support;
 
-use ReflectionException;
 use Rice\Basic\Support\Lang;
 use Tests\Support\Entity\Cat;
 use PHPUnit\Framework\TestCase;
@@ -16,7 +15,7 @@ class AccessorTest extends TestCase
 {
     /**
      * @throws InternalServerErrorException
-     * @throws ReflectionException
+     * @throws \ReflectionException
      */
     public function testAccessor(): void
     {

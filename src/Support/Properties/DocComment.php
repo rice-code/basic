@@ -26,7 +26,7 @@ class DocComment
         $type = $property->getType();
         $name = $property->getName();
 
-        $type  = $type instanceof \ReflectionType ? $type->getName() : null;
+        $type  = $type instanceof \ReflectionNamedType ? $type->getName() : ($type instanceof \ReflectionType ? 'mixed' : null);
 
         $stronglyTyped = !is_null($type);
 
@@ -88,6 +88,9 @@ class DocComment
         return $docLabels;
     }
 
+    /**
+     * @param false|string $docComment
+     */
     protected static function parseDocDesc($docComment): string
     {
         $lines   = explode(PHP_EOL, $docComment);

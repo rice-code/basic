@@ -2,80 +2,79 @@
 
 namespace Rice\Basic\Support\Properties;
 
-use ReflectionClass;
-use ReflectionException;
-use ReflectionProperty;
+use Rice\Basic\Support\Utils\StrUtil;
 use Rice\Basic\Contracts\CacheContract;
 use Rice\Basic\Components\Enum\TypeEnum;
+use Rice\Basic\Support\Utils\ObjectPool;
 use Rice\Basic\Support\Utils\ExtractUtil;
-use Rice\Basic\Support\Converts\TypeConvert;
 use Rice\Basic\Support\Utils\FrameTypeUtil;
-use Rice\Basic\Support\Utils\StrUtil;
+use Rice\Basic\Support\Converts\TypeConvert;
+use Rice\Basic\Support\Utils\LazyCollection;
+use Rice\Basic\Components\Entity\FrameEntity;
 use Rice\Basic\Support\Annotation\ClassReflector;
 use Rice\Basic\Components\Exception\InternalServerErrorException;
-use Rice\Basic\Components\Entity\FrameEntity;
 
 /**
  * 属性自动填充处理器
- * 将AutoFillProperties trait的功能封装为独立的处理器类
+ * 将AutoFillProperties trait的功能封装为独立的处理器类.
  */
 class AutoFillPropertyHandler
 {
     /**
-     * @var array|mixed
+     * @var array
      */
     private array $_params;
-    
+
     /**
      * @var array
      */
     private array $_properties;
-    
+
     /**
      * @var array
      */
     private array $_alias;
-    
+
     /**
      * @var CacheContract|null
      */
     private ?CacheContract $_cache;
-    
+
     /**
      * @var bool 是否只填充当前类的属性（过滤父类属性）
      */
     private bool $_onlyCurrentClass = false;
-    
+
     /**
      * @var object 使用属性填充的目标对象
      */
     private object $_target;
-    
+
     /**
-     * @var ReflectionClass 目标对象的反射类
+     * @var \ReflectionClass 目标对象的反射类
      */
-    private ReflectionClass $_reflection;
-    
+    private \ReflectionClass $_reflection;
+
     /**
-     * 构造函数
-     * 
-     * @param object $target 需要进行属性填充的目标对象
-     * @throws ReflectionException
+     * 构造函数.
+     *
+     * @param  object               $target 需要进行属性填充的目标对象
+     * @throws \ReflectionException
      */
     public function __construct(object $target)
     {
-        $this->_target = $target;
-        $this->_reflection = new ReflectionClass($target);
+        $this->_target     = $target;
+        $this->_reflection = new \ReflectionClass($target);
     }
-    
+
     /**
-     * 自动填充初始化方法
-     * 
-     * @param mixed $params 参数数据
-     * @param CacheContract|null $cache 缓存实例
-     * @param bool $onlyCurrentClass 是否只填充当前类的属性（过滤父类属性）。如果不提供，则保持当前设置
+     * 自动填充初始化方法.
+     *
+     * @param  mixed                        $params           参数数据
+     * @param  CacheContract|null           $cache            缓存实例
+     * @param  bool                         $onlyCurrentClass 是否只填充当前类的属性（过滤父类属性）。如果不提供，则保持当前设置
      * @throws InternalServerErrorException
-     * @throws ReflectionException
+     * @throws \ReflectionException
      */
     public function initialize($params = null, CacheContract $cache = null, bool $onlyCurrentClass = null): void
     {
@@ -83,7 +82,9 @@ class AutoFillPropertyHandler
         if (is_null($params) && FrameTypeUtil::isLaravel() && function_exists('app')) {
             try {
                 $request = app('request');
+                // @phpstan-ignore-next-line
                 if ($request instanceof \Illuminate\Http\Request) {
+                    // @phpstan-ignore-next-line
                     $params = $request->all();
                 }
             } catch (\Exception $e) {
@@ -110,33 +111,33 @@ class AutoFillPropertyHandler
 
         $this->_params      = $params;
         $annotation         = new ClassReflector($cache);
-        
+
         // 只有在显式提供了参数时才更新设置
-        if ($onlyCurrentClass !== null) {
+        if (null !== $onlyCurrentClass) {
             $this->_onlyCurrentClass = $onlyCurrentClass;
             $annotation->setOnlyCurrentClass($onlyCurrentClass);
         }
-        
+
         $this->_properties  = $annotation->execute(get_class($this->_target))->getClassProperties();
         $this->_alias       = $annotation->getAlias();
         $this->_cache       = $cache;
 
         $this->handle();
     }
-    
+
     /**
-     * 处理属性填充
-     * 
+     * 处理属性填充.
+     *
      * @throws InternalServerErrorException
      */
     protected function handle(): void
     {
         $this->fill();
     }
-    
+
     /**
-     * 执行属性填充
-     * 
+     * 执行属性填充.
+     *
      * @throws InternalServerErrorException
      */
     public function fill(): void
@@ -149,6 +150,7 @@ class AutoFillPropertyHandler
             foreach ($this->_params as $name => $value) {
                 $this->setValue($name, $value);
             }
+
             return;
         }
 
@@ -161,23 +163,25 @@ class AutoFillPropertyHandler
             if (FrameEntity::inFilter($name)) {
                 continue;
             }
-            
 
             // 提取变量值
             $value = ExtractUtil::getValue($this->_params, $loopIdx);
 
             if (is_null($property)) {
                 $this->setValue($name, $value);
+
                 continue;
             }
-            
+
             if ($property->isClass) {
                 $this->fillClass($property, $name, $value);
+
                 continue;
             }
 
             if ($property->isArray) {
                 $this->fillArray($name, $value ?? []);
+
                 continue;
             }
 
@@ -189,12 +193,12 @@ class AutoFillPropertyHandler
             $this->setValue($name, $value);
         }
     }
-    
+
     /**
      * 使用反射设置属性值
-     * 
-     * @param string $name 属性名
-     * @param mixed $value 属性值
+     *
+     * @param string $name  属性名
+     * @param mixed  $value 属性值
      */
     private function setValue(string $name, $value): void
     {
@@ -214,104 +218,157 @@ class AutoFillPropertyHandler
             }
         }
     }
-    
+
     /**
      * 填充类属性值为类的值
-     * 
+     *
      * @param Property $property
-     * @param string $name
-     * @param mixed $values
+     * @param string   $name
+     * @param mixed    $values
      */
     public function fillClass(Property $property, string $name, $values): void
     {
         if (!isset($this->_properties[$property->namespace]) || is_null($values)) {
             $this->setValue($name, null);
+
             return;
         }
 
         if ($property->isArray) {
-            $result = [];
-            foreach ($values as $value) {
-                $obj = new $property->namespace();
-                if (method_exists($obj, 'autoFillInitialize')) {
-                    $obj->autoFillInitialize($value, $this->_cache);
+            // 检查是否是大型数组，如果是则使用惰性加载
+            if (is_array($values) && count($values) > 100) {
+                // 使用惰性加载集合处理大型数组（现在默认禁用缓存）
+                $lazyCollection = LazyCollection::fromArray($values)
+                    ->map(function ($value) use ($property) {
+                        $obj = $this->createObject($property->namespace, $value);
+                        return $obj;
+                    });
+                $this->setValue($name, $lazyCollection);
+            } else {
+                // 对于小型数组，使用对象池优化
+                $result = [];
+                foreach ($values as $value) {
+                    $obj      = $this->createObject($property->namespace, $value);
+                    $result[] = $obj;
                 }
-                $result[] = $obj;
+                $this->setValue($name, $result);
             }
-            $this->setValue($name, $result);
+
             return;
         }
 
-        $obj = new $property->namespace();
+        // 单个对象也使用对象池优化
+        $obj = $this->createObject($property->namespace, $values);
+        $this->setValue($name, $obj);
+    }
+
+    /**
+     * 创建对象的工厂方法，使用对象池优化.
+     *
+     * @param string $className 类名
+     * @param mixed  $values    初始化值
+     * @return object
+     */
+    private function createObject(string $className, $values): object
+    {
+        // 对于频繁创建的类，使用对象池优化
+        $usePool = $this->shouldUseObjectPool($className);
+
+        if ($usePool) {
+            // 从对象池获取对象
+            $obj = ObjectPool::get($className);
+        } else {
+            // 创建新对象
+            $obj = new $className();
+        }
+
+        // 初始化对象
         if (method_exists($obj, 'autoFillInitialize')) {
             $obj->autoFillInitialize($values, $this->_cache);
         }
-        $this->setValue($name, $obj);
+
+        return $obj;
     }
-    
+
+    /**
+     * 检查是否应该使用对象池.
+     *
+     * @param string $className 类名
+     * @return bool
+     */
+    private function shouldUseObjectPool(string $className): bool
+    {
+        // 可以根据配置或类名模式判断是否使用对象池
+        // 这里简单实现：如果类名包含DTO、VO或Entity，则考虑使用对象池
+        return false    !== strpos($className, 'DTO')
+               || false !== strpos($className, 'VO')
+               || false !== strpos($className, 'Entity');
+    }
+
     /**
      * 填充类属性为数组的值
-     * 
+     *
      * @param string $name
-     * @param array $values
+     * @param array  $values
      */
     public function fillArray(string $name, array $values): void
     {
         $this->setValue($name, $values);
     }
-    
+
     /**
-     * 获取参数数据
-     * 
+     * 获取参数数据.
+     *
      * @return array
      */
     public function getParams(): array
     {
         return $this->_params ?? [];
     }
-    
+
     /**
-     * 获取属性配置
-     * 
+     * 获取属性配置.
+     *
      * @return array
      */
     public function getProperties(): array
     {
         return $this->_properties ?? [];
     }
-    
+
     /**
-     * 获取别名配置
-     * 
+     * 获取别名配置.
+     *
      * @return array
      */
     public function getAlias(): array
     {
         return $this->_alias ?? [];
     }
-    
+
     /**
-     * 获取缓存实例
-     * 
+     * 获取缓存实例.
+     *
      * @return CacheContract|null
      */
     public function getCache(): ?CacheContract
     {
         return $this->_cache;
     }
-    
+
     /**
-    /**
-     * 设置是否只填充当前类的属性（过滤父类属性）
+     * /**
+     * 设置是否只填充当前类的属性（过滤父类属性）.
      */
     public function setOnlyCurrentClass(bool $onlyCurrentClass): self
     {
         $this->_onlyCurrentClass = $onlyCurrentClass;
+
         return $this;
     }
-    
+
     /**
-     * 获取是否只填充当前类的属性的设置
+     * 获取是否只填充当前类的属性的设置.
      */
     public function isOnlyCurrentClass(): bool
     {

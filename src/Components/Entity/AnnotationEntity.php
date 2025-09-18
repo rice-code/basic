@@ -9,6 +9,7 @@ use Rice\Basic\Support\Traits\Singleton;
 class AnnotationEntity extends BaseEntity
 {
     use Singleton;
+
     private static array $caches = [
         KeyEnum::FILE_MTIME_KEY => [],
         KeyEnum::FILE_USE_KEY   => [],
@@ -16,7 +17,7 @@ class AnnotationEntity extends BaseEntity
     ];
 
     private static array $classProperties = [];
-    private static array $classMethods = [];
+    private static array $classMethods    = [];
     private static bool $checks           = false;
 
     public static function build(?CacheContract $cache): self
@@ -70,7 +71,10 @@ class AnnotationEntity extends BaseEntity
         self::$classProperties[$namespace] = $classProperties;
     }
 
-    public static function getClassProperties($namespace = null, $key = null)
+    /**
+     * @param class-string|null $namespace
+     */
+    public static function getClassProperties(string $namespace = null, $key = null)
     {
         if ($namespace && $key) {
             return self::$classProperties[$namespace][$key] ?? null;
@@ -107,6 +111,10 @@ class AnnotationEntity extends BaseEntity
         return self::$caches;
     }
 
+    /**
+     * @param false|string $key
+     * @param false|int    $value
+     */
     public function setMtime($key, $value): self
     {
         self::$caches[KeyEnum::FILE_MTIME_KEY][$key] = $value;
@@ -121,7 +129,7 @@ class AnnotationEntity extends BaseEntity
         return $this;
     }
 
-    public function setUses($key, $value): self
+    public function setUses(string $key, $value): self
     {
         self::$caches[KeyEnum::FILE_USE_KEY][$key] = $value;
 
@@ -140,7 +148,7 @@ class AnnotationEntity extends BaseEntity
         return $this;
     }
 
-    public function setAlias($key, $value): self
+    public function setAlias(string $key, $value): self
     {
         self::$caches[KeyEnum::FILE_ALIAS_KEY][$key] = $value;
 

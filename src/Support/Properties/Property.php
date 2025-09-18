@@ -57,9 +57,24 @@ class Property
         $this->stronglyTyped  = $stronglyTyped;
         $this->docLabels      = $docLabels;
 
-        if (false !== strpos($this->type, '[]')) {
-            $this->isArray       = true;
-            $this->type          = str_replace('[]', '', $this->type);
+        // 识别各种形式的数组类型声明
+        if (!is_null($this->type)) {
+            // 处理 [] 后缀格式（如 Eye[]）
+            if (false !== strpos($this->type, '[]')) {
+                $this->isArray = true;
+                $this->type    = str_replace('[]', '', $this->type);
+            }
+            // 处理 array 关键词（如 array, array<string>, array<int, string>）
+            elseif (0 === strpos(strtolower($this->type), 'array')) {
+                $this->isArray = true;
+                // 提取数组中的类型（如果有）
+                preg_match('/array<([^,>]+)/i', $this->type, $matches);
+                if (!empty($matches[1])) {
+                    $this->type = $matches[1];
+                } else {
+                    $this->type = null; // 未知数组元素类型
+                }
+            }
         }
     }
 

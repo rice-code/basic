@@ -24,7 +24,7 @@ class FileParser
      * @param $rowData
      * @return bool
      */
-    public function analysis($classNamespace, $rowData): bool
+    public function analysis(string $classNamespace, string $rowData): bool
     {
         $matches = [];
 
