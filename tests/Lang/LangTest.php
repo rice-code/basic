@@ -3,8 +3,8 @@
 namespace Lang;
 
 use PHPUnit\Framework\TestCase;
-use Rice\Basic\Components\Enum\SupportEnum;
-use Rice\Basic\Components\Exception\InternalServerErrorException;
+use Rice\Basic\Infrastructure\Enum\SupportEnum;
+use Rice\Basic\Infrastructure\Exception\InternalServerErrorException;
 
 class LangTest extends TestCase
 {

@@ -2,7 +2,7 @@
 
 namespace Rice\Basic\Support;
 
-use Rice\Basic\PathManager;
+use Rice\Basic\Infrastructure\PathManager;
 use Rice\Basic\Support\Traits\Singleton;
 
 class Lang

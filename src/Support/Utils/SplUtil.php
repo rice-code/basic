@@ -7,8 +7,8 @@ class SplUtil
     /**
      * 递归获取所有类中使用过的 trait 类.
      *
-     * @param $class
-     * @return array|mixed
+     * @param class-string|object $class
+     * @return array
      */
     public static function classUsesRecursive($class)
     {
@@ -28,7 +28,7 @@ class SplUtil
     /**
      * 递归获取 trait 类中所有的 trait 类.
      *
-     * @param trait-string $trait
+     * @param trait-string|class-string $trait
      *
      * @return array|false|string[]
      */

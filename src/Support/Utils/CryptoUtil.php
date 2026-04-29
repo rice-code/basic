@@ -2,7 +2,7 @@
 
 namespace Rice\Basic\Support\Utils;
 
-use Rice\Basic\Components\Exception\EncryptionException;
+use Rice\Basic\Infrastructure\Exception\InternalServerErrorException;
 
 /**
  * 加密工具类
@@ -237,13 +237,13 @@ class CryptoUtil
     {
         try {
             if (!file_exists($inputFile)) {
-                throw new EncryptionException('输入文件不存在: ' . $inputFile);
+                throw new InternalServerErrorException('输入文件不存在: ' . $inputFile);
             }
 
             // 读取文件内容
             $content = file_get_contents($inputFile);
             if (false === $content) {
-                throw new EncryptionException('无法读取输入文件: ' . $inputFile);
+                throw new InternalServerErrorException('无法读取输入文件: ' . $inputFile);
             }
 
             // 加密内容
@@ -253,7 +253,7 @@ class CryptoUtil
             $result = file_put_contents($outputFile, $encryptedContent);
 
             if (false === $result) {
-                throw new EncryptionException('无法写入输出文件: ' . $outputFile);
+                throw new InternalServerErrorException('无法写入输出文件: ' . $outputFile);
             }
 
             return true;
@@ -297,7 +297,7 @@ class CryptoUtil
 
             return true;
         } catch (\Exception $e) {
-            throw new EncryptionException('解密文件过程中发生错误: ' . $e->getMessage(), $e->getCode(), $e);
+            throw new InternalServerErrorException('解密文件过程中发生错误: ' . $e->getMessage(), $e->getCode(), $e);
         }
     }
 }

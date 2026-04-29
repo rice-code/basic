@@ -22,6 +22,26 @@
 - **性能优化**：包含性能监控和优化工具
 - **契约式编程**：定义清晰的接口规范
 
+## 核心思想
+
+```text
+src/
+├── Domain/                    # 业务域层
+│   ├── User/                  # 用户域
+│   │   ├── UserService.php    # 用户核心服务
+│   │   ├── UserRepository.php # 用户仓储
+│   │   ├── UserEntity.php     # 用户实体
+│   │   └── UserDTO.php        # 用户数据传输对象
+│   └── Order/                 # 订单域
+│       ├── OrderService.php
+│       ├── OrderRepository.php
+│       └── OrderEntity.php
+├── Infrastructure/           # 基础设施层
+│   └── Persistence/          # 持久化实现
+└── Application/              # 应用层
+    └── Controllers/          # 控制器
+```
+
 ## 安装
 
 ```shell script
@@ -31,28 +51,48 @@ composer require rice/basic
 ## 目录结构
 
 ```text
-├── src/
-│   ├── Components/       # 核心组件
-│   │   ├── Assembler/    # 数据装配器
-│   │   ├── DTO/          # 数据传输对象
-│   │   ├── Entity/       # 业务实体
-│   │   ├── Enum/         # 枚举类
-│   │   ├── Exception/    # 异常类
-│   │   └── VO/           # 值对象
-│   ├── Contracts/        # 接口定义
-│   └── Support/          # 支持工具类
-│       ├── Abstracts/    # 抽象类
-│       ├── Annotation/   # 注解处理
-│       ├── Converts/     # 转换器
-│       ├── Loggers/      # 日志实现
-│       ├── Observers/    # 观察者
-│       ├── Properties/   # 属性处理
-│       ├── Traits/       # 特性集合
-│       └── Utils/        # 工具函数
-├── tests/                # 测试代码
-├── doc/                  # 文档
-└── storage/              # 存储目录
-    └── logs/             # 日志文件
+src/
+├── Domain/                    # 领域层 - 核心业务逻辑
+│   ├── Entity/               # 实体类
+│   │   ├── BaseEntity.php
+│   │   ├── AnnotationEntity.php
+│   │   └── FrameEntity.php
+│   ├── DTO/                  # 数据传输对象
+│   │   ├── BaseDTO.php
+│   │   └── PageDTO.php
+│   ├── VO/                   # 值对象
+│   │   ├── BaseVO.php
+│   │   ├── Response.php
+│   │   └── PageResponse.php
+│   ├── Assembler/            # 装配器
+│   │   ├── Interfaces/       # 拆分后的小接口
+│   │   │   ├── BaseAssembler.php
+│   │   │   ├── DtoAssemblerInterface.php
+│   │   │   ├── EntityAssemblerInterface.php
+│   │   │   └── ArrayConverterInterface.php
+│   │   ├── Traits/           # Trait提供默认实现
+│   │   │   └── AssemblerTrait.php
+│   │   └── AbstractAssembler.php
+│   └── Mapper/               # 对象映射器（集中处理映射逻辑）
+│       └── ObjectMapper.php
+├── Infrastructure/           # 基础设施层 - 技术实现细节
+│   ├── Enum/                 # 枚举类
+│   │   ├── BaseEnum.php
+│   │   ├── SupportEnum.php
+│   │   ├── InvalidRequestEnum.php
+│   │   └── ...
+│   └── Exception/            # 异常类
+│       ├── BaseException.php
+│       ├── InvalidRequestException.php
+│       └── InternalServerErrorException.php
+├── Support/                  # 支持层 - 通用工具和辅助功能
+│   ├── Traits/
+│   ├── Utils/
+│   ├── Properties/
+│   ├── Annotation/
+│   └── ...
+├── Contracts/                # 契约层 - 接口定义
+└── PathManager.php           # 更新为新结构
 ```
 
 ## 核心组件

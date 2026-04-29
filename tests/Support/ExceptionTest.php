@@ -4,11 +4,11 @@ namespace Tests\Support;
 
 use Rice\Basic\Support\Lang;
 use PHPUnit\Framework\TestCase;
-use Rice\Basic\Components\Enum\SupportEnum;
-use Rice\Basic\Components\Enum\HttpStatusCodeEnum;
-use Rice\Basic\Components\Enum\InvalidRequestEnum;
-use Rice\Basic\Components\Exception\InvalidRequestException;
-use Rice\Basic\Components\Exception\InternalServerErrorException;
+use Rice\Basic\Infrastructure\Enum\SupportEnum;
+use Rice\Basic\Infrastructure\Enum\HttpStatusCodeEnum;
+use Rice\Basic\Infrastructure\Enum\InvalidRequestEnum;
+use Rice\Basic\Infrastructure\Exception\InvalidRequestException;
+use Rice\Basic\Infrastructure\Exception\InternalServerErrorException;
 
 class ExceptionTest extends TestCase
 {

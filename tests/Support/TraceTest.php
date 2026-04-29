@@ -5,7 +5,7 @@ namespace Tests\Support;
 use PHPUnit\Framework\TestCase;
 use Rice\Basic\Support\LogTraceFacade;
 use Rice\Basic\Support\TraceIdManager;
-use Rice\Basic\Components\Exception\InvalidRequestException;
+use Rice\Basic\Infrastructure\Exception\InvalidRequestException;
 
 /**
  * 分布式追踪功能测试类

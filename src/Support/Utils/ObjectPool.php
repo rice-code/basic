@@ -140,7 +140,7 @@ class ObjectPool
         $pool['last_cleanup'] = $now;
 
         // 过滤出未过期的对象
-        $pool['objects'] = array_filter($pool['objects'], function ($item) use ($now, $ttl) {
+        $pool['objects'] = array_filter($pool['objects'], function (array $item) use ($now, $ttl) {
             return $now - $item['return_time'] < $ttl;
         });
     }
@@ -148,7 +148,7 @@ class ObjectPool
     /**
      * 创建新对象
      *
-     * @param string $className 类名
+     * @param class-string $className 类名
      * @param array  $params    构造函数参数
      * @return object
      */

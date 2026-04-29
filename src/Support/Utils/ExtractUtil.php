@@ -2,7 +2,7 @@
 
 namespace Rice\Basic\Support\Utils;
 
-use Rice\Basic\Components\Exception\InternalServerErrorException;
+use Rice\Basic\Infrastructure\Exception\InternalServerErrorException;
 
 /**
  * 数据提取
@@ -88,10 +88,8 @@ class ExtractUtil
     /**
      * 按照 原键值 -> 驼峰 -> 蛇形 依次获取值
      *
-     * @param  int[][][]                    $params
+     * @param array $params
      * @throws InternalServerErrorException
-     *
-     * @psalm-param array{data: list{array{myNumber?: 1, my_number?: 1}}} $params
      */
     public static function getValue(array $params, string $key)
     {

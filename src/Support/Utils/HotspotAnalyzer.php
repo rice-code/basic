@@ -220,7 +220,7 @@ class HotspotAnalyzer
         }
 
         // 排序
-        usort($hotspots, function ($a, $b) use ($orderBy, $orderDirection) {
+        usort($hotspots, function ($a, $b) use ($orderBy, $orderDirection): int {
             $direction = 'asc' === $orderDirection ? 1 : -1;
 
             switch ($orderBy) {

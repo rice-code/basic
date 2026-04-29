@@ -7,7 +7,7 @@ use Tests\Support\Entity\Cat;
 use Tests\Support\Entity\Cat8;
 use PHPUnit\Framework\TestCase;
 use Rice\Basic\Support\Properties\Methods;
-use Rice\Basic\Components\Enum\SupportEnum;
+use Rice\Basic\Infrastructure\Enum\SupportEnum;
 use Rice\Basic\Support\Properties\Property;
 use Rice\Basic\Support\Utils\FrameTypeUtil;
 use Rice\Basic\Support\Annotation\ClassReflector;

@@ -10,10 +10,10 @@ class PerfUtil
      * 秒.
      *
      * @param int $loop
-     * @param     $callback
+     * @param \Closure $callback
      * @return int
      */
-    public static function seconds(int $loop, $callback): int
+    public static function seconds(int $loop, \Closure $callback): int
     {
         $start = Carbon::now();
         for ($i = 0; $i < $loop; ++$i) {
@@ -27,10 +27,10 @@ class PerfUtil
      * 毫秒.
      *
      * @param int $loop
-     * @param     $callback
+     * @param \Closure $callback
      * @return int
      */
-    public static function milliseconds(int $loop, $callback): int
+    public static function milliseconds(int $loop, \Closure $callback): int
     {
         $start = Carbon::now();
         for ($i = 0; $i < $loop; ++$i) {

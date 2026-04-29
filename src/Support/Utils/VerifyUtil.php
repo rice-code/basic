@@ -2,8 +2,8 @@
 
 namespace Rice\Basic\Support\Utils;
 
-use Rice\Basic\Components\Enum\TypeEnum;
-use Rice\Basic\Components\Exception\InternalServerErrorException;
+use Rice\Basic\Infrastructure\Enum\TypeEnum;
+use Rice\Basic\Infrastructure\Exception\InternalServerErrorException;
 
 class VerifyUtil
 {
@@ -13,16 +13,25 @@ class VerifyUtil
      */
     public static bool $strongTypeIsEnable = true;
 
+    /**
+     * @param mixed $obj
+     */
     public static function notNull($obj): bool
     {
         return !is_null($obj);
     }
 
+    /**
+     * @param mixed $obj
+     */
     public static function notEmpty($obj): bool
     {
         return !empty($obj);
     }
 
+    /**
+     * @param mixed $obj
+     */
     public static function notNullAndNotEmpty($obj): bool
     {
         return self::notNull($obj) && self::notEmpty($obj);
@@ -30,16 +39,17 @@ class VerifyUtil
 
     /**
      * 只校验已知类型.
-     * @param $type
-     * @param $value
+     * @param string $type
+     * @param mixed $value
      * @return bool
      */
-    public static function strongType($type, $value): bool
+    public static function strongType(string $type, $value): bool
     {
         switch ($type) {
             case 'string':
                 return is_string($value);
-            case 'int' | 'integer':
+            case 'int':
+            case 'integer':
                 return is_int($value);
             case 'bool':
                 return is_bool($value);
@@ -52,11 +62,11 @@ class VerifyUtil
 
     /**
      * 强类型异常抛出.
-     * @param                               $type
-     * @param                               $value
+     * @param string $type
+     * @param mixed $value
      * @throws InternalServerErrorException
      */
-    public static function throwStrongType($type, $value): void
+    public static function throwStrongType(string $type, $value): void
     {
         if (self::$strongTypeIsEnable && !self::strongType($type, $value)) {
             throw new InternalServerErrorException(TypeEnum::INVALID_TYPE);

@@ -3,12 +3,12 @@
 namespace Rice\Basic\Support\Annotation;
 
 use Rice\Basic\Support\FileParser;
-use Rice\Basic\Components\Enum\KeyEnum;
+use Rice\Basic\Infrastructure\Enum\KeyEnum;
 use Rice\Basic\Contracts\CacheContract;
 use Rice\Basic\Support\Properties\Methods;
 use Rice\Basic\Support\Properties\Property;
 use Rice\Basic\Support\Properties\Properties;
-use Rice\Basic\Components\Entity\AnnotationEntity;
+use Rice\Basic\Domain\Entity\AnnotationEntity;
 
 class ClassReflector
 {

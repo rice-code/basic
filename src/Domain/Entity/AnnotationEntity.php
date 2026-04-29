@@ -1,0 +1,158 @@
+<?php
+
+namespace Rice\Basic\Domain\Entity;
+
+use Rice\Basic\Infrastructure\Enum\KeyEnum;
+use Rice\Basic\Contracts\CacheContract;
+use Rice\Basic\Support\Traits\Singleton;
+
+class AnnotationEntity extends BaseEntity
+{
+    use Singleton;
+
+    private static array $caches = [
+        KeyEnum::FILE_MTIME_KEY => [],
+        KeyEnum::FILE_USE_KEY   => [],
+        KeyEnum::FILE_ALIAS_KEY => [],
+    ];
+
+    private static array $classProperties = [];
+    private static array $classMethods    = [];
+    private static bool $checks           = false;
+
+    public static function build(?CacheContract $cache): self
+    {
+        $entity = self::getInstance();
+        if (empty(self::$caches[KeyEnum::FILE_USE_KEY])) {
+            self::$caches = $cache ? $cache->get(KeyEnum::ANNOTATION_KEY, self::$caches) : self::$caches;
+        }
+
+        return $entity;
+    }
+
+    public function hasChangeFile(string $namespace): bool
+    {
+        if (empty(self::$classProperties[$namespace])) {
+            return true;
+        }
+
+        if (self::$caches) {
+            return false;
+        }
+
+        foreach (self::$caches[KeyEnum::FILE_MTIME_KEY] ?? [] as $path => $time) {
+            if (filemtime($path) !== (int) $time) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public function getChangeFiles(): array
+    {
+        $changeFiles = [];
+        foreach (self::$caches[KeyEnum::FILE_MTIME_KEY] as $path => $time) {
+            if (filemtime($path) !== (int) $time) {
+                $changeFiles[] = $path;
+            }
+        }
+
+        self::$checks = true;
+
+        return $changeFiles;
+    }
+
+    public static function setClassProperties(string $namespace, array $classProperties): void
+    {
+        self::$classProperties[$namespace] = $classProperties;
+    }
+
+    public static function getClassProperties(?string $namespace = null, $key = null)
+    {
+        if ($namespace && $key) {
+            return self::$classProperties[$namespace][$key] ?? null;
+        }
+
+        if ($namespace) {
+            return self::$classProperties[$namespace] ?? [];
+        }
+
+        return self::$classProperties;
+    }
+
+    public static function setClassMethods(string $namespace, array $classMethods): void
+    {
+        self::$classMethods[$namespace] = $classMethods;
+    }
+
+    public static function getClassMethods(?string $namespace = null, $key = null)
+    {
+        if ($namespace && $key) {
+            return self::$classMethods[$namespace][$key] ?? null;
+        }
+
+        if ($namespace) {
+            return self::$classMethods[$namespace] ?? null;
+        }
+
+        return self::$classMethods;
+    }
+
+    public static function getCaches(): array
+    {
+        return self::$caches;
+    }
+
+    public function setMtime($key, $value): self
+    {
+        self::$caches[KeyEnum::FILE_MTIME_KEY][$key] = $value;
+
+        return $this;
+    }
+
+    public function delMtime($key): self
+    {
+        unset(self::$caches[KeyEnum::FILE_MTIME_KEY][$key]);
+
+        return $this;
+    }
+
+    public function setUses(string $key, $value): self
+    {
+        self::$caches[KeyEnum::FILE_USE_KEY][$key] = $value;
+
+        return $this;
+    }
+
+    public function getUses(?string $className = null)
+    {
+        return $className ? self::$caches[KeyEnum::FILE_USE_KEY][$className] : self::$caches[KeyEnum::FILE_USE_KEY];
+    }
+
+    public function delUses($key): self
+    {
+        unset(self::$caches[KeyEnum::FILE_USE_KEY][$key]);
+
+        return $this;
+    }
+
+    public function setAlias(string $key, $value): self
+    {
+        self::$caches[KeyEnum::FILE_ALIAS_KEY][$key] = $value;
+
+        return $this;
+    }
+
+    public function getAlias(?string $className = null)
+    {
+        return $className ? self::$caches[KeyEnum::FILE_ALIAS_KEY][$className] : self::$caches[KeyEnum::FILE_ALIAS_KEY];
+    }
+
+    public function delAlias($key): self
+    {
+        unset(self::$caches[KeyEnum::FILE_ALIAS_KEY][$key]);
+
+        return $this;
+    }
+}

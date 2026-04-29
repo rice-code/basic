@@ -2,7 +2,7 @@
 
 namespace Rice\Basic\Support\Properties;
 
-use Rice\Basic\Components\Entity\FrameEntity;
+use Rice\Basic\Domain\Entity\FrameEntity;
 
 class Properties
 {
@@ -40,8 +40,24 @@ class Properties
         $constants  = $this->reflectionClass->getReflectionConstants();
         $properties = $this->reflectionClass->getProperties($filter);
 
+        // 获取类级别的国际化标签（包括父类）
+        $classLabels = [];
+        $currentClass = $this->reflectionClass;
+        while ($currentClass) {
+            $docComment = $currentClass->getDocComment() ?: '';
+            $labels = DocComment::matchLabels($docComment);
+            // 合并标签，子类标签优先
+            foreach ($labels as $lang => $langLabels) {
+                if (!isset($classLabels[$lang])) {
+                    $classLabels[$lang] = [];
+                }
+                $classLabels[$lang] = array_merge($classLabels[$lang], $langLabels);
+            }
+            $currentClass = $currentClass->getParentClass();
+        }
+
         // 确保这两个方法返回数组，避免array_merge参数为null
-        $constantsResult  = $this->handleConstants($constants, $onlyCurrentClass)   ?? [];
+        $constantsResult  = $this->handleConstants($constants, $onlyCurrentClass, $classLabels)   ?? [];
         $propertiesResult = $this->handleProperties($properties, $onlyCurrentClass) ?? [];
 
         return array_merge(
@@ -55,7 +71,7 @@ class Properties
      * @param bool  $onlyCurrentClass 是否只获取当前类的常量
      * @return array|Property[]
      */
-    public function handleConstants(array $constants, bool $onlyCurrentClass = false): array
+    public function handleConstants(array $constants, bool $onlyCurrentClass = false, array $classLabels = []): array
     {
         /**
          * @var \ReflectionClassConstant $constant
@@ -77,6 +93,21 @@ class Properties
             }
 
             [$name, $value, $comment, $labels] = DocComment::getConstantInfo($constant);
+            
+            // 合并类级别的国际化标签到常量标签中（常量自身的标签优先级更高）
+            $constantValue = $value;
+            foreach ($classLabels as $lang => $langLabels) {
+                // 如果常量自身已经有该语言的标签，则跳过（属性注释优先级高于类注释）
+                if (!empty($labels[$lang])) {
+                    continue;
+                }
+                foreach ($langLabels as $label) {
+                    if (strpos($label, $constantValue . ' ') === 0) {
+                        $labels[$lang][] = substr($label, strlen($constantValue) + 1);
+                    }
+                }
+            }
+            
             $newProperty                       = new Property(
                 'const',
                 $name,

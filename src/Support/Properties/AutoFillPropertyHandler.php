@@ -4,15 +4,15 @@ namespace Rice\Basic\Support\Properties;
 
 use Rice\Basic\Support\Utils\StrUtil;
 use Rice\Basic\Contracts\CacheContract;
-use Rice\Basic\Components\Enum\TypeEnum;
+use Rice\Basic\Infrastructure\Enum\TypeEnum;
 use Rice\Basic\Support\Utils\ObjectPool;
 use Rice\Basic\Support\Utils\ExtractUtil;
 use Rice\Basic\Support\Utils\FrameTypeUtil;
 use Rice\Basic\Support\Converts\TypeConvert;
 use Rice\Basic\Support\Utils\LazyCollection;
-use Rice\Basic\Components\Entity\FrameEntity;
+use Rice\Basic\Domain\Entity\FrameEntity;
 use Rice\Basic\Support\Annotation\ClassReflector;
-use Rice\Basic\Components\Exception\InternalServerErrorException;
+use Rice\Basic\Infrastructure\Exception\InternalServerErrorException;
 
 /**
  * 属性自动填充处理器

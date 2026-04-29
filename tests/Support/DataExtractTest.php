@@ -4,7 +4,7 @@ namespace Tests\Support;
 
 use PHPUnit\Framework\TestCase;
 use Rice\Basic\Support\Utils\ExtractUtil;
-use Rice\Basic\Components\Exception\InternalServerErrorException;
+use Rice\Basic\Infrastructure\Exception\InternalServerErrorException;
 
 class DataExtractTest extends TestCase
 {

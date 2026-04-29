@@ -2,7 +2,7 @@
 
 namespace Tests\DTO;
 
-use Rice\Basic\Components\DTO\PageDTO;
+use Rice\Basic\Domain\DTO\PageDTO;
 use Rice\Basic\Contracts\CacheContract;
 use Rice\Basic\Support\Traits\AutoFillProperties;
 

@@ -3,7 +3,7 @@
 namespace Tests\DTO;
 
 use PHPUnit\Framework\TestCase;
-use Rice\Basic\Components\Exception\InternalServerErrorException;
+use Rice\Basic\Infrastructure\Exception\InternalServerErrorException;
 
 class DTOTest extends TestCase
 {

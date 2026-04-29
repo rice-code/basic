@@ -336,6 +336,6 @@ class PerformanceMonitor
 
         $bytes /= (1 << (10 * $pow));
 
-        return round($bytes, 2) . ' ' . $units[$pow];
+        return round($bytes, 2) . ' ' . $units[(int)$pow];
     }
 }

@@ -4,8 +4,8 @@ namespace Tests\Support;
 
 use Rice\Basic\Support\Lang;
 use PHPUnit\Framework\TestCase;
-use Rice\Basic\Components\Enum\InvalidRequestEnum;
-use Rice\Basic\Components\Exception\InvalidRequestException;
+use Rice\Basic\Infrastructure\Enum\InvalidRequestEnum;
+use Rice\Basic\Infrastructure\Exception\InvalidRequestException;
 
 class ExceptionObserverTest extends TestCase
 {

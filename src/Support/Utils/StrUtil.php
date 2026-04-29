@@ -43,7 +43,7 @@ class StrUtil
     public static function camelCaseToSnakeCase(string $name): string
     {
         $len     = strlen($name);
-        $newName = $name[0] ?? '';
+        $newName = strtolower($name[0] ?? '');
         for ($i = 1; $i < $len; ++$i) {
             $char = $name[$i];
             if (self::isUpper($char)) {
@@ -84,7 +84,7 @@ class StrUtil
     public static function startsWith(string $haystack, $needles): bool
     {
         foreach ((array) $needles as $needle) {
-            if ('' !== $needle && 0 === strpos($haystack, (string) $needle)) {
+            if ('' !== $needle && 0 === strpos($haystack, $needle)) {
                 return true;
             }
         }
@@ -102,7 +102,7 @@ class StrUtil
     public static function endsWith(string $haystack, $needles): bool
     {
         foreach ((array) $needles as $needle) {
-            if (substr($haystack, -strlen($needle)) === (string) $needle) {
+            if (substr($haystack, -strlen($needle)) === $needle) {
                 return true;
             }
         }

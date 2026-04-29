@@ -14,3 +14,6 @@ vendor/
 *.cache
 tests/generate
 tests/Storage
+docs/
+storage/logs/
+*.log

@@ -3,10 +3,10 @@
 namespace Rice\Basic\Support\Traits;
 
 use Rice\Basic\Support\Utils\StrUtil;
-use Rice\Basic\Components\Enum\BaseEnum;
-use Rice\Basic\Components\Enum\NameTypeEnum;
-use Rice\Basic\Components\Entity\FrameEntity;
-use Rice\Basic\Components\Exception\InternalServerErrorException;
+use Rice\Basic\Infrastructure\Enum\BaseEnum;
+use Rice\Basic\Infrastructure\Enum\NameTypeEnum;
+use Rice\Basic\Domain\Entity\FrameEntity;
+use Rice\Basic\Infrastructure\Exception\InternalServerErrorException;
 
 trait Accessor
 {
@@ -78,7 +78,7 @@ trait Accessor
      * @param $args
      * @return void
      */
-    protected function setValue($attrName, $args): void
+    protected function setValue(string $attrName, array $args): void
     {
         $this->{$attrName} = $args[0];
     }
@@ -88,7 +88,7 @@ trait Accessor
      * @param $attrName
      * @return mixed
      */
-    protected function getValue($attrName)
+    protected function getValue(string $attrName)
     {
         // 检查属性是否存在
         if (!property_exists($this, $attrName)) {
@@ -103,6 +103,12 @@ trait Accessor
         // 安全返回属性值，如果未设置则返回null
         return $this->{$attrName} ?? null;
     }
+
+    /**
+     * 类级别属性反射缓存
+     * @var array
+     */
+    private static array $reflectionPropertiesCache = [];
 
     /**
      * @internal
@@ -122,8 +128,14 @@ trait Accessor
         // 初始化结果数组，避免在null上访问数组偏移量
         $result = [];
 
-        $oReflectionClass = new \ReflectionClass($obj);
-        foreach ($oReflectionClass->getProperties() as $property) {
+        $className = get_class($obj);
+        // 检查反射属性缓存
+        if (!isset(self::$reflectionPropertiesCache[$className])) {
+            $oReflectionClass = new \ReflectionClass($obj);
+            self::$reflectionPropertiesCache[$className] = $oReflectionClass->getProperties();
+        }
+
+        foreach (self::$reflectionPropertiesCache[$className] as $property) {
             $key = $property->getName();
 
             // 过滤框架内部定义字段

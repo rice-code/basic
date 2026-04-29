@@ -4,7 +4,7 @@ namespace Rice\Basic\Support\Traits;
 
 use Rice\Basic\Contracts\CacheContract;
 use Rice\Basic\Support\Properties\AutoFillPropertyHandler;
-use Rice\Basic\Components\Exception\InternalServerErrorException;
+use Rice\Basic\Infrastructure\Exception\InternalServerErrorException;
 
 /**
  * 自动填充属性Trait

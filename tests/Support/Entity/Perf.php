@@ -5,7 +5,7 @@ namespace Tests\Support\Entity;
 use Tests\Cache;
 use Tests\DTO\OrderListDTO;
 use Rice\Basic\Support\Utils\PerfUtil;
-use Rice\Basic\Components\Entity\BaseEntity;
+use Rice\Basic\Domain\Entity\BaseEntity;
 
 class Perf extends BaseEntity
 {

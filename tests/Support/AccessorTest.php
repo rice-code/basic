@@ -7,9 +7,9 @@ use Tests\Support\Entity\Cat;
 use PHPUnit\Framework\TestCase;
 use Tests\Support\Entity\GetterCat;
 use Tests\Support\Entity\SetterCat;
-use Rice\Basic\Components\VO\Response;
-use Rice\Basic\Components\VO\PageResponse;
-use Rice\Basic\Components\Exception\InternalServerErrorException;
+use Rice\Basic\Domain\VO\Response;
+use Rice\Basic\Domain\VO\PageResponse;
+use Rice\Basic\Infrastructure\Exception\InternalServerErrorException;
 
 class AccessorTest extends TestCase
 {

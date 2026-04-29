@@ -76,7 +76,7 @@ class DocComment
         return [$name, $comment, $labels];
     }
 
-    protected static function matchLabels(string $docComment): array
+    public static function matchLabels(string $docComment): array
     {
         $docLabels = [];
         preg_match_all(self::LABEL_PATTERN, $docComment, $matches);
